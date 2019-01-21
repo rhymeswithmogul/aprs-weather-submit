@@ -1,0 +1,435 @@
+/*
+ aprs-weather-submit version 1.0
+ Copyright (c) 2019 Colin Cogle
+ 
+ This file, main.c, is part of aprs-weather-submit.
+ 
+ aprs-weather-submit is free software: you can redistribute it and/or
+ modify it under the terms of the GNU General Public License as published
+ by the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ aprs-weather-submit is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with aprs-weather-submit. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include "main.h"
+#include "aprs-wx.h"
+#include "aprs-is.h"
+#include <stdio.h>		/* *printf(), *puts(), and friends */
+#include <stdlib.h>		/* atof(), EXIT_SUCCESS, EXIT_FAILURE */
+#include <getopt.h>		/* getopt_long() */
+#include <string.h>		/* str*cpy() and friends */
+#include <math.h>		/* round() */
+
+int main(const int argc, char* const argv[]) {
+	char			packetToSend[601] = "\0"; /* 600 bytes can be sent in one second at 1200 baud */
+	char			username[BUFSIZE] = "\0";
+	char			password[BUFSIZE] = "\0";
+	char			server[NI_MAXHOST];
+	unsigned short	port = 0;
+	APRSPacket		packet;
+	
+	const static struct option long_options[] = {
+		{"help",					no_argument,       0, 'H'},
+		{"version",					no_argument,       0, 'v'},
+/*		{"uncompressed-positions",	no_argument,       0, 'q'}, */
+		{"server",					required_argument, 0, 'I'},
+		{"port",					required_argument, 0, 'o'},
+		{"username",				required_argument, 0, 'u'},
+		{"password",				required_argument, 0, 'd'},
+		{"callsign",				required_argument, 0, 'k'},
+		{"latitude",				required_argument, 0, 'n'},
+		{"longitude",				required_argument, 0, 'e'},
+		/*
+		 	The following options are using APRS-standard short options,
+		 	for clarity.  The exception is wind speed, because that's
+		 	overloaded with snowfall ('s').
+		 */
+		{"wind-direction",			required_argument, 0, 'c'},
+		{"wind-speed",				required_argument, 0, 'S'},
+		{"gust",					required_argument, 0, 'g'},
+		{"temperature",				required_argument, 0, 't'},
+		{"rainfall-last-hour",		required_argument, 0, 'r'},
+		{"rainfall-last-24-hours",	required_argument, 0, 'p'},
+		{"rainfall-since-midnight",	required_argument, 0, 'P'},
+		{"snowfall-last-24-hours",	required_argument, 0, 's'},
+		{"humidity",				required_argument, 0, 'h'},
+		{"pressure",				required_argument, 0, 'b'},
+		{"luminosity",				required_argument, 0, 'L'},
+		{"radiation",				required_argument, 0, 'X'},
+		{"water-level-above-stage",	required_argument, 0, 'F'}, /* APRS 1.2 */
+		{"voltage",					required_argument, 0, 'V'}, /* APRS 1.2 */
+		{0, 0, 0, 0}
+	};
+	
+	packetConstructor(&packet);
+	while (1) {
+		char  c				= '\0'; /* for getopt_long() */
+		int   option_index	= 0;	/* for getopt_long() */
+		float x				= 0.0;	/* scratch space */
+		
+		c = getopt_long(argc, argv, "HvI:o:u:d:k:n:e:c:S:g:t:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index);
+		if (c == -1)
+			break;
+
+		switch (c) {
+			/* Complete help (-H | --help) */
+			case 'H':
+				help();
+				return EXIT_SUCCESS;
+				
+			/* Version information (-v | --version) */
+			case 'v':
+				version();
+				return EXIT_SUCCESS;
+			
+			/* IGate server name (-I | --server) */
+			case 'I':
+				snprintf(server, strlen(optarg)+1, "%s", optarg);
+				break;
+			
+			/* IGate server port (-o | --port) */
+			case 'o':
+				x = atoi(optarg);
+				if (x <= 0 || x > 65535) {
+					fprintf(stderr, "%s: argument for option '-%c' was invalid.  Valid port numbers are 1 through 65535.", argv[0], optopt);
+					return EXIT_FAILURE;
+				}
+				port = x;
+				break;
+				
+			/* IGate server username (-u | --username) */
+			case 'u':
+				snprintf(username, strlen(optarg)+1, "%s", optarg);
+				break;
+				
+			/* IGate server password (-d | --password) */
+			case 'd':
+				snprintf(password, strlen(optarg)+1, "%s", optarg);
+				break;
+				
+			/* Callsign, with SSID if desired (-k | --callsign) */
+			case 'k':
+				snprintf(packet.callsign, 10, "%s", optarg);
+				break;
+			
+			/* Your latitude, in degrees north (-n | --latitude) */
+			case 'n':
+				x = atof(optarg);
+				if (x < -90 || x > 90) {
+					fprintf(stderr, "%s: option `-%c' must be between -90 and 90 degrees north.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+#ifdef COMPRESS_POSITION
+					compressedPosition(packet.latitude, x, IS_LATITUDE);
+#else
+					uncompressedPosition(packet.latitude, x, IS_LATITUDE);
+#endif
+				}
+				break;
+			
+			/* Your longitude, in degrees east (-e | --longitude) */
+			case 'e':
+				x = atof(optarg);
+				if (x < -180 || x > 180) {
+					fprintf(stderr, "%s: option `-%c' must be between -180 and 180 degrees east.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+#ifdef COMPRESS_POSITION
+					compressedPosition(packet.longitude, x, IS_LONGITUDE);
+#else
+					uncompressedPosition(packet.longitude, x, IS_LONGITUDE);
+#endif
+				}
+				break;
+			
+			/* Wind direction, in degrees from true north (-c | --wind-direction) */
+			case 'c':
+				x = atof(optarg);
+				if (x < 0 || x > 360) {
+					fprintf(stderr, "%s: option `-%c' must be between -180 and 180 degrees east.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+#ifdef COMPRESS_POSITION
+					snprintf(packet.windDirection, 2, "%c", compressedWindDirection((int)x % 360));
+#else
+					snprintf(packet.windDirection, 4, "%03d", (int)(round(x)) % 360 );
+#endif
+				}
+				break;
+			
+			/* Wind speed in miles per hour (-S | --wind-speed) */
+			case 'S':
+				x = atof(optarg);
+				if (x < 0 || x > 999) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 999 miles per hour.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+#ifdef COMPRESS_POSITION
+					snprintf(packet.windSpeed, 2, "%c", compressedWindSpeed(x));
+#else
+					snprintf(packet.windSpeed, 4, "%03d", (int)(round(x)) );
+#endif
+				}
+				break;
+
+			/* Wind gust, in miles per hour (-g | --gust) */
+			case 'g':
+				x = atof(optarg);
+				if (x < 0 || x > 999) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 999 miles per hour.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					snprintf(packet.gust, 4, "%03d", (int)(round(x)) );
+				}
+				break;
+			
+			/* Temperature in degrees Fahrenheit (-t | --temperature) */
+			case 't':
+				x = atof(optarg);
+				if (x < 0 || x > 999) {
+					fprintf(stderr, "%s: option `-%c' must be between -99 and 999 degrees Fahrenheit.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
+				}
+				break;
+				
+			/* Rainfall in the past hour, in inches (-r | --rainfall-last-hour) */
+			case 'r':
+				x = atof(optarg);
+				if (x < 0 || x > 9.99) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 9.99 inches.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					rain(packet.rainfallLastHour, x * 100);
+				}
+				break;
+			
+			/* Rainfall in the past 24 hours, in inches (-p | --rainfall-last-day) */
+			case 'p':
+				x = atof(optarg);
+				if (x < 0 || x > 9.99) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 9.99 inches.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					rain(packet.rainfallLast24Hours, x * 100);
+				}
+				break;
+				
+			/* Rainfall since midnight, in inches (-P | --rainfall-since-midnight) */
+			case 'P':
+				x = atof(optarg);
+				if (x < 0 || x > 9.99) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 9.99 inches.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					rain(packet.rainfallSinceMidnight, x * 100);
+				}
+				break;
+
+			/* (APRS 1.1) Snowfall in the last 24 hours, in inches (-s | --snowfall) */
+			case 's':
+				x = atof(optarg);
+				if (x < 0 || x > 999) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 999 inches.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					/* According to the APRS 1.1 errata, if we have more than ten inches, remove the decimal part.
+					 APRS doesn't give us enough resolution to report it. http://www.aprs.org/aprs11/spec-wx.txt */
+					if (x > 10) {
+						snprintf(packet.snowfallLast24Hours, 4, "%03d", (unsigned short)floor(x));
+					} else {
+						snprintf(packet.snowfallLast24Hours, 4, "%1f", x);
+					}
+				}
+				break;
+				
+			/* Humidity, in the range from 1 to 100% (-h | --humidity) */
+			case 'h':
+				x = atoi(optarg);
+				if (x < 0 || x > 99) {
+					fprintf(stderr, "%s: option `-%c' must be between 0%% and 100%%.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					unsigned short int h = round(x);
+					/* APRS only supports values 1-100. Round 0% up to 1%. */
+					if (h == 0) {
+						h = 1;
+					}
+					/* APRS requires us to encode 100% as "00". */
+					else if (h == 100) {
+						h = 0;
+					}
+					snprintf(packet.humidity, 3, "%.2d", h);
+				}
+				break;
+			
+			/* Barometric pressure, in millibars or hectopascals (-b | --pressure) */
+			case 'b':
+				x = atof(optarg);
+				if (x < 0 || x > 9999.9) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 9999.9 millibars.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					snprintf(packet.pressure, 6, "%.5d", (int)(round(x * 10)) );
+				}
+				break;
+			
+			/* Luminosity, in watts per square meter (-L | --luminosity) */
+			case 'L':
+				x = atof(optarg);
+				if (x < 0 || x > 1999) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 1999 watts per square meter.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					/*
+					 This is where it gets weird.  APRS supports readings of up to 2,000 W/m^2, but only gives us three digits' resolution to use.  Values under 1000 are encoded as "L000" and values over 1000 are encoded as "l000".
+					 */
+					snprintf(packet.luminosity, 5, "L%.3d", (int)(x) % 1000);
+					if (x > 999) {
+						packet.luminosity[0] = 'l';
+					}
+				}
+				break;
+			
+			/* (APRS 1.2) Radiation in nanosieverts (-X | --radiation) */
+			case 'X':
+				x = atof(optarg);
+				if (x < 0 || x > 99000000) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 99 billion nSv.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					unsigned short magnitude = 0;
+					for (; x > 100; magnitude++) {
+						x /= 10;
+					}
+					snprintf(packet.radiation, 4, "%.2d%d", (unsigned short)x, magnitude);
+				}
+				break;
+
+			/* (APRS 1.2) Flooding (-F | --water-level-above-stage) */
+			case 'F':
+				x = atof(optarg);
+				if (x < -99.9 || x > 99.9) {
+					fprintf(stderr, "%s: option `-%c' must be between -99.9 and 99.9 feet.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					snprintf(packet.waterLevel, 4, "%.3d", (short)x * 10);
+				}
+				break;
+				
+			/* (APRS 1.2) Weather station battery voltage (-V | --voltage) */
+			case 'V':
+				x = atof(optarg);
+				if (x < 0 || x > 99.9) {
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 99.9 volts.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					snprintf(packet.voltage, 4, "%.3d", (short)x * 10);
+				}
+				break;
+				
+			/* Unknown argument handler (quick help). */
+			default:
+				usage();
+				return EXIT_FAILURE;
+		}
+	}
+	
+	/* Check for mandatory parameters.  If any are missing, show usage() and quit. */
+	if (strlen(packet.callsign) == 0 || strlen(packet.latitude) == 0 || strlen(packet.longitude) == 0) {
+		usage();
+		return EXIT_FAILURE;
+	}
+	
+	/* Create the APRS packet. */
+	printAPRSPacket(&packet, packetToSend);
+	
+	/* If we specified all of the server information, send the packet.
+	 * Otherwise, print the packet to stdout and let the user deal with it. */
+	if (strlen(server) && strlen(username) && strlen(password) && port != 0) {
+		sendPacket(server, port, username, password, packetToSend);
+	} else {
+		puts(packetToSend);
+	}
+	return EXIT_SUCCESS;
+}
+
+/**
+ * usage() -- show version information.
+ *
+ * @author		Colin Cogle
+ * @since		0.1
+ */
+void version(void) {
+	printf("\
+		   %s, version %s\n\
+		   Copyright (c) 2019 Colin Cogle.\n\
+		   This program comes with ABSOLUTELY NO WARRANTY. This is free software,\n\
+		   and you are welcome to redistribute it under certain conditions.  See\n\
+		   the GNU General Public License (version 3) for more details.\n\
+		   ", PROGRAM_NAME, VERSION);
+	return;
+}
+
+/**
+ * usage() -- show some help.
+ *
+ * @author		Colin Cogle
+ * @since		0.1
+ */
+void usage(void) {
+	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER OPTIONS]\n", PROGRAM_NAME);
+	return;
+}
+
+/**
+ * help() -- show even more help.
+ *
+ * @author		Colin Cogle
+ * @since		0.1
+ */
+void help(void) {
+	version();
+	puts("\n\
+		 Special parameters:\n\
+		 -H, --help                        Show this help and exit.\n\
+		 -v, --version                     Show version and licensing information, and exit.\n\
+		 -q, --use-uncompressed-positions  Report with uncompressed position data.\n\
+		 \n\
+		 Required parameters:\n\
+		 -k, --callsign     Your callsign, with SSID if desired.\n\
+		 -e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n\
+		 -n, --latitude      The latitude of your weather station, in degrees north of the equator.\n\
+		 \n\
+		 APRS-IS IGate parameters:\n\
+		 -I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
+		 -o, --port          Port that the APRS-IS IGate service is listening on.\n\
+		 -u, --username      Authenticate to the server with this username.\n\
+		 -d, --password      Authenticate to the server with this password.\n\
+		 \n\
+		 Optional weather parameters:\n\
+		 -b, --pressure                 Barometric pressure (in millibars or hectopascals).\n\
+		 -c, --wind-direction           Direction that the wind is blowing (degrees).\n\
+		 -F, --water-level-above-stage  Water level above flood stage or mean tide (feet).\n\
+		 -g, --gust                     Peak wind speed in the last five minutes (miles per hour).\n\
+		 -h, --humidity                 Relative humidity (percentage).\n\
+		 -L, --luminosity               Luminosity (watts per square meter).\n\
+		 -p, --rainfall-last-24-hours   Total rainfall in the past 24 hours (inches).\n\
+		 -P, --rainfall-since-midnight  Total rainfall since midnight local time (inches).\n\
+		 -r, --rainfall-last-hour       Total rainfall in the past hour (inches).\n\
+		 -s, --snowfall-last-24-hours   Total snowfall in the past 24 hours (inches).\n\
+		 -S, --wind-speed               Sustained wind speed in the past minute (miles per hour).\n\
+		 -t, --temperature              Temperature (degrees Fahrenheit).\n\
+		 -V, --voltage                  Battery voltage of your weather station.\n\
+		 -X, --radiation                Radiation levels (nanosieverts per hour).\n\
+		 ");
+	return;
+}
