@@ -1,5 +1,5 @@
 # aprs-weather-submit
-Not everyone has a fancy weather station with APRS connectivity built in.  Maybe you're like me, and have an old-school thermometer and CoCoRaHS-approved rain gauge.  This command-line app, written in classic K&R C, can compile on most Linux toolchains and will manually submit APRS 1.2-compliant weather information to the APRS-IS network.
+Not everyone has a fancy weather station with APRS connectivity built in.  Maybe you're like me, and have an old-school thermometer and CoCoRaHS-approved rain gauge.  This command-line app, written in classic K&R C, can compile on most Linux toolchains and will manually submit APRS 1.2.1-compliant weather information to the APRS-IS network.
 
 ## Help
 Anyone can use this app to create [an APRS packet](http://www.aprs.org/doc/APRS101.PDF).  However, to send it to the APRS-IS network, you must have an account on an APRS-IS IGate server, as well as an amateur radio license or CWOP identifier (more on that below).
@@ -18,10 +18,10 @@ $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -I example-igate-s
 Or, if you just want the raw packet for your own use, don't specify server information:
 ```console
 $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -t 68
-W1AW-13>APRS,TCPIP*:@210548z/9F,=<+74_  Ct068Xaprs-weather-submit/1.0
+W1AW-13>APRS,TCPIP*:@210548z/9F,=<+74_  Ct068Xaprs-weather-submit/1.1
 ```
 
-This app supports all of the weather data parameters defined in APRS versions up to and including version 1.2:
+This app supports all of the weather data parameters defined in APRS versions up to and including version 1.2.1:
 * Barometric pressure (`-b`, `--pressure`)
 * Luminosity (`-L`, `--luminosity`)
 * Radiation (`-X`, `--radiation`)
@@ -30,7 +30,8 @@ This app supports all of the weather data parameters defined in APRS versions up
 * Rainfall in the past hour (`-r`, `--rainfall-last-hour`)
 * Relative humidity (`-h`,` --humidity`)
 * Snowfall in the past 24 hours (`-s`, `--snowfall-last-24-hours`)
-* Temperature (`-t`, `--temperature`)
+* Temperature (°F) (`-t`, `--temperature`)
+* Temperature (°C) (`-T`, `--temperature-celsius`)
 * Water level above flood stage or mean tide (`-F`, `--water-level-above-stage`)
 * Weather station battery voltage (`-V`, `--voltage`)
 * Wind direction (`-c`, `--wind-direction`)
@@ -45,4 +46,4 @@ To use this app, you *must* be either:
 
 Like it says in the license:  this app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the [GNU General Public License 3.0](https://www.gnu.org/licenses/) for more details.  As such, you and you alone are solely responsible for using this app to submit complete and correct weather and/or location data.  Please do not use this app for evil.  Don't make me regret writing this app.
 
-73, KC1HBK
+QTH. 73, KC1HBK
