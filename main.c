@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.0
+ aprs-weather-submit version 1.1
  Copyright (c) 2019 Colin Cogle
  
  This file, main.c, is part of aprs-weather-submit.
@@ -55,6 +55,7 @@ int main(const int argc, char* const argv[]) {
 		{"wind-speed",				required_argument, 0, 'S'},
 		{"gust",					required_argument, 0, 'g'},
 		{"temperature",				required_argument, 0, 't'},
+		{"temperature-celsius",		required_argument, 0, 'T'},
 		{"rainfall-last-hour",		required_argument, 0, 'r'},
 		{"rainfall-last-24-hours",	required_argument, 0, 'p'},
 		{"rainfall-since-midnight",	required_argument, 0, 'P'},
@@ -74,7 +75,7 @@ int main(const int argc, char* const argv[]) {
 		int   option_index	= 0;	/* for getopt_long() */
 		float x				= 0.0;	/* scratch space */
 		
-		c = getopt_long(argc, argv, "HvI:o:u:d:k:n:e:c:S:g:t:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index);
+		c = getopt_long(argc, argv, "HvqI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index);
 		if (c == -1)
 			break;
 
@@ -189,12 +190,24 @@ int main(const int argc, char* const argv[]) {
 					snprintf(packet.gust, 4, "%03d", (int)(round(x)) );
 				}
 				break;
-			
-			/* Temperature in degrees Fahrenheit (-t | --temperature) */
+				
+				/* Temperature in degrees Fahrenheit (-t | --temperature) */
 			case 't':
 				x = atof(optarg);
-				if (x < 0 || x > 999) {
+				if (x < -99 || x > 999) {
 					fprintf(stderr, "%s: option `-%c' must be between -99 and 999 degrees Fahrenheit.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				} else {
+					snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
+				}
+				break;
+				
+			/* Temperature in degrees Celsius (-T | --temperature-celsius) */
+			case 'T':
+				x = atof(optarg);
+				x = x * 1.8 + 32;
+				if (x < -99 || x > 999) {
+					fprintf(stderr, "%s: option `-%c' must be between -72 and 537 degrees Celsius.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				} else {
 					snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
@@ -369,13 +382,11 @@ int main(const int argc, char* const argv[]) {
  * @since		0.1
  */
 void version(void) {
-	printf("\
-		   %s, version %s\n\
-		   Copyright (c) 2019 Colin Cogle.\n\
-		   This program comes with ABSOLUTELY NO WARRANTY. This is free software,\n\
-		   and you are welcome to redistribute it under certain conditions.  See\n\
-		   the GNU General Public License (version 3) for more details.\n\
-		   ", PROGRAM_NAME, VERSION);
+	printf("%s, version %s\n\
+Copyright (c) 2019 Colin Cogle.\n\
+This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n\
+are welcome to redistribute it under certain conditions.  See the GNU General\n\
+Public License (version 3.0) for more details.\n", PROGRAM_NAME, VERSION);
 	return;
 }
 
@@ -386,7 +397,7 @@ void version(void) {
  * @since		0.1
  */
 void usage(void) {
-	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER OPTIONS]\n", PROGRAM_NAME);
+	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER PARAMETERS]\n", PROGRAM_NAME);
 	return;
 }
 
@@ -398,38 +409,43 @@ void usage(void) {
  */
 void help(void) {
 	version();
+	puts("");
+	usage();
 	puts("\n\
-		 Special parameters:\n\
-		 -H, --help                        Show this help and exit.\n\
-		 -v, --version                     Show version and licensing information, and exit.\n\
-		 -q, --use-uncompressed-positions  Report with uncompressed position data.\n\
-		 \n\
-		 Required parameters:\n\
-		 -k, --callsign     Your callsign, with SSID if desired.\n\
-		 -e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n\
-		 -n, --latitude      The latitude of your weather station, in degrees north of the equator.\n\
-		 \n\
-		 APRS-IS IGate parameters:\n\
-		 -I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
-		 -o, --port          Port that the APRS-IS IGate service is listening on.\n\
-		 -u, --username      Authenticate to the server with this username.\n\
-		 -d, --password      Authenticate to the server with this password.\n\
-		 \n\
-		 Optional weather parameters:\n\
-		 -b, --pressure                 Barometric pressure (in millibars or hectopascals).\n\
-		 -c, --wind-direction           Direction that the wind is blowing (degrees).\n\
-		 -F, --water-level-above-stage  Water level above flood stage or mean tide (feet).\n\
-		 -g, --gust                     Peak wind speed in the last five minutes (miles per hour).\n\
-		 -h, --humidity                 Relative humidity (percentage).\n\
-		 -L, --luminosity               Luminosity (watts per square meter).\n\
-		 -p, --rainfall-last-24-hours   Total rainfall in the past 24 hours (inches).\n\
-		 -P, --rainfall-since-midnight  Total rainfall since midnight local time (inches).\n\
-		 -r, --rainfall-last-hour       Total rainfall in the past hour (inches).\n\
-		 -s, --snowfall-last-24-hours   Total snowfall in the past 24 hours (inches).\n\
-		 -S, --wind-speed               Sustained wind speed in the past minute (miles per hour).\n\
-		 -t, --temperature              Temperature (degrees Fahrenheit).\n\
-		 -V, --voltage                  Battery voltage of your weather station.\n\
-		 -X, --radiation                Radiation levels (nanosieverts per hour).\n\
-		 ");
+Special parameters:\n\
+	-H, --help                       Show this help and exit.\n\
+	-v, --version                    Show version and licensing information, and exit.\n\
+	-q, --use-uncompressed-positions Report with uncompressed position data.\n\
+\n\
+Required parameters:\n\
+	-k, --callsign      Your callsign, with SSID if desired.\n\
+	-e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n\
+	-n, --latitude      The latitude of your weather station, in degrees north of the equator.\n\
+\n\
+APRS-IS IGate parameters:\n\
+	-I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
+	-o, --port          Port that the APRS-IS IGate service is listening on.\n\
+	-u, --username      Authenticate to the server with this username.\n\
+	-d, --password      Authenticate to the server with this password.\n\
+\n\
+Optional weather parameters:\n\
+	-b, --pressure                 Barometric pressure (in millibars or hectopascals).\n\
+	-c, --wind-direction           Direction that the wind is blowing (degrees).\n\
+	-F, --water-level-above-stage  Water level above flood stage or mean tide (feet).\n\
+	-g, --gust                     Peak wind speed in the last five minutes (miles per hour).\n\
+	-h, --humidity                 Relative humidity (percentage).\n\
+	-L, --luminosity               Luminosity (watts per square meter).\n\
+	-p, --rainfall-last-24-hours   Total rainfall in the past 24 hours (inches).\n\
+	-P, --rainfall-since-midnight  Total rainfall since midnight local time (inches).\n\
+	-r, --rainfall-last-hour       Total rainfall in the past hour (inches).\n\
+	-s, --snowfall-last-24-hours   Total snowfall in the past 24 hours (inches).\n\
+	-S, --wind-speed               Sustained wind speed in the past minute (miles per hour).\n\
+	-t, --temperature              Temperature (degrees Fahrenheit).\n\
+	-T, --temperature-celsius      Temperature (degrees Celsius).\n\
+	-V, --voltage                  Battery voltage of your weather station.\n\
+	-X, --radiation                Radiation levels (nanosieverts per hour).\n\
+\n\
+Find this project online at https://github.com/rhymeswithmogul/aprs-weather-submit\n\
+");
 	return;
 }

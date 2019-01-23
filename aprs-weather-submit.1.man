@@ -1,0 +1,291 @@
+.\" aprs-weather-submit version 1.1
+.\" Copyright (c) 2019 Colin Cogle
+.\"
+.\" This file, aprs-weather-submit.1, is part of aprs-weather-submit.
+.\" 
+.\" aprs-weather-submit is free software: you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as published
+.\" by the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" aprs-weather-submit is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with aprs-weather-submit. If not, see <https://www.gnu.org/licenses/>.
+.\"
+.\" (This page is best viewed with the command: groff -man)
+.\"
+.TH aprs\-weather\-submit 1 "aprs-weather-submit" "January 23, 2019" "Version 1.1"
+.SH NAME
+aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
+.SH DESCRIPTION
+Not everyone has a fancy weather station with APRS connectivity built in.
+Maybe all you have is a thermometer and a rain gauge.
+This command-line app will manually submit APRS 1.2.1-compliant weather information to the APRS-IS network.
+.SH SYNOPSIS
+.PP
+.BR aprs\-weather\-submit " [" " \-H " | " \-v " ]
+.PP
+.BI "aprs\-weather\-submit \-k " CALLSIGN[-SSID] " \-n " LATITUDE " \-e " LONGITUDE
+.RB " [" " \-q " "]"
+[
+.BI "\-I " SERVER_NAME " \-o " PORT_NUMBER " \-u " USERNAME " \-d " PASSWORD
+]
+.RB [ " \-b "
+.IR MILLIBARS_OR_HECTOPASCALS " ]\:"
+.RB [ " \-c "
+.IR DEGREES " ]\:"
+.RB [ " \-F "
+.IR FEET " ]\:"
+.RB [ " \-g "
+.IR SPEED " ]\:"
+.RB [ " \-h "
+.IR PERCENTAGE " ]\:"
+.RB [ " \-L "
+.IR WATTS_PER_SQUARE_METER " ]\:"
+.RB [ " \-p "
+.IR INCHES " ]\:"
+.RB [ " \-P "
+.IR INCHES " ]\:"
+.RB [ " \-r "
+.IR INCHES " ]\:"
+.RB [ " \-s "
+.IR INCHES " ]\:"
+.RB [ " \-S "
+.IR SPEED " ]\:"
+.RB [ " \-t "
+.IR DEGREES_F " | " 
+.B "\-T "
+.IR DEGREES_C " ]\:"
+.RB [ " \-v "
+.IR VOLTS " ]\:"
+.RB [ " \-X "
+.IR NANOSIEVERTS " ]\:"
+
+.SH OPTIONS
+aprs-weather-submit is not interactive;
+please specify all of your input as command-line options.
+The equal signs ("=") are not required and are only shown for clarity.
+
+.SS SPECIAL OPTIONS
+.TP
+.BR \-H ", " \-\-help
+Show long help and exit.
+.TP
+.BR \-v ", " \-\-version
+Show version information and exit.
+.TP
+.BR \-q ", " \-\-use\-uncompressed\-position
+Report using uncompressed position data.
+By default, aprs\-weather\-submit will send packets with the position in compressed format.
+This option will decompress the latitude, longitude, wind direction, and wind speed information.
+
+.SS REQUIRED OPTIONS
+The APRS specification requires all packets to have a callsign, and strongly encourages all weather reports to have position information.
+(See the BUGS AND ERRATA section.)
+.TP
+.BR \-k ", " \-\-callsign =\fICALLSIGN[-SSID]\fP
+Required parameter.
+Enter your amateur radio callsign (with or without an SSID), or your Citizens Weather Observer Program identifier.
+.TP
+.BR \-n ", " \-\-latitude =\fILATITUDE\fP
+Required parameter.
+Enter your weather station's current latitude, in decimal degrees north of the Equator.
+For locations in the Southern Hemisphere, make the number negative.
+.TP
+.BR \-e ", " \-\-longitude =\fILONGITUDE\fP
+Required parameter.
+Enter your weather station's current longitude, in decimal degrees east of the Prime Meridian.
+For locations in the Western Hemisphere, make the number negative.
+
+.SS REQUIRED APRS-IS OPTIONS
+If you do not specify \fIall\fP of the following options to connect to and authenticate with an IGate, then the APRS packet will only be printed to stdout.
+.TP
+.BR \-I ", " \-\-server =\fISERVER_NAME\fP
+The IGate to which to send this packet.
+You can specify the server name or a literal IPv4 or IPv6 address.
+.TP
+.BR \-o ", " \-\-port =\fIPORT_NUMBER\fP
+The port on the IGate server that is accepting incoming connections.
+.TP
+.BR \-u ", " \-\-username =\fIUSERNAME\fP
+Authenticate to the server with this username.
+.TP
+.BR \-d ", " \-\-password =\fIPASSWORD\fP
+Authenticate to the server with this password.
+Note that this will be sent in cleartext!
+(See the BUGS AND ERRATA section.)
+
+.SS WEATHER OPTIONS
+You may add zero or more weather measurements to your report.
+All minimum and maximum measurements listed below are inclusive unless otherwise specified.
+All options accept measurements in whole numbers only, unless otherwise specified.
+.TP
+.BR \-b ", " \-\-pressure =\fIMILLIBARS_OR_HECTOPASCALS\fP
+The current barometric pressure.
+You may report values up to 9999.9 millibars or hectopascals, with a resolution of 0.1 mbar|hPa.
+(You don't need to specify the unit of measurement, as 1 mbar is equal to 1 hPa.)
+.TP
+.BR \-c ", " \-\-wind\-direction =\fIDEGREES\fP
+The direction in which the wind is blowing, as measured in degrees relative to north, from 0 to 360 degrees.
+If you specify a value outside of this range, it will be reduced (that is, a report of 361 degrees would be submitted as 1 degree).
+.TP
+.BR \-F ", " \-\-water\-level\-above\-stage =\fIFEET\fP
+(APRS 1.2)
+The water level above or below the flood stage or mean tide.
+You may report numbers from \-99.9 feet to 99.9 feet, with a resolution of 0.1 feet.
+.TP
+.BR \-g ", " \-\-gust =\fISPEED\fP
+The peak wind speed measured in the past five minutes.
+You may report speeds up to 999 miles per hour.
+.TP
+.BR \-h ", " \-\-humidity =\fIPERCENTAGE\fP
+The humidity relative to temperature.
+You may report whole numbers from 1% to 100%.
+(APRS does not permit reports of 0%, so those will be rounded up to 1%.)
+.TP
+.BR \-L ", " \-\-luminosity =\fIWATTS_PER_SQUARE_METER\fP
+The current light measurement.
+You may report whole numbers up to 1,999 watts per square meter.
+.TP
+.BR \-p ", " \-\-rainfall\-last\-24\-hours =\fIINCHES\fP
+How much rainfall was measured within the last twenty-four hours.
+You may report totals of up to 9.99 inches, with a resolution of one one-hundredth of an inch.
+.TP
+.BR \-P ", " \-\-rainfall\-since\-midnight =\fIINCHES\fP
+How much rainfall was measured since 12:00 AM local time.
+You may report totals of up to 9.99 inches, with a resolution of one one-hundredth of an inch.
+.TP
+.BR \-r ", " \-\-rainfall\-last\-hour =\fIINCHES\fP
+How much rainfall was measured in the last hour.
+You may report values of up to 9.99 inches, with a resolution of one one-hundredth of an inch.
+.TP
+.BR \-s ", " \-\-snowfall\-last\-24\-hours =\fIINCHES\fP
+How much snowfall was measured in the last twenty-four hours.
+You may report values of up to 999 inches.
+If you are reporting less than ten inches of snow, the resolution increases to one-tenth of an inch.
+.TP
+.BR \-S ", " \-\-wind\-speed =\fISPEED\fP
+The sustained one-minute wind speed.
+You may report speeds up to 999 miles per hour.
+.TP
+.BR \-t ", " \-\-temperature =\fIDEGREES_F\fP
+The current temperature.
+You may report temperatures between \-99 and 999 degrees Fahrenheit.
+.TP
+.BR \-T ", " \-\-temperature\-celsius =\fIDEGREES_C\fP
+The current temperature.
+You may report temperatures between approximately \-72 and 537 degrees Celsius, as your input must be converted to degrees Fahrenheit to be reported.
+If both \fB-t\fP and \fB-T\fP are specified, the last option specified will be reported.
+.TP
+.BR \-V ", " \-\-voltage =\fIVOLTS\fP
+(APRS 1.2)
+The battery voltage.
+You may report voltages of up to 99.9 volts, with a resolution of one-tenth of a volt.
+.TP
+.BR \-X ", " \-\-radiation =\fINANOSIEVERTS\fP
+(APRS 1.2)
+The current level of nuclear radiation.
+You may report readings of up to 99,000,000,000 nanosieverts per hour, though the resolution of the value put into your report varies based on orders of magnitude.
+Consult the APRS 1.2 specification for full details.
+.SH EXAMPLES
+.PP
+If you were operating the ARRL's (theoretical) weather station at their headquarters and wanted to submit a temperature of 68 degrees Fahrenheit, no rainfall, and a westerly wind at about five miles per hour, use this command:
+.nf
+.RS
+.B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-I example-igate-server.foo \-o 12345 \-u hiram \-d percymaxim \-t 68 \-p 0 \-S 5 \-c 270
+.RE
+.fi
+.PP
+If you wanted to print an APRS packet showing the current barometric pressure of 990.1 mbar and a temperature of -1 degree Fahrenheit:
+.nf
+.RS
+.B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-b 990.1 \-t \-1
+W1AW-13>APRS,TCPIP*:@230338z/9F,=<+74_  Ct0-1b09901Xaprs-weather-submit/1.1
+.RE
+.fi
+.PP
+You could pipe the packet to another command, for example, one that would output it via a sound card into your radio:
+.nf
+.RS
+.B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-b 990.1 \-t \-1 \: | ./hypothetical\-send\-to\-radio\-app
+.RE
+.fi
+
+.SH EXIT STATUS
+.PP
+.B EXIT_SUCCESS
+If all inputs were correct and within the range,
+all mandatory options were included,
+and if \fIboth\fP the user specified APRS-IS IGate server information \fIand\fP the packet was submitted successfully,
+then return \fBEXIT_SUCCESS\fP (0).
+.PP
+.B EXIT_FAILURE
+Return \fBEXIT_FAILURE\fP (1) if something went wrong, including but not limited to:
+bad parameters,
+missing callsign,
+missing position data,
+weather measurements out of range,
+failure to authenticate with the APRS-IS server,
+failure to connect to the APRS-IS server,
+or some other unexpected failure.
+.SH BUGS AND ERRATA
+.PP
+This app does not allow submitting WinAPRS-style positionless weather reports as defined in APRS 1.0.
+However, APRS 1.2.1 says that the raw and positionless formats are "strongly discouraged for use."
+There are no plans to implement this deprecated functionality.
+.PP
+The -q/-\-use\-uncompressed\-position switch is not yet implemented.
+This is a known issue.
+For now, all positions are always sent in compressed format, unless this app was compiled without \fB-D\fICOMPRESS_POSITIONS\fR.
+.PP
+You cannot connect to an APRS-IS IGate that does \fInot\fP require authentication.
+The developer assumed that all APRS-IS servers would want to authenticate people sending in data to be published to the entire world.
+This will be fixed in a future release.
+.PP
+APRS-IS usernames and passwords, as well as your packet, are sent over the Internet in cleartext.
+This app does not use TLS to secure the data in transit, nor is the developer aware of such a protocol.
+(If secure APRS-IS exists, please let me know and I'll code it!)
+
+.SH NOTES
+Some older apps and devices may unintentionally display the new APRS 1.2 measurements (radiation, water level, and voltage) as a comment rather than a measurement.
+This is compliant with the APRS specification and not a bug in this app.
+
+.SH STANDARDS CONFORMING TO
+.TP
+.UR http://\:www.aprs.org/\:doc/\:APRS101.PDF
+.B "APRS Protocol Reference: Protocol Version 1.0" (29 Aug 2000)
+.UE
+.TP
+\fBAPRS Version 1.1 Errata (3 Nov 2011)
+.TP
+.UR http://\:www.aprs.org/\:aprs11\:spec-wx.txt
+"APRS Weather Specification Comments" (24 Mar 2011)
+.UE
+.TP
+.UR http://\:www.aprs.org/\:aprs12/\:weather-new.txt
+\fBAPRS Version 1.2.1\fP, "Weather Updates to the Spec" (24 Mar 2011)
+.UE
+
+.SH AUTHOR AND COPYRIGHT
+.BR aprs\-weather\-submit ", version 1.1"
+.br
+Copyright (c) 2019 Colin Cogle.
+.br
+This program comes with ABSOLUTELY NO WARRANTY.
+This is free software, and you are welcome to redistribute it under certain conditions.
+See the
+.UR https://\:www.gnu.org/\:licenses/
+GNU General Public License (version\ 3.0)
+.UE
+for more details.
+.PP
+Bug reports and contributions should be made on this project's GitHub page:
+.UR https://\:github.com/\:rhymeswithmogul/\:aprs-weather-submit
+.I https://\:github.com/\:rhymeswithmogul/\:aprs-weather-submit
+.UE
+.PP
+QRT. 73 de KC1HBK

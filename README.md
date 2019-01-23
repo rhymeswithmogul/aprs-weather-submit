@@ -1,22 +1,22 @@
 # aprs-weather-submit
-Not everyone has a fancy weather station with APRS connectivity built in.  Maybe you're like me, and have an old-school thermometer and CoCoRaHS-approved rain gauge.  This command-line app, written in classic K&R C, can compile on most Linux toolchains and will manually submit weather information to the APRS-IS network.
+Not everyone has a fancy weather station with APRS connectivity built in.  Maybe you're like me, and have an old-school thermometer and CoCoRaHS-approved rain gauge.  This command-line app, written in classic K&R C, can compile on most Linux toolchains and will manually submit APRS 1.2-compliant weather information to the APRS-IS network.
 
 ## Help
-Anyone can use this app to create an APRS 1.2-compliant packet.  However, to send it to the APRS-IS network, you must have an account on an APRS-IS IGate server.
+Anyone can use this app to create [an APRS packet](http://www.aprs.org/doc/APRS101.PDF).  However, to send it to the APRS-IS network, you must have an account on an APRS-IS IGate server, as well as an amateur radio license or CWOP identifier (more on that below).
 
 ## Examples
 At the bare minimum, you can submit your weather station's position with a command line like this:
-```bash
-./aprs-weather-submit --callsign W1AW-13 --latitude 41.714692 --longitude -72.728514 --server example-igate-server.foo --port 12345 --username hiram --password percymaxim
+```console
+$ ./aprs-weather-submit --callsign W1AW-13 --latitude 41.714692 --longitude -72.728514 --server example-igate-server.foo --port 12345 --username hiram --password percymaxim
 ```
 
 If you'd like to report a temperature of 68°F, you can use a command like this:
-```bash
-./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -I example-igate-server.foo -o 12345 -u hiram -d percymaxim -t 68
+```console
+$ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -I example-igate-server.foo -o 12345 -u hiram -d percymaxim -t 68
 ```
 
 Or, if you just want the raw packet for your own use, don't specify server information:
-```bash
+```console
 $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -t 68
 W1AW-13>APRS,TCPIP*:@210548z/9F,=<+74_  Ct068Xaprs-weather-submit/1.0
 ```
