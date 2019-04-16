@@ -1,4 +1,4 @@
-### Version 1.2
+## Version 1.2
 <time datetime="2019-04-16T03:10:07-04:00">April 16, 2019</time>
 * Added preliminary support for compiling on Windows.
 * Added the option of using APRS uncompressed positions at runtime with the  <tt>--uncompressed-position</tt> switch, rather than a compile-time choice.
