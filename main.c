@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.1
+ aprs-weather-submit version 1.2
  Copyright (c) 2019 Colin Cogle
  
  This file, main.c, is part of aprs-weather-submit.
@@ -23,22 +23,35 @@
 #include "aprs-is.h"
 #include <stdio.h>		/* *printf(), *puts(), and friends */
 #include <stdlib.h>		/* atof(), EXIT_SUCCESS, EXIT_FAILURE */
-#include <getopt.h>		/* getopt_long() */
 #include <string.h>		/* str*cpy() and friends */
-#include <math.h>		/* round() */
+#include <math.h>		/* round(), floor() */
+
+#ifndef _WIN32
+#include <getopt.h>			/* getopt_long() */
+#else
+#include "getopt-windows.h" /* getopt_long() */
+#endif
+
+#ifndef MAX
+#define MAX(a,b) ((a) < (b) ? (a) : (b))
+#endif
 
 int main(const int argc, char* const argv[]) {
-	char			packetToSend[601] = "\0"; /* 600 bytes can be sent in one second at 1200 baud */
-	char			username[BUFSIZE] = "\0";
-	char			password[BUFSIZE] = "\0";
-	char			server[NI_MAXHOST];
-	unsigned short	port = 0;
-	APRSPacket		packet;
-	
+	char		    packetToSend[BUFSIZE] = "";
+	char		    username[BUFSIZE] = "";
+	char		    password[BUFSIZE] = "";
+	char		    server[NI_MAXHOST] = "";
+    char            packetFormat = COMPRESSED_PACKET;
+    unsigned int    i = 0;
+	uint16_t	    port = 0;
+	APRSPacket	    packet;
+	int			    option_index = 0;	/* for getopt_long() */
+	char		    c = '\0';			/* for getopt_long() */
+
 	const static struct option long_options[] = {
+		{"uncompressed-position",	no_argument,       0, '0'},
 		{"help",					no_argument,       0, 'H'},
 		{"version",					no_argument,       0, 'v'},
-/*		{"uncompressed-positions",	no_argument,       0, 'q'}, */
 		{"server",					required_argument, 0, 'I'},
 		{"port",					required_argument, 0, 'o'},
 		{"username",				required_argument, 0, 'u'},
@@ -47,9 +60,9 @@ int main(const int argc, char* const argv[]) {
 		{"latitude",				required_argument, 0, 'n'},
 		{"longitude",				required_argument, 0, 'e'},
 		/*
-		 	The following options are using APRS-standard short options,
-		 	for clarity.  The exception is wind speed, because that's
-		 	overloaded with snowfall ('s').
+			The following options are using APRS-standard short options,
+			for clarity.  The exception is wind speed, because that's
+			overloaded with snowfall ('s').
 		 */
 		{"wind-direction",			required_argument, 0, 'c'},
 		{"wind-speed",				required_argument, 0, 'S'},
@@ -68,19 +81,34 @@ int main(const int argc, char* const argv[]) {
 		{"voltage",					required_argument, 0, 'V'}, /* APRS 1.2 */
 		{0, 0, 0, 0}
 	};
-	
+
+#ifdef DEBUG
+    puts("Compiled with debugging output.\n");
+#endif
 	packetConstructor(&packet);
-	while (1) {
-		char  c				= '\0'; /* for getopt_long() */
-		int   option_index	= 0;	/* for getopt_long() */
-		float x				= 0.0;	/* scratch space */
-		
-		c = getopt_long(argc, argv, "HvqI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index);
-		if (c == -1)
-			break;
+    
+    /* Check for --uncompressed-position early. */
+    for (i = 0; i < argc; i++) {
+        if (
+            strncmp(argv[i], "-0", MAX(2, strlen(argv[i]))) == 0 ||
+            strncmp(argv[i], "--uncompressed-position", MAX(23, strlen(argv[i]))) == 0
+        ) {
+            packetFormat = UNCOMPRESSED_PACKET;
+            strcpy(packet.windDirection, "...");
+            strcpy(packet.windSpeed, "...");
+            break;
+        }
+    }
+
+	while ((c = (char)getopt_long(argc, argv, "0HvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1) {
+		double x = 0.0;	 /* scratch space */
 
 		switch (c) {
-			/* Complete help (-H | --help) */
+            /* --uncompressed-position was already handled */
+            case '0':
+                break;
+                
+            /* Complete help (-H | --help) */
 			case 'H':
 				help();
 				return EXIT_SUCCESS;
@@ -89,7 +117,7 @@ int main(const int argc, char* const argv[]) {
 			case 'v':
 				version();
 				return EXIT_SUCCESS;
-			
+                
 			/* IGate server name (-I | --server) */
 			case 'I':
 				snprintf(server, strlen(optarg)+1, "%s", optarg);
@@ -97,12 +125,12 @@ int main(const int argc, char* const argv[]) {
 			
 			/* IGate server port (-o | --port) */
 			case 'o':
-				x = atoi(optarg);
+				x = (double)atoi(optarg);
 				if (x <= 0 || x > 65535) {
 					fprintf(stderr, "%s: argument for option '-%c' was invalid.  Valid port numbers are 1 through 65535.", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
-				port = x;
+				port = (unsigned short)x;
 				break;
 				
 			/* IGate server username (-u | --username) */
@@ -127,11 +155,12 @@ int main(const int argc, char* const argv[]) {
 					fprintf(stderr, "%s: option `-%c' must be between -90 and 90 degrees north.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				} else {
-#ifdef COMPRESS_POSITION
-					compressedPosition(packet.latitude, x, IS_LATITUDE);
-#else
-					uncompressedPosition(packet.latitude, x, IS_LATITUDE);
-#endif
+					if (packetFormat == COMPRESSED_PACKET) {
+						compressedPosition(packet.latitude, x, IS_LATITUDE);
+					}
+					else {
+						uncompressedPosition(packet.latitude, x, IS_LATITUDE);
+					}
 				}
 				break;
 			
@@ -141,12 +170,14 @@ int main(const int argc, char* const argv[]) {
 				if (x < -180 || x > 180) {
 					fprintf(stderr, "%s: option `-%c' must be between -180 and 180 degrees east.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
-#ifdef COMPRESS_POSITION
-					compressedPosition(packet.longitude, x, IS_LONGITUDE);
-#else
-					uncompressedPosition(packet.longitude, x, IS_LONGITUDE);
-#endif
+				}
+				else {
+					if (packetFormat == COMPRESSED_PACKET) {
+						compressedPosition(packet.longitude, x, IS_LONGITUDE);
+					}
+					else {
+						uncompressedPosition(packet.longitude, x, IS_LONGITUDE);
+					}
 				}
 				break;
 			
@@ -154,14 +185,15 @@ int main(const int argc, char* const argv[]) {
 			case 'c':
 				x = atof(optarg);
 				if (x < 0 || x > 360) {
-					fprintf(stderr, "%s: option `-%c' must be between -180 and 180 degrees east.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between 0 and 360 degrees.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				} else {
-#ifdef COMPRESS_POSITION
-					snprintf(packet.windDirection, 2, "%c", compressedWindDirection((int)x % 360));
-#else
-					snprintf(packet.windDirection, 4, "%03d", (int)(round(x)) % 360 );
-#endif
+					if (packetFormat == COMPRESSED_PACKET) {
+						snprintf(packet.windDirection, 2, "%c", compressedWindDirection((int)x % 360));
+					}
+					else {
+						snprintf(packet.windDirection, 4, "%03d", (int)(round(x)) % 360);
+					}
 				}
 				break;
 			
@@ -172,11 +204,12 @@ int main(const int argc, char* const argv[]) {
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 999 miles per hour.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				} else {
-#ifdef COMPRESS_POSITION
-					snprintf(packet.windSpeed, 2, "%c", compressedWindSpeed(x));
-#else
-					snprintf(packet.windSpeed, 4, "%03d", (int)(round(x)) );
-#endif
+					if (packetFormat == COMPRESSED_PACKET) {
+						snprintf(packet.windSpeed, 2, "%c", compressedWindSpeed( (const uint16_t)x  ) );
+					}
+					else {
+						snprintf(packet.windSpeed, 4, "%03d", (int)(round(x)));
+					}
 				}
 				break;
 
@@ -191,7 +224,7 @@ int main(const int argc, char* const argv[]) {
 				}
 				break;
 				
-				/* Temperature in degrees Fahrenheit (-t | --temperature) */
+			/* Temperature in degrees Fahrenheit (-t | --temperature) */
 			case 't':
 				x = atof(optarg);
 				if (x < -99 || x > 999) {
@@ -271,7 +304,7 @@ int main(const int argc, char* const argv[]) {
 					fprintf(stderr, "%s: option `-%c' must be between 0%% and 100%%.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				} else {
-					unsigned short int h = round(x);
+					unsigned short int h = (unsigned short)(round(x));
 					/* APRS only supports values 1-100. Round 0% up to 1%. */
 					if (h == 0) {
 						h = 1;
@@ -363,14 +396,14 @@ int main(const int argc, char* const argv[]) {
 	}
 	
 	/* Create the APRS packet. */
-	printAPRSPacket(&packet, packetToSend);
-	
+	printAPRSPacket(&packet, packetToSend, packetFormat);
+
 	/* If we specified all of the server information, send the packet.
 	 * Otherwise, print the packet to stdout and let the user deal with it. */
 	if (strlen(server) && strlen(username) && strlen(password) && port != 0) {
 		sendPacket(server, port, username, password, packetToSend);
 	} else {
-		puts(packetToSend);
+		fputs(packetToSend, stdout);
 	}
 	return EXIT_SUCCESS;
 }
@@ -387,6 +420,9 @@ Copyright (c) 2019 Colin Cogle.\n\
 This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n\
 are welcome to redistribute it under certain conditions.  See the GNU General\n\
 Public License (version 3.0) for more details.\n", PROGRAM_NAME, VERSION);
+#ifdef DEBUG
+    puts("Compiled with debugging output.");
+#endif
 	return;
 }
 
@@ -415,7 +451,7 @@ void help(void) {
 Special parameters:\n\
 	-H, --help                       Show this help and exit.\n\
 	-v, --version                    Show version and licensing information, and exit.\n\
-	-q, --use-uncompressed-positions Report with uncompressed position data.\n\
+	--uncompressed-position          Create a packet with the uncompressed position format (deprecated).\n\
 \n\
 Required parameters:\n\
 	-k, --callsign      Your callsign, with SSID if desired.\n\

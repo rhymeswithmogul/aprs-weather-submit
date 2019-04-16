@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.1
+ aprs-weather-submit version 1.2
  Copyright (c) 2019 Colin Cogle
  
  This file, aprs-is.h, is part of aprs-weather-submit.
@@ -39,5 +39,11 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 #ifndef NI_MAXHOST
 #define NI_MAXHOST 1025
 #endif
+
+/* This is not defined on Windows by default, it seems. */
+#ifndef EAI_SYSTEM
+#define EAI_SYSTEM -11
+#endif
+
 
 #endif /* aprs_is_h */

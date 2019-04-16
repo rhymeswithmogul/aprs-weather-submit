@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.1
+ aprs-weather-submit version 1.2
  Copyright (c) 2019 Colin Cogle
  
  This file, aprs.c, is part of aprs-weather-submit.
@@ -22,8 +22,7 @@
 #include <string.h>	/* strcpy(), strncpy(), strncat(), strlen() */
 #include <math.h>	/* floor(), round(), pow(), fabs() */
 #include <time.h>	/* struct tm, time_t, time(), gmtime() */
-#include <stdint.h>	/* uint32_t */
-#include "main.h"	/* PROGRAM_NAME, VERSION */
+#include "main.h"	/* PROGRAM_NAME, VERSION, BUFSIZE */
 #include "aprs-wx.h"
 
 /**
@@ -36,13 +35,8 @@ void packetConstructor(APRSPacket* const p) {
 	strcpy(p->callsign, "");
 	strcpy(p->latitude, "");
 	strcpy(p->longitude, "");
-#ifdef COMPRESS_POSITION
 	strcpy(p->windDirection, " ");
 	strcpy(p->windSpeed, " ");
-#else
-	strcpy(p->windDirection, "...");
-	strcpy(p->windSpeed, "...");
-#endif
 	strcpy(p->gust, "..");
 	strcpy(p->temperature, "...");
 	strcpy(p->rainfallLastHour, "...");
@@ -55,9 +49,9 @@ void packetConstructor(APRSPacket* const p) {
 	strcpy(p->waterLevel, "....");
 	strcpy(p->voltage, "...");
 	strcpy(p->snowfallLast24Hours, "...");
+    return;
 }
 
-#ifdef COMPRESS_POSITION
 /**
  * compressedWindSpeed() -- return an APRS-compressed wind speed.
  *
@@ -93,24 +87,30 @@ char compressedWindDirection(const unsigned short direction) {
  * @param isLongitude	The constant IS_LATITUDE or IS_LONGITUDE.
  * @since				0.2
  */
-void compressedPosition(char* const pResult, const float decimal, const char isLongitude) {
-	uint32_t x = 190463;
+void compressedPosition(char* const pResult, const double decimal, const char isLongitude) {
+    char         pos = 0;       /* iterator */
+	unsigned int x   = 190463;  /* magic number for longitude (see APRS 1.0 spec, p. 38) */
+    
 	if (isLongitude == IS_LONGITUDE) {
-		x *= (180 + decimal);
+		x = (unsigned int)(x * (180 + decimal));
 	} else {
-		x *= 2 * (90 - decimal);
+        /* The magic number for latitude is exactly twice that of longitude, so
+           that's why we're doubling it here (also on p. 38 of the APRS spec). */
+		x = (unsigned int)(x * 2 * (90 - decimal));
 	}
 	
-	for (char pos = 0; pos < 3; pos++) {
-		uint32_t divisor = (uint32_t)pow(91, 3 - pos);
-		uint32_t result = floor(x / divisor);
-		pResult[(int)pos] = result + 33;
+	for (; pos < 3; pos++) {
+		unsigned int divisor = (unsigned int)pow(91, 3 - pos);
+		unsigned int result  = (unsigned int)floor(x / divisor);
+        pResult[(unsigned int)pos] = (char)(result + 33);
 		x %= divisor;
 	}
-	pResult[3] = (x % 91) + 33;
+	pResult[3] = (char)((x % 91) + 33);
 	pResult[4] = '\0';
+
+    return;
 }
-#else /* COMPRESS_POSITION */
+
 
 /**
  * uncompressedPosition() -- return an APRS-uncompressed latitude or longitude value.
@@ -121,38 +121,35 @@ void compressedPosition(char* const pResult, const float decimal, const char isL
  * @param isLongitude	The constant IS_LATITUDE or IS_LONGITUDE.
  * @since				0.2
  */
-void uncompressedPosition(char* const pResult, float decimal, const char isLongitude) {
-	char			format[16] = "%02d%02u.%02u%c";
-	signed short	degrees;
-	unsigned short	minutes = 0;
-	unsigned short	seconds = 0;
-	char			direction = '.';
-	
-	if (isLongitude == IS_LONGITUDE) {
-		format[2] = '3';
-		direction = (decimal < 0 ? 'W' : 'E');
-	} else {
-		direction = (decimal < 0 ? 'S' : 'N');
-	}
-	
+void uncompressedPosition(char* const pResult, double decimal, const char isLongitude) {
+	signed char 	degrees;
+	unsigned char	minutes = 0;
+	unsigned char	seconds = 0;
+
 	if (decimal > 90) {
 		degrees = 90;
 	}
 	else if (decimal < -90) {
 		degrees = -90;
-	} else {
+	}
+	else {
 		decimal = fabs(decimal);
-		degrees = floor(decimal);
+		degrees = (signed char)floor(decimal);
 		decimal -= degrees;
 		decimal *= 60;
-		minutes = floor(decimal);
-		seconds = floor((decimal - minutes) * 60);
+		minutes = (unsigned char)floor(decimal);
+		seconds = (unsigned char)floor((decimal - minutes) * 60);
 	}
 	
-	/* 10 = length of char[] longitude */
-	snprintf(pResult, 10, format, degrees, minutes, seconds, direction);
+	if (isLongitude == IS_LATITUDE) {
+		snprintf(pResult, 9, "%02d%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'W' : 'E'));
+	}
+	else {
+		snprintf(pResult, 10, "%03d%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'S' : 'N'));
+	}
+    
+    return;
 }
-#endif /* COMPRESS_POSITION */
 
 /**
  * rain() -- format a rainfall measurement
@@ -162,8 +159,9 @@ void uncompressedPosition(char* const pResult, float decimal, const char isLongi
  * @param precip	A constant representing how much precipiation precipitated.
  * @since			0.2
  */
-void rain(char* const pResult, const float precip) {
+void rain(char* const pResult, const double precip) {
 	snprintf(pResult, 4, "%03d", (unsigned short)precip);
+    return;
 }
 
 /**
@@ -189,22 +187,24 @@ int notNull(const char* const val) {
  * @param ret	A constant pointer to a string that will hold the return value.
  * @since		0.1
  */
-void printAPRSPacket(APRSPacket* const p, char* const ret) {
-	char result[601]; /* one second's worth of data at 1200 baud + \0 */
+void printAPRSPacket(APRSPacket* const p, char* const ret, char compressPacket) {
+	char result[BUFSIZE] = "\0";
 	time_t t = time(NULL);
 	struct tm *now = gmtime(&t); /* APRS uses GMT */
-	
-#ifdef COMPRESS_POSITION
-	/*                    header_________ timestamp____ pos_wc_s_ T__*/
-	snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
-			 p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
-			 p->latitude, p->longitude, p->windDirection[0], p->windSpeed[0], p->temperature);
-#else
-	/*                    header_________ timestamp____pos__wc_ s_T__*/
-	snprintf(result, 61, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%st%s",
-			 p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
-			 p->latitude, p->longitude, p->windDirection, p->windSpeed, p->temperature);
-#endif
+
+	if (compressPacket == COMPRESSED_PACKET) {
+		/*                    header_________ timestamp____ pos_wc_s_ T__*/
+		snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
+			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
+			p->latitude, p->longitude, p->windDirection[0], p->windSpeed[0], p->temperature);
+	}
+	else {
+		/*                    header_________ timestamp____pos__wc_ s_T__*/
+		snprintf(result, 61, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%st%s",
+			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
+			p->latitude, p->longitude, p->windDirection, p->windSpeed, p->temperature);
+	}
+
 	if (notNull(p->gust)) {
 		strncat(result, "g", 1);
 		strncat(result, p->gust, 3);
@@ -256,5 +256,6 @@ void printAPRSPacket(APRSPacket* const p, char* const ret) {
 	strncat(result, "/", 1);
 	strncat(result, VERSION, strlen(VERSION));
 	strncat(result, "\n\0", 2);
-	strncpy(ret, result, (sizeof(ret) < strlen(result) ? strlen(result) : sizeof(ret)));
+    strncpy(ret, result, strlen(result));
+    return;
 }

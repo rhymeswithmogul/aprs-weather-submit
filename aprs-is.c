@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.1
+ aprs-weather-submit version 1.2
  Copyright (c) 2019 Colin Cogle
  
  This file, aprs-is.c, is part of aprs-weather-submit.
@@ -21,13 +21,19 @@
 #include <stdio.h>		/* fprintf(), printf(), fputs() */
 #include <stdlib.h>		/* malloc(), free(), exit() and constants */
 #include <string.h>		/* str?cat() */
-#include <sys/socket.h>	/* socket(), connect(), shutdown() */
-#include <unistd.h>		/* read() */
+#include "main.h"		/* PROGRAM_NAME, VERSION */
+#include "aprs-is.h"
+
+#ifndef _WIN32
+#include <sys/socket.h>	/* socket(), connect(), shutdown(), recv(), send() */
 #include <netinet/in.h>	/* sockaddr, sockaddr_in, sockaddr_in6 */
 #include <arpa/inet.h>	/* inet_pton() */
 #include <netdb.h>		/* getaddrinfo() */
-#include "main.h"		/* PROGRAM_NAME, VERSION */
-#include "aprs-is.h"
+#include <unistd.h>		/* EAI_SYSTEM */
+#else  /* _WIN32 */
+#include <WinSock2.h>	/* all that socket stuff on Windows */
+#include <WS2tcpip.h>	/* inet_pton() -- only available on Windows Vista and higher */
+#endif /* _WIN32 */
 
 /**
  * sendPacket() -- sends a packet to an APRS-IS IGate server.
@@ -41,7 +47,6 @@
  * @since 0.3
  */
 void sendPacket(const char* const server, const unsigned short port, const char* const username, const char* const password, const char* const toSend) {
-	int					socket_desc = -1;
 	int					error = 0;
 	int					bytesRead = 0;
 	char				authenticated = 0;
@@ -50,6 +55,19 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 	struct addrinfo*	results;
 	char				verificationMessage[BUFSIZE];
 	char*				buffer = malloc(BUFSIZE);
+#ifndef _WIN32
+	int					socket_desc = -1;
+#else
+	SOCKET				socket_desc = INVALID_SOCKET;
+	int					wsaResult;
+	WSADATA				wsaData;
+
+	wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
+	if (wsaResult != 0) {
+		fprintf(stderr, "WinSock2: WSAStartup failed with error: %d\n", wsaResult);
+		exit(EXIT_FAILURE);
+	}
+#endif
 	
 	error = getaddrinfo(server, NULL, NULL, &results);
 	if (error != 0) {
@@ -62,7 +80,7 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 	}
 	
 	for (result = results; result != NULL; result = result->ai_next) {
-		/* For readability: */
+		/* For readability later: */
 		struct sockaddr* const addressinfo = result->ai_addr;
 		
 		socket_desc = socket(addressinfo->sa_family, SOCK_STREAM, IPPROTO_TCP);
@@ -82,19 +100,22 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 		}
 		
 		/* Connect */
-#ifdef DEBUG
 		switch (addressinfo->sa_family) {
 			case AF_INET:
 				inet_ntop(AF_INET, &((struct sockaddr_in*)addressinfo)->sin_addr, buffer, INET_ADDRSTRLEN);
+#ifdef DEBUG
 				printf("Connecting to %s:%d...\n", buffer, ntohs(((struct sockaddr_in*)addressinfo)->sin_port));
-				break;
+#endif
+                break;
 			case AF_INET6:
 				inet_ntop(AF_INET6, &((struct sockaddr_in6*)addressinfo)->sin6_addr, buffer, INET6_ADDRSTRLEN);
-				printf("Connecting to [%s]:%d...\n", buffer, ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port));
-				break;
-		}
+#ifdef DEBUG
+                printf("Connecting to [%s]:%d...\n", buffer, ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port));
 #endif
-		if (connect(socket_desc, addressinfo, result->ai_addrlen) >= 0) {
+                break;
+		}
+
+        if (connect(socket_desc, addressinfo, (size_t)(result->ai_addrlen)) >= 0) {
 			foundValidServerIP = 1;
 			break; /* for loop */
 		}
@@ -114,11 +135,11 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 #ifdef DEBUG
 	printf("> %s", buffer);
 #endif
-	send(socket_desc, buffer, strlen(buffer), 0);
+	send(socket_desc, buffer, (size_t)strlen(buffer), 0);
 	
-	strncpy(verificationMessage, username, strlen(username)+1);
+	strncpy(verificationMessage, username, (size_t)strlen(username)+1);
 	strncat(verificationMessage, " verified", 9);
-	bytesRead = read(socket_desc, buffer, BUFSIZE);
+	bytesRead = recv(socket_desc, buffer, BUFSIZE, 0);
 	while (bytesRead > 0) {
 		buffer[bytesRead] = '\0';
 #ifdef DEBUG
@@ -128,7 +149,7 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 			authenticated = 1;
 			break;
 		} else {
-			bytesRead = read(socket_desc, buffer, BUFSIZE);
+			bytesRead = recv(socket_desc, buffer, BUFSIZE, 0);
 		}
 	}
 	free(buffer);
@@ -139,9 +160,9 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 	
 	/* Send packet */
 #ifdef DEBUG
-	printf("> %s\n", toSend);
+	printf("> %s", toSend);
 #endif
-	send(socket_desc, toSend, strlen(toSend), 0);
+	send(socket_desc, toSend, (size_t)strlen(toSend), 0);
 	shutdown(socket_desc, 2);
 	return;
 }

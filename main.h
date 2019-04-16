@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.1
+ aprs-weather-submit version 1.2
  Copyright (c) 2019 Colin Cogle
  
  This file, main.h, is part of aprs-weather-submit.
@@ -23,16 +23,7 @@
 
 /* Program constants. */
 #define PROGRAM_NAME "aprs-weather-submit"
-#define VERSION      "1.0"
-
-/*
- * By default, compress APRS positions.  It's better over the air.
- * For whatever reason, if you want to send uncompressed positions,
- * make sure this doesn't get #define'd.
- */
-#ifndef COMPRESS_POSITION
-#define COMPRESS_POSITION
-#endif
+#define VERSION      "1.2"
 
 /**
  * usage() -- show some help.
