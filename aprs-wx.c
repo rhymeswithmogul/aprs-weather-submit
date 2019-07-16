@@ -121,10 +121,11 @@ void compressedPosition(char* const pResult, const double decimal, const char is
  * @param isLongitude	The constant IS_LATITUDE or IS_LONGITUDE.
  * @since				0.2
  */
-void uncompressedPosition(char* const pResult, double decimal, const char isLongitude) {
+void uncompressedPosition(char* const pResult, const double decimal, const char isLongitude) {
 	signed char   degrees;
 	unsigned char minutes = 0;
 	unsigned char seconds = 0;
+	float         x;
 
 	if (decimal > 90) {
 		degrees = 90;
@@ -133,12 +134,12 @@ void uncompressedPosition(char* const pResult, double decimal, const char isLong
 		degrees = -90;
 	}
 	else {
-		decimal = fabs(decimal);
-		degrees = (signed char)floor(decimal);
-		decimal -= degrees;
-		decimal *= 60;
-		minutes = (unsigned char)floor(decimal);
-		seconds = (unsigned char)floor((decimal - minutes) * 60);
+		x = fabs(decimal);
+		degrees = (signed char)floor(x);
+		x -= degrees;
+		x *= 60;
+		minutes = (unsigned char)floor(x);
+		seconds = (unsigned char)floor((x - minutes) * 60);
 	}
 
 	if (isLongitude == IS_LATITUDE) {
