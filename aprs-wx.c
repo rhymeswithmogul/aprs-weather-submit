@@ -124,7 +124,7 @@ void compressedPosition(char* const pResult, const double decimal, const char is
 void uncompressedPosition(char* const pResult, double decimal, const char isLongitude) {
 	signed char   degrees;
 	unsigned char minutes = 0;
-	unsigned char.seconds = 0;
+	unsigned char seconds = 0;
 
 	if (decimal > 90) {
 		degrees = 90;
