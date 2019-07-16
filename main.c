@@ -25,6 +25,7 @@
 #include <stdlib.h>		/* atof(), EXIT_SUCCESS, EXIT_FAILURE */
 #include <string.h>		/* str*cpy() and friends */
 #include <math.h>		/* round(), floor() */
+#include <stdint.h>		/* uint16_t */
 
 #ifndef _WIN32
 #include <getopt.h>			/* getopt_long() */
