@@ -25,7 +25,7 @@
 #include <stdlib.h>		/* atof(), EXIT_SUCCESS, EXIT_FAILURE */
 #include <string.h>		/* str*cpy() and friends */
 #include <math.h>		/* round(), floor() */
-#include <stdint.h>		/* uint16_t */
+#include <stdint.h>		/* uint16_t*/
 
 #ifndef _WIN32
 #include <getopt.h>			/* getopt_long() */
@@ -37,17 +37,17 @@
 #define MAX(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
-int main(const int argc, char* const argv[]) {
+int main(const int argc, const char** argv) {
 	char         packetToSend[BUFSIZE] = "";
 	char         username[BUFSIZE] = "";
-	char.        password[BUFSIZE] = "";
+	char         password[BUFSIZE] = "";
 	char         server[NI_MAXHOST] = "";
 	char         packetFormat = COMPRESSED_PACKET;
 	unsigned int i = 0;
-	uint16_t.    port = 0;
-	APRSPacket.  packet;
+	uint16_t     port = 0;
+	APRSPacket   packet;
 	int          option_index = 0;  /* for getopt_long() */
-	char.        c = '\0';          /* for getopt_long() */
+	char         c = '\0';          /* for getopt_long() */
 
 	const static struct option long_options[] = {
 		{"uncompressed-position",   no_argument,       0, '0'},
@@ -101,7 +101,7 @@ int main(const int argc, char* const argv[]) {
 		}
 	}
 
-	while ((c = (char)getopt_long(argc, argv, "0HvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1) {
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "0HvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1) {
 		double x = 0.0;	 /* scratch space */
 
 		switch (c) {

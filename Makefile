@@ -7,11 +7,11 @@ CC=gcc
 #
 # Compiler flags:
 #  -I.		look in the current folder for headers.
-#  -ansi	compile good old-fashioned K&R C
+#  -std=c99	compile C99, old enough to be portable, new enough for snprintf()
 #  -Wall	complain heavily
 #  -Os		optimize for size
 #
-CFLAGS=-I. -ansi -Wall -Os
+CFLAGS=-I. -std=c99 -Wall -Os
 
 # Some variables.
 SRCS = main.c aprs-wx.c aprs-is.c

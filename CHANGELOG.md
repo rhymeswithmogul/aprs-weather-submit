@@ -1,3 +1,9 @@
+## Version 1.2.1
+In progress
+* Added &lt;stdint.h&gt; to prevent compiler errors.  (Thank you to UR3QJW for reporting this.)
+* Switched from ANSI C to the C99 standard, in order to keep using <tt>snprintf()</tt>.  Some compilers are stricter than mine and refuse to compile K&R C with it.  (Another thank you to UR3QJW.)
+* Code cleanup.
+
 ## Version 1.2
 <time datetime="2019-04-16T03:10:07-04:00">April 16, 2019</time>
 * Added preliminary support for compiling on Windows.
