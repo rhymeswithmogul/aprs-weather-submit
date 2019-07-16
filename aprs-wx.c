@@ -1,19 +1,19 @@
 /*
  aprs-weather-submit version 1.2
  Copyright (c) 2019 Colin Cogle
- 
+
  This file, aprs.c, is part of aprs-weather-submit.
- 
+
  aprs-weather-submit is free software: you can redistribute it and/or
  modify it under the terms of the GNU General Public License as published
  by the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
- 
+
  aprs-weather-submit is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with aprs-weather-submit. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -49,7 +49,7 @@ void packetConstructor(APRSPacket* const p) {
 	strcpy(p->waterLevel, "....");
 	strcpy(p->voltage, "...");
 	strcpy(p->snowfallLast24Hours, "...");
-    return;
+	return;
 }
 
 /**
@@ -88,27 +88,27 @@ char compressedWindDirection(const unsigned short direction) {
  * @since				0.2
  */
 void compressedPosition(char* const pResult, const double decimal, const char isLongitude) {
-    char         pos = 0;       /* iterator */
+	char         pos = 0;       /* iterator */
 	unsigned int x   = 190463;  /* magic number for longitude (see APRS 1.0 spec, p. 38) */
-    
+
 	if (isLongitude == IS_LONGITUDE) {
 		x = (unsigned int)(x * (180 + decimal));
 	} else {
-        /* The magic number for latitude is exactly twice that of longitude, so
-           that's why we're doubling it here (also on p. 38 of the APRS spec). */
+		/* The magic number for latitude is exactly twice that of longitude, so
+		that's why we're doubling it here (also on p. 38 of the APRS spec). */
 		x = (unsigned int)(x * 2 * (90 - decimal));
 	}
-	
+
 	for (; pos < 3; pos++) {
 		unsigned int divisor = (unsigned int)pow(91, 3 - pos);
 		unsigned int result  = (unsigned int)floor(x / divisor);
-        pResult[(unsigned int)pos] = (char)(result + 33);
+		pResult[(unsigned int)pos] = (char)(result + 33);
 		x %= divisor;
 	}
 	pResult[3] = (char)((x % 91) + 33);
 	pResult[4] = '\0';
 
-    return;
+	return;
 }
 
 
@@ -140,15 +140,15 @@ void uncompressedPosition(char* const pResult, double decimal, const char isLong
 		minutes = (unsigned char)floor(decimal);
 		seconds = (unsigned char)floor((decimal - minutes) * 60);
 	}
-	
+
 	if (isLongitude == IS_LATITUDE) {
-		snprintf(pResult, 9, "%02d%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'W' : 'E'));
+		snprintf(pResult,  9, "%02d%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'W' : 'E'));
 	}
 	else {
 		snprintf(pResult, 10, "%03d%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'S' : 'N'));
 	}
-    
-    return;
+
+	return;
 }
 
 /**
@@ -161,7 +161,7 @@ void uncompressedPosition(char* const pResult, double decimal, const char isLong
  */
 void rain(char* const pResult, const double precip) {
 	snprintf(pResult, 4, "%03d", (unsigned short)precip);
-    return;
+	return;
 }
 
 /**
@@ -256,6 +256,6 @@ void printAPRSPacket(APRSPacket* const p, char* const ret, char compressPacket) 
 	strncat(result, "/", 1);
 	strncat(result, VERSION, strlen(VERSION));
 	strncat(result, "\n\0", 2);
-    strncpy(ret, result, strlen(result));
-    return;
+	strncpy(ret, result, strlen(result));
+	return;
 }

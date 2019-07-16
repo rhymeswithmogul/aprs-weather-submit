@@ -1,19 +1,19 @@
 /*
  aprs-weather-submit version 1.2
  Copyright (c) 2019 Colin Cogle
- 
+
  This file, aprs-is.c, is part of aprs-weather-submit.
- 
+
  aprs-weather-submit is free software: you can redistribute it and/or
  modify it under the terms of the GNU General Public License as published
  by the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
- 
+
  aprs-weather-submit is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with aprs-weather-submit. If not, see <https://www.gnu.org/licenses/>.
  */
@@ -68,7 +68,7 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 		exit(EXIT_FAILURE);
 	}
 #endif
-	
+
 	error = getaddrinfo(server, NULL, NULL, &results);
 	if (error != 0) {
 		if (error == EAI_SYSTEM) {
@@ -78,17 +78,17 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 		}
 		exit(EXIT_FAILURE);
 	}
-	
+
 	for (result = results; result != NULL; result = result->ai_next) {
 		/* For readability later: */
 		struct sockaddr* const addressinfo = result->ai_addr;
-		
+
 		socket_desc = socket(addressinfo->sa_family, SOCK_STREAM, IPPROTO_TCP);
 		if (socket_desc < 0) {
 			perror("error in socket()");
 			continue; /* for loop */
 		}
-		
+
 		/* Assign the port number. */
 		switch (addressinfo->sa_family) {
 			case AF_INET:
@@ -98,7 +98,7 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 				((struct sockaddr_in6*)addressinfo)->sin6_port = htons(port);
 				break;
 		}
-		
+
 		/* Connect */
 		switch (addressinfo->sa_family) {
 			case AF_INET:
@@ -106,16 +106,16 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 #ifdef DEBUG
 				printf("Connecting to %s:%d...\n", buffer, ntohs(((struct sockaddr_in*)addressinfo)->sin_port));
 #endif
-                break;
+				break;
 			case AF_INET6:
 				inet_ntop(AF_INET6, &((struct sockaddr_in6*)addressinfo)->sin6_addr, buffer, INET6_ADDRSTRLEN);
 #ifdef DEBUG
-                printf("Connecting to [%s]:%d...\n", buffer, ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port));
+				printf("Connecting to [%s]:%d...\n", buffer, ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port));
 #endif
-                break;
+				break;
 		}
 
-        if (connect(socket_desc, addressinfo, (size_t)(result->ai_addrlen)) >= 0) {
+		if (connect(socket_desc, addressinfo, (size_t)(result->ai_addrlen)) >= 0) {
 			foundValidServerIP = 1;
 			break; /* for loop */
 		}
@@ -129,14 +129,14 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 		fputs("Could not connect to the server.\n", stderr);
 		exit(EXIT_FAILURE);
 	}
-	
+
 	/* Authenticate */
 	sprintf(buffer, "user %s pass %s vers %s/%s\n", username, password, PROGRAM_NAME, VERSION);
 #ifdef DEBUG
 	printf("> %s", buffer);
 #endif
 	send(socket_desc, buffer, (size_t)strlen(buffer), 0);
-	
+
 	strncpy(verificationMessage, username, (size_t)strlen(username)+1);
 	strncat(verificationMessage, " verified", 9);
 	bytesRead = recv(socket_desc, buffer, BUFSIZE, 0);
@@ -157,7 +157,7 @@ void sendPacket(const char* const server, const unsigned short port, const char*
 		fputs("Authentication failed!", stderr);
 		exit(EXIT_FAILURE);
 	}
-	
+
 	/* Send packet */
 #ifdef DEBUG
 	printf("> %s", toSend);

@@ -38,92 +38,92 @@
 #endif
 
 int main(const int argc, char* const argv[]) {
-	char		    packetToSend[BUFSIZE] = "";
-	char		    username[BUFSIZE] = "";
-	char		    password[BUFSIZE] = "";
-	char		    server[NI_MAXHOST] = "";
-    char            packetFormat = COMPRESSED_PACKET;
-    unsigned int    i = 0;
-	uint16_t	    port = 0;
-	APRSPacket	    packet;
-	int			    option_index = 0;	/* for getopt_long() */
-	char		    c = '\0';			/* for getopt_long() */
+	char         packetToSend[BUFSIZE] = "";
+	char         username[BUFSIZE] = "";
+	char.        password[BUFSIZE] = "";
+	char         server[NI_MAXHOST] = "";
+	char         packetFormat = COMPRESSED_PACKET;
+	unsigned int i = 0;
+	uint16_t.    port = 0;
+	APRSPacket.  packet;
+	int          option_index = 0;  /* for getopt_long() */
+	char.        c = '\0';          /* for getopt_long() */
 
 	const static struct option long_options[] = {
-		{"uncompressed-position",	no_argument,       0, '0'},
-		{"help",					no_argument,       0, 'H'},
-		{"version",					no_argument,       0, 'v'},
-		{"server",					required_argument, 0, 'I'},
-		{"port",					required_argument, 0, 'o'},
-		{"username",				required_argument, 0, 'u'},
-		{"password",				required_argument, 0, 'd'},
-		{"callsign",				required_argument, 0, 'k'},
-		{"latitude",				required_argument, 0, 'n'},
-		{"longitude",				required_argument, 0, 'e'},
+		{"uncompressed-position",   no_argument,       0, '0'},
+		{"help",                    no_argument,       0, 'H'},
+		{"version",                 no_argument,       0, 'v'},
+		{"server",                  required_argument, 0, 'I'},
+		{"port",                    required_argument, 0, 'o'},
+		{"username",                required_argument, 0, 'u'},
+		{"password",                required_argument, 0, 'd'},
+		{"callsign",                required_argument, 0, 'k'},
+		{"latitude",                required_argument, 0, 'n'},
+		{"longitude",               required_argument, 0, 'e'},
 		/*
 			The following options are using APRS-standard short options,
 			for clarity.  The exception is wind speed, because that's
 			overloaded with snowfall ('s').
 		 */
-		{"wind-direction",			required_argument, 0, 'c'},
-		{"wind-speed",				required_argument, 0, 'S'},
-		{"gust",					required_argument, 0, 'g'},
-		{"temperature",				required_argument, 0, 't'},
-		{"temperature-celsius",		required_argument, 0, 'T'},
-		{"rainfall-last-hour",		required_argument, 0, 'r'},
-		{"rainfall-last-24-hours",	required_argument, 0, 'p'},
-		{"rainfall-since-midnight",	required_argument, 0, 'P'},
-		{"snowfall-last-24-hours",	required_argument, 0, 's'},
-		{"humidity",				required_argument, 0, 'h'},
-		{"pressure",				required_argument, 0, 'b'},
-		{"luminosity",				required_argument, 0, 'L'},
-		{"radiation",				required_argument, 0, 'X'},
-		{"water-level-above-stage",	required_argument, 0, 'F'}, /* APRS 1.2 */
-		{"voltage",					required_argument, 0, 'V'}, /* APRS 1.2 */
+		{"wind-direction",          required_argument, 0, 'c'},
+		{"wind-speed",              required_argument, 0, 'S'},
+		{"gust",                    required_argument, 0, 'g'},
+		{"temperature",             required_argument, 0, 't'},
+		{"temperature-celsius",     required_argument, 0, 'T'},
+		{"rainfall-last-hour",      required_argument, 0, 'r'},
+		{"rainfall-last-24-hours",  required_argument, 0, 'p'},
+		{"rainfall-since-midnight", required_argument, 0, 'P'},
+		{"snowfall-last-24-hours",  required_argument, 0, 's'},
+		{"humidity",                required_argument, 0, 'h'},
+		{"pressure",                required_argument, 0, 'b'},
+		{"luminosity",              required_argument, 0, 'L'},
+		{"radiation",               required_argument, 0, 'X'},
+		{"water-level-above-stage", required_argument, 0, 'F'}, /* APRS 1.2 */
+		{"voltage",                 required_argument, 0, 'V'}, /* APRS 1.2 */
 		{0, 0, 0, 0}
 	};
 
 #ifdef DEBUG
-    puts("Compiled with debugging output.\n");
+	puts("Compiled with debugging output.\n");
 #endif
 	packetConstructor(&packet);
-    
-    /* Check for --uncompressed-position early. */
-    for (i = 0; i < argc; i++) {
-        if (
-            strncmp(argv[i], "-0", MAX(2, strlen(argv[i]))) == 0 ||
-            strncmp(argv[i], "--uncompressed-position", MAX(23, strlen(argv[i]))) == 0
-        ) {
-            packetFormat = UNCOMPRESSED_PACKET;
-            strcpy(packet.windDirection, "...");
-            strcpy(packet.windSpeed, "...");
-            break;
-        }
-    }
+
+	/* Check for --uncompressed-position early. */
+	for (i = 0; i < argc; i++) {
+		if (
+			strncmp(argv[i], "-0", MAX(2, strlen(argv[i]))) == 0 ||
+			strncmp(argv[i], "--uncompressed-position", MAX(23, strlen(argv[i]))) == 0
+		) {
+			packetFormat = UNCOMPRESSED_PACKET;
+			strcpy(packet.windDirection, "...");
+			strcpy(packet.windSpeed, "...");
+			break;
+		}
+	}
 
 	while ((c = (char)getopt_long(argc, argv, "0HvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1) {
 		double x = 0.0;	 /* scratch space */
 
 		switch (c) {
-            /* --uncompressed-position was already handled */
-            case '0':
-                break;
-                
-            /* Complete help (-H | --help) */
+			/* --uncompressed-position was already handled */
+			case '0':
+				break;
+
+			/* Complete help (-H | --help) */
 			case 'H':
 				help();
 				return EXIT_SUCCESS;
-				
+
 			/* Version information (-v | --version) */
 			case 'v':
 				version();
 				return EXIT_SUCCESS;
-                
+
 			/* IGate server name (-I | --server) */
 			case 'I':
 				snprintf(server, strlen(optarg)+1, "%s", optarg);
 				break;
-			
+
 			/* IGate server port (-o | --port) */
 			case 'o':
 				x = (double)atoi(optarg);
@@ -133,22 +133,22 @@ int main(const int argc, char* const argv[]) {
 				}
 				port = (unsigned short)x;
 				break;
-				
+
 			/* IGate server username (-u | --username) */
 			case 'u':
 				snprintf(username, strlen(optarg)+1, "%s", optarg);
 				break;
-				
+
 			/* IGate server password (-d | --password) */
 			case 'd':
 				snprintf(password, strlen(optarg)+1, "%s", optarg);
 				break;
-				
+
 			/* Callsign, with SSID if desired (-k | --callsign) */
 			case 'k':
 				snprintf(packet.callsign, 10, "%s", optarg);
 				break;
-			
+
 			/* Your latitude, in degrees north (-n | --latitude) */
 			case 'n':
 				x = atof(optarg);
@@ -164,7 +164,7 @@ int main(const int argc, char* const argv[]) {
 					}
 				}
 				break;
-			
+
 			/* Your longitude, in degrees east (-e | --longitude) */
 			case 'e':
 				x = atof(optarg);
@@ -181,7 +181,7 @@ int main(const int argc, char* const argv[]) {
 					}
 				}
 				break;
-			
+
 			/* Wind direction, in degrees from true north (-c | --wind-direction) */
 			case 'c':
 				x = atof(optarg);
@@ -197,7 +197,7 @@ int main(const int argc, char* const argv[]) {
 					}
 				}
 				break;
-			
+
 			/* Wind speed in miles per hour (-S | --wind-speed) */
 			case 'S':
 				x = atof(optarg);
@@ -224,7 +224,7 @@ int main(const int argc, char* const argv[]) {
 					snprintf(packet.gust, 4, "%03d", (int)(round(x)) );
 				}
 				break;
-				
+
 			/* Temperature in degrees Fahrenheit (-t | --temperature) */
 			case 't':
 				x = atof(optarg);
@@ -235,7 +235,7 @@ int main(const int argc, char* const argv[]) {
 					snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
 				}
 				break;
-				
+
 			/* Temperature in degrees Celsius (-T | --temperature-celsius) */
 			case 'T':
 				x = atof(optarg);
@@ -247,7 +247,7 @@ int main(const int argc, char* const argv[]) {
 					snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
 				}
 				break;
-				
+
 			/* Rainfall in the past hour, in inches (-r | --rainfall-last-hour) */
 			case 'r':
 				x = atof(optarg);
@@ -258,7 +258,7 @@ int main(const int argc, char* const argv[]) {
 					rain(packet.rainfallLastHour, x * 100);
 				}
 				break;
-			
+
 			/* Rainfall in the past 24 hours, in inches (-p | --rainfall-last-day) */
 			case 'p':
 				x = atof(optarg);
@@ -297,7 +297,7 @@ int main(const int argc, char* const argv[]) {
 					}
 				}
 				break;
-				
+
 			/* Humidity, in the range from 1 to 100% (-h | --humidity) */
 			case 'h':
 				x = atoi(optarg);
@@ -317,7 +317,7 @@ int main(const int argc, char* const argv[]) {
 					snprintf(packet.humidity, 3, "%.2d", h);
 				}
 				break;
-			
+
 			/* Barometric pressure, in millibars or hectopascals (-b | --pressure) */
 			case 'b':
 				x = atof(optarg);
@@ -328,7 +328,7 @@ int main(const int argc, char* const argv[]) {
 					snprintf(packet.pressure, 6, "%.5d", (int)(round(x * 10)) );
 				}
 				break;
-			
+
 			/* Luminosity, in watts per square meter (-L | --luminosity) */
 			case 'L':
 				x = atof(optarg);
@@ -337,7 +337,8 @@ int main(const int argc, char* const argv[]) {
 					return EXIT_FAILURE;
 				} else {
 					/*
-					 This is where it gets weird.  APRS supports readings of up to 2,000 W/m^2, but only gives us three digits' resolution to use.  Values under 1000 are encoded as "L000" and values over 1000 are encoded as "l000".
+					 This is where it gets weird.  APRS supports readings of up to 2,000 W/m^2, but only gives us three digits'
+					 resolution to use.  Values under 1000 are encoded as "L000" and values over 1000 are encoded as "l000".
 					 */
 					snprintf(packet.luminosity, 5, "L%.3d", (int)(x) % 1000);
 					if (x > 999) {
@@ -345,7 +346,7 @@ int main(const int argc, char* const argv[]) {
 					}
 				}
 				break;
-			
+
 			/* (APRS 1.2) Radiation in nanosieverts (-X | --radiation) */
 			case 'X':
 				x = atof(optarg);
@@ -371,7 +372,7 @@ int main(const int argc, char* const argv[]) {
 					snprintf(packet.waterLevel, 4, "%.3d", (short)x * 10);
 				}
 				break;
-				
+
 			/* (APRS 1.2) Weather station battery voltage (-V | --voltage) */
 			case 'V':
 				x = atof(optarg);
@@ -382,25 +383,27 @@ int main(const int argc, char* const argv[]) {
 					snprintf(packet.voltage, 4, "%.3d", (short)x * 10);
 				}
 				break;
-				
+
 			/* Unknown argument handler (quick help). */
 			default:
 				usage();
 				return EXIT_FAILURE;
 		}
 	}
-	
+
 	/* Check for mandatory parameters.  If any are missing, show usage() and quit. */
 	if (strlen(packet.callsign) == 0 || strlen(packet.latitude) == 0 || strlen(packet.longitude) == 0) {
 		usage();
 		return EXIT_FAILURE;
 	}
-	
+
 	/* Create the APRS packet. */
 	printAPRSPacket(&packet, packetToSend, packetFormat);
 
-	/* If we specified all of the server information, send the packet.
-	 * Otherwise, print the packet to stdout and let the user deal with it. */
+	/*
+	 If we specified all of the server information, send the packet.
+	 Otherwise, print the packet to stdout and let the user deal with it.
+	 */
 	if (strlen(server) && strlen(username) && strlen(password) && port != 0) {
 		sendPacket(server, port, username, password, packetToSend);
 	} else {

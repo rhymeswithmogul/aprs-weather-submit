@@ -31,13 +31,13 @@ $(APPNAME): $(OBJS)
 
 main.o:    main.c main.h aprs-is.h aprs-wx.h
 	$(CC) $(CFLAGS) -c main.c
-		
+
 aprs-is.o: aprs-is.c aprs-is.h main.h
-	$(CC) $(CFLAGS) -c aprs-is.c	
-	
+	$(CC) $(CFLAGS) -c aprs-is.c
+
 aprs-wx.o: aprs-wx.c aprs-wx.h main.h
 	$(CC) $(CFLAGS) -c aprs-wx.c
-	
+
 .PHONY: clean
 
 clean:
