@@ -1,4 +1,4 @@
-.\" aprs-weather-submit version 1.2
+.\" aprs-weather-submit version 1.2.1-beta
 .\" Copyright (c) 2019 Colin Cogle
 .\"
 .\" This file, aprs-weather-submit.1, is part of aprs-weather-submit.
@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "aprs-weather-submit" "January 23, 2019" "Version 1.1"
+.TH aprs\-weather\-submit 1 "aprs-weather-submit" "July 15, 2019" "Version 1.2.1-beta"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -271,7 +271,7 @@ This is compliant with the APRS specification and not a bug in this app.
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 1.1"
+.BR aprs\-weather\-submit ", version 1.2.1-beta"
 .br
 Copyright (c) 2019 Colin Cogle.
 .br
