@@ -94,8 +94,9 @@ void compressedPosition(char* const pResult, const double decimal, const char is
 	if (isLongitude == IS_LONGITUDE) {
 		x = (unsigned int)(x * (180 + decimal));
 	} else {
-		/* The magic number for latitude is exactly twice that of longitude, so
-		that's why we're doubling it here (also on p. 38 of the APRS spec). */
+		/* The magic number for latitude is exactly twice that of longitude,
+		 * so that's why we're doubling it here (also on p. 38 of the APRS spec).
+		 */
 		x = (unsigned int)(x * 2 * (90 - decimal));
 	}
 
@@ -194,7 +195,7 @@ void printAPRSPacket(APRSPacket* const p, char* const ret, char compressPacket) 
 	struct tm *now = gmtime(&t); /* APRS uses GMT */
 
 	if (compressPacket == COMPRESSED_PACKET) {
-		/*                    header_________ timestamp____ pos_wc_s_ T__*/
+		/*                    header_________ timestamp____ pos_wc_s_Tt__*/
 		snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
 			p->latitude, p->longitude, p->windDirection[0], p->windSpeed[0], p->temperature);

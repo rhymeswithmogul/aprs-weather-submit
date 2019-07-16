@@ -128,7 +128,7 @@ int main(const int argc, const char** argv) {
 			case 'o':
 				x = (double)atoi(optarg);
 				if (x <= 0 || x > 65535) {
-					fprintf(stderr, "%s: argument for option '-%c' was invalid.  Valid port numbers are 1 through 65535.", argv[0], optopt);
+					fprintf(stderr, "%s: argument for option '-%c' was invalid.  Valid port numbers are 1 through 65535.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				port = (unsigned short)x;
