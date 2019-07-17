@@ -1,6 +1,6 @@
 /*
  aprs-weather-submit version 1.2.1-beta
- Copyright (c) 2019 Colin Cogle
+ Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
  
  This file, aprs-is.h, is part of aprs-weather-submit.
  
@@ -18,19 +18,18 @@
  along with aprs-weather-submit. If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 #ifndef aprs_is_h
 #define aprs_is_h
 
 /**
  * sendPacket() -- sends a packet to an APRS-IS IGate server.
  *
- * @author			Colin Cogle
- * @param server	The (constant pointer to the constant) DNS hostname of the server.
- * @param port		The (constant) listening port on the server.
- * @param username	The (constant pointer to the constant) username with which to authenticate to the server.
- * @param password	The (constant pointer to the constant) password with which to authenticate to the server.
- * @param toSend	The (constant pointer to the constant) APRS-IS packet, as a string.
+ * @author         Colin Cogle
+ * @param server   The DNS hostname of the server.
+ * @param port     The listening port on the server.
+ * @param username The username with which to authenticate to the server.
+ * @param password The password with which to authenticate to the server.
+ * @param toSend   The APRS-IS packet, as a string.
  * @since 0.3
  */
 void sendPacket(const char* const restrict server, const unsigned short port, const char* const restrict username, const char* const restrict password, const char* const restrict toSend);

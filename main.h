@@ -1,6 +1,6 @@
 /*
  aprs-weather-submit version 1.2.1-beta
- Copyright (c) 2019 Colin Cogle
+ Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
  
  This file, main.h, is part of aprs-weather-submit.
  
@@ -28,24 +28,24 @@
 /**
  * usage() -- show some help.
  *
- * @author		Colin Cogle
- * @since		0.1
+ * @author Colin Cogle
+ * @since  0.1
  */
 void usage(void);
 
 /**
  * help() -- show even more help.
  *
- * @author		Colin Cogle
- * @since		0.1
+ * @author Colin Cogle
+ * @since  0.1
  */
 void help(void);
 
 /**
  * version() -- show the version.
  *
- * @author		Colin Cogle
- * @since		0.1
+ * @author Colin Cogle
+ * @since  0.1
  */
 void version(void);
 

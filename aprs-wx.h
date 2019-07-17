@@ -1,8 +1,8 @@
 /*
  aprs-weather-submit version 1.2.1-beta
- Copyright (c) 2019 Colin Cogle
+ Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
  
- This file, aprs.h, is part of aprs-weather-submit.
+ This file, aprs-wx.h, is part of aprs-weather-submit.
  
  aprs-weather-submit is free software: you can redistribute it and/or
  modify it under the terms of the GNU General Public License as published
@@ -22,23 +22,23 @@
 #define aprs_wx_h
 
 typedef struct APRSPacket {
-	char  callsign[10]; /* max. six for callsign, max. three for SSID */
-	char  latitude[9];
-	char  longitude[10];
-	char  windDirection[4];
-	char  windSpeed[4];
-	char  gust[4];
-	char  temperature[4];
-	char  rainfallLastHour[4];
-	char  rainfallLast24Hours[4];
-	char  rainfallSinceMidnight[4];
-	char  snowfallLast24Hours[4];
-	char  humidity[3];
-	char  pressure[6];
-	char  luminosity[5]; /* We're keeping an extra digit for l/L conversion */
-	char  radiation[4];
-	char  waterLevel[5];
-	char  voltage[4];
+	char callsign[10]; /* callsign (strlen <= 6), dash, SSID (strlen <= 2) */
+	char latitude[9];
+	char longitude[10];
+	char windDirection[4];
+	char windSpeed[4];
+	char gust[4];
+	char temperature[4];
+	char rainfallLastHour[4];
+	char rainfallLast24Hours[4];
+	char rainfallSinceMidnight[4];
+	char snowfallLast24Hours[4];
+	char humidity[3];
+	char pressure[6];
+	char luminosity[5]; /* We're keeping an extra digit for l/L conversion */
+	char radiation[4];
+	char waterLevel[5];
+	char voltage[4];
 } APRSPacket;
 
 #define IS_LATITUDE  0
@@ -50,8 +50,8 @@ typedef struct APRSPacket {
 /**
  * packetConstructor() -- put some default values into an APRSPacket
  *
- * @author	Colin Cogle
- * @param p	The struct to instantiate.
+ * @author  Colin Cogle
+ * @param p The struct to instantiate.
  * @since 0.1
  */
 void packetConstructor(APRSPacket* const p);
@@ -59,10 +59,10 @@ void packetConstructor(APRSPacket* const p);
 /**
  * rain() -- format a rainfall measurement
  *
- * @author			Colin Cogle
- * @param pResult	A constant pointer to the return value.
- * @param precip	A constant representing how much precipiation precipitated.
- * @since			0.2
+ * @author        Colin Cogle
+ * @param pResult A constant pointer to the return value.
+ * @param precip  A constant representing how much precipitation precipitated.
+ * @since         0.2
  */
 void rain(char* const pResult, const double precip);
 
@@ -72,32 +72,32 @@ void rain(char* const pResult, const double precip);
  * Return !0 if there is a numerical value for this parameter.  If the user hasn't specified
  * a value, then packetConstructor() would have filled this with dots, so return 0.
  *
- * @author		Colin Cogle
- * @param val	A constant pointer to the raw value, which will remain constant.
- * @return		0 if this value is unspecified/not meaningful; !0 otherwise.
- * @since		0.2
+ * @author    Colin Cogle
+ * @param val A constant pointer to the raw value, which will remain constant.
+ * @return    0 if this value is unspecified/not meaningful; !0 otherwise.
+ * @since     0.2
  */
 int notNull(const char* const val);
 
 /**
  * printAPRSPacket() -- create a textual representation of an APRS weather packet.
  *
- * @author					Colin Cogle
- * @param p					A constant pointer to an APRS packet of type (struct APRSPacket).
- * @param ret				A constant pointer to a string that will hold the return value.
- * @param compressedPacket	The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
- * @since					0.1
+ * @author                 Colin Cogle
+ * @param p                A pointer to an APRS packet of type (struct APRSPacket).
+ * @param ret              A pointer to a string that will hold the return value.
+ * @param compressedPacket The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
+ * @since                  0.1
  */
-void printAPRSPacket(APRSPacket* const p, char* const ret, char compressedPacket);
+void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, char compressedPacket);
 
 /**
  * compressedPosition() -- return an APRS-compressed latitude or longitude value.
  *
- * @author				Colin Cogle
- * @param pResult		A constant pointer to the return value.
- * @param decimal		The latitude or longitude value, in decimal-formatted degrees.
- * @param isLongitude	The constant IS_LATITUDE or IS_LONGITUDE.
- * @since				0.2
+ * @author             Colin Cogle
+ * @param pResult      A constant pointer to the return value.
+ * @param decimal      The latitude or longitude value, in decimal-formatted degrees.
+ * @param isLongitude  The constant IS_LATITUDE or IS_LONGITUDE.
+ * @since              0.2
  */
 void compressedPosition(char* const pResult, const double decimal, const char isLongitude);
 
@@ -106,9 +106,9 @@ void compressedPosition(char* const pResult, const double decimal, const char is
  *
  * This value will fill the APRS direction/heading value.
  *
- * @author				Colin Cogle
- * @param direction		The direction in which the wind is blowing, in degrees from true north.
- * @since				0.2
+ * @author          Colin Cogle
+ * @param direction The direction in which the wind is blowing, in degrees from true north.
+ * @since           0.2
  */
 char compressedWindDirection(const unsigned short direction);
 
@@ -117,20 +117,20 @@ char compressedWindDirection(const unsigned short direction);
  *
  * This value will fill the APRS speed value.
  *
- * @author		Colin Cogle
- * @param speed	The wind speed, in miles per hour.
- * @since		0.2
+ * @author       Colin Cogle
+ * @param speed  The wind speed, in miles per hour.
+ * @since        0.2
  */
 char compressedWindSpeed(const unsigned short speed);
 
 /**
  * uncompressedPosition() -- return an APRS-uncompressed latitude or longitude value.
  *
- * @author				Colin Cogle
- * @param pResult		A constant pointer to the return value.
- * @param decimal		The latitude or longitude value, in decimal-formatted degrees.
- * @param isLongitude	The constant IS_LATITUDE or IS_LONGITUDE.
- * @since				0.2
+ * @author            Colin Cogle
+ * @param pResult     A constant pointer to the return value.
+ * @param decimal     The latitude or longitude value, in decimal-formatted degrees.
+ * @param isLongitude The constant IS_LATITUDE or IS_LONGITUDE.
+ * @since             0.2
  */
 void uncompressedPosition(char* const pResult, double decimal, const char isLongitude);
 

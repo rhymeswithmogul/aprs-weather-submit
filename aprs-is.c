@@ -1,6 +1,6 @@
 /*
  aprs-weather-submit version 1.2.1-beta
- Copyright (c) 2019 Colin Cogle
+ Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
 
  This file, aprs-is.c, is part of aprs-weather-submit.
 
@@ -18,49 +18,49 @@
  along with aprs-weather-submit. If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include <stdio.h>		/* fprintf(), printf(), fputs() */
-#include <stdlib.h>		/* malloc(), free(), exit() and constants */
-#include <string.h>		/* str?cat() */
-#include "main.h"		/* PROGRAM_NAME, VERSION */
+#include <stdio.h>      /* fprintf(), printf(), fputs() */
+#include <stdlib.h>     /* malloc(), free(), exit() and constants */
+#include <string.h>     /* str?cat() */
+#include "main.h"       /* PROGRAM_NAME, VERSION */
 #include "aprs-is.h"
 
 #ifndef _WIN32
-#include <sys/socket.h>	/* socket(), connect(), shutdown(), recv(), send() */
-#include <netinet/in.h>	/* sockaddr, sockaddr_in, sockaddr_in6 */
-#include <arpa/inet.h>	/* inet_pton() */
-#include <netdb.h>		/* getaddrinfo() */
-#include <unistd.h>		/* EAI_SYSTEM */
+#include <sys/socket.h> /* socket(), connect(), shutdown(), recv(), send() */
+#include <netinet/in.h> /* sockaddr, sockaddr_in, sockaddr_in6 */
+#include <arpa/inet.h>  /* inet_pton() */
+#include <netdb.h>      /* getaddrinfo() */
+#include <unistd.h>     /* EAI_SYSTEM */
 #else  /* _WIN32 */
-#include <WinSock2.h>	/* all that socket stuff on Windows */
-#include <WS2tcpip.h>	/* inet_pton() -- only available on Windows Vista and higher */
+#include <WinSock2.h>   /* all that socket stuff on Windows */
+#include <WS2tcpip.h>   /* inet_pton() -- only available on Windows Vista and higher */
 #endif /* _WIN32 */
 
 /**
  * sendPacket() -- sends a packet to an APRS-IS IGate server.
  *
- * @author			Colin Cogle
- * @param server	The (constant pointer to the constant) DNS hostname of the server.
- * @param port		The (constant) listening port on the server.
- * @param username	The (constant pointer to the constant) username with which to authenticate to the server.
- * @param password	The (constant pointer to the constant) password with which to authenticate to the server.
- * @param toSend	The (constant pointer to the constant) APRS-IS packet, as a string.
+ * @author         Colin Cogle
+ * @param server   The DNS hostname of the server.
+ * @param port     The listening port on the server.
+ * @param username The username with which to authenticate to the server.
+ * @param password The password with which to authenticate to the server.
+ * @param toSend   The APRS-IS packet, as a string.
  * @since 0.3
  */
 void sendPacket(const char* const restrict server, const unsigned short port, const char* const restrict username, const char* const restrict password, const char* const restrict toSend) {
-	int					error = 0;
-	int					bytesRead = 0;
-	char				authenticated = 0;
-	char				foundValidServerIP = 0;
-	struct addrinfo*	result = NULL;
-	struct addrinfo*	results;
-	char				verificationMessage[BUFSIZE];
-	char*				buffer = malloc(BUFSIZE);
+	int              error = 0;
+	int              bytesRead = 0;
+	char             authenticated = 0;
+	char             foundValidServerIP = 0;
+	struct addrinfo* result = NULL;
+	struct addrinfo* results;
+	char             verificationMessage[BUFSIZE];
+	char*            buffer = malloc(BUFSIZE);
 #ifndef _WIN32
-	int					socket_desc = -1;
+	int              socket_desc = -1;
 #else
-	SOCKET				socket_desc = INVALID_SOCKET;
-	int					wsaResult;
-	WSADATA				wsaData;
+	SOCKET           socket_desc = INVALID_SOCKET;
+	int              wsaResult;
+	WSADATA          wsaData;
 
 	wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
 	if (wsaResult != 0) {
@@ -92,7 +92,7 @@ void sendPacket(const char* const restrict server, const unsigned short port, co
 		/* Assign the port number. */
 		switch (addressinfo->sa_family) {
 			case AF_INET:
-				((struct sockaddr_in*)addressinfo)->sin_port = htons(port);
+				((struct sockaddr_in*)addressinfo)->sin_port   = htons(port);
 				break;
 			case AF_INET6:
 				((struct sockaddr_in6*)addressinfo)->sin6_port = htons(port);
@@ -163,6 +163,8 @@ void sendPacket(const char* const restrict server, const unsigned short port, co
 	printf("> %s", toSend);
 #endif
 	send(socket_desc, toSend, (size_t)strlen(toSend), 0);
+	
+	/* Done! */
 	shutdown(socket_desc, 2);
 	return;
 }

@@ -1,6 +1,6 @@
 /*
  aprs-weather-submit version 1.2.1-beta
- Copyright (c) 2019 Colin Cogle
+ Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
  
  This file, main.c, is part of aprs-weather-submit.
  
@@ -21,14 +21,14 @@
 #include "main.h"
 #include "aprs-wx.h"
 #include "aprs-is.h"
-#include <stdio.h>		/* *printf(), *puts(), and friends */
-#include <stdlib.h>		/* atof(), EXIT_SUCCESS, EXIT_FAILURE */
-#include <string.h>		/* str*cpy() and friends */
-#include <math.h>		/* round(), floor() */
-#include <stdint.h>		/* uint16_t*/
+#include <stdio.h>          /* *printf(), *puts(), and friends */
+#include <stdlib.h>         /* atof(), EXIT_SUCCESS, EXIT_FAILURE */
+#include <string.h>         /* str*cpy() and friends */
+#include <math.h>           /* round(), floor() */
+#include <stdint.h>         /* uint16_t*/
 
 #ifndef _WIN32
-#include <getopt.h>			/* getopt_long() */
+#include <getopt.h>         /* getopt_long() */
 #else
 #include "getopt-windows.h" /* getopt_long() */
 #endif
@@ -391,7 +391,10 @@ int main(const int argc, const char** argv) {
 		}
 	}
 
-	/* Check for mandatory parameters.  If any are missing, show usage() and quit. */
+	/*
+	 * Check for mandatory parameters.
+	 * If any are missing, show usage() and quit.
+	 */
 	if (strlen(packet.callsign) == 0 || strlen(packet.latitude) == 0 || strlen(packet.longitude) == 0) {
 		usage();
 		return EXIT_FAILURE;
@@ -401,22 +404,23 @@ int main(const int argc, const char** argv) {
 	printAPRSPacket(&packet, packetToSend, packetFormat);
 
 	/*
-	 If we specified all of the server information, send the packet.
-	 Otherwise, print the packet to stdout and let the user deal with it.
+	 * If we specified all of the server information, send the packet.
+	 * Otherwise, print the packet to stdout and let the user deal with it.
 	 */
 	if (strlen(server) && strlen(username) && strlen(password) && port != 0) {
 		sendPacket(server, port, username, password, packetToSend);
 	} else {
 		fputs(packetToSend, stdout);
 	}
+	
 	return EXIT_SUCCESS;
 }
 
 /**
  * usage() -- show version information.
  *
- * @author		Colin Cogle
- * @since		0.1
+ * @author Colin Cogle
+ * @since  0.1
  */
 void version(void) {
 	printf("%s, version %s\n\
@@ -433,8 +437,8 @@ Public License (version 3.0) for more details.\n", PROGRAM_NAME, VERSION);
 /**
  * usage() -- show some help.
  *
- * @author		Colin Cogle
- * @since		0.1
+ * @author Colin Cogle
+ * @since  0.1
  */
 void usage(void) {
 	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER PARAMETERS]\n", PROGRAM_NAME);
@@ -444,8 +448,8 @@ void usage(void) {
 /**
  * help() -- show even more help.
  *
- * @author		Colin Cogle
- * @since		0.1
+ * @author Colin Cogle
+ * @since  0.1
  */
 void help(void) {
 	version();
@@ -453,9 +457,9 @@ void help(void) {
 	usage();
 	puts("\n\
 Special parameters:\n\
-	-H, --help                       Show this help and exit.\n\
-	-v, --version                    Show version and licensing information, and exit.\n\
-	--uncompressed-position          Create a packet with the uncompressed position format (deprecated).\n\
+	-H, --help               Show this help and exit.\n\
+	-v, --version            Show version and licensing information, and exit.\n\
+	--uncompressed-position  Create a packet with the uncompressed position format.\n\
 \n\
 Required parameters:\n\
 	-k, --callsign      Your callsign, with SSID if desired.\n\
