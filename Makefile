@@ -7,12 +7,19 @@ CC=cc
 
 #
 # Compiler flags:
-#  -I.		look in the current folder for headers.
-#  -std=c99	compile C99, old enough to be portable, new enough for snprintf()
-#  -Wall	complain heavily
-#  -Os		optimize for size
+#  -I.		               look in the current folder for headers.
+#  -std=gnu99	           compile C99 with GNU extensions
+#  -Wall	               complain heavily…
+#  -Wno-format-truncation  …but don't complain about snprintf() format truncation (GCC).
+#  -Os		               optimize for size
 #
-CFLAGS=-I. -std=c99 -Wall -Os
+CFLAGS=-I. -std=c99 -Os -Wall
+
+#
+# Linker flags:
+#  -lm    Include <math.h>
+#
+LDFLAGS=-lm
 
 # Some variables.
 SRCS = main.c aprs-wx.c aprs-is.c
@@ -28,7 +35,7 @@ default: all
 all: $(SRCS) $(APPNAME)
 
 $(APPNAME): $(OBJS)
-	$(CC) $(CFLAGS) $(SRCS) -o $(APPNAME)
+	$(CC) $(CFLAGS) $(SRCS) -o $(APPNAME) $(LDFLAGS)
 
 main.o:    main.c main.h aprs-is.h aprs-wx.h
 	$(CC) $(CFLAGS) -c main.c

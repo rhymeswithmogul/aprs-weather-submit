@@ -25,10 +25,11 @@
 #include "aprs-is.h"
 
 #ifndef _WIN32
+#include <sys/types.h>  /* size_t */
 #include <sys/socket.h> /* socket(), connect(), shutdown(), recv(), send() */
 #include <netinet/in.h> /* sockaddr, sockaddr_in, sockaddr_in6 */
 #include <arpa/inet.h>  /* inet_pton() */
-#include <netdb.h>      /* getaddrinfo() */
+#include <netdb.h>      /* getaddrinfo(), gai_strerror() */
 #include <unistd.h>     /* EAI_SYSTEM */
 #else  /* _WIN32 */
 #include <WinSock2.h>   /* all that socket stuff on Windows */

@@ -5,6 +5,7 @@ In progress
 * Since we switched to C99, I added some tiny performance enhancements with <tt>restrict</tt>.
 * Fixed a pair of bugs where uncompressed packets would fail to encode the location correctly.
 * Fixed a bug where wind speeds would not be reported properly in compressed packets, because math is hard.
+* Added linker options to the Makefile to fix linking errors with GCC 7.
 * Code cleanup.
 
 ## Version 1.2

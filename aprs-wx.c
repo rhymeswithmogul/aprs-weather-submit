@@ -71,7 +71,7 @@ void packetConstructor(APRSPacket* const p) {
  * @since        0.2
  */
 char compressedWindSpeed(const unsigned short speed) {
-    return (char)(round(log(speed + 1) / log(1.08)) + 33);
+    return (char)(round(log(speed + 1) / logf(1.08)) + 33);
 }
 
 /**
@@ -133,8 +133,8 @@ void compressedPosition(char* const pResult, const double decimal, const char is
  */
 void uncompressedPosition(char* const pResult, const double decimal, const char isLongitude) {
 	signed char   degrees;
-	unsigned char minutes;
-	unsigned char seconds;
+	unsigned char minutes = 0; /* initialized here to prevent compiler warnings */
+	unsigned char seconds = 0;
 	float         x;
 
 	if (decimal > 90) {
