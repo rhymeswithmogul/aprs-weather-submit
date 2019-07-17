@@ -55,14 +55,23 @@ void packetConstructor(APRSPacket* const p) {
 /**
  * compressedWindSpeed() -- return an APRS-compressed wind speed.
  *
- * This value will fill the APRS speed value.
+ * This value will fill the APRS speed value, calculated as below.
+ * Let R be the return value, and S be speed.
+ *
+ * Given that:  1.08^R - 1 = S
+ * Then:            1.08^R = S + 1
+ *            log (1.08^R) = log (S + 1)
+ *              R log 1.08 = log (S + 1)
+ *                       R = log (S + 1) / log 1.08
+ *
+ * Then, as per the APRS spec, add 33 to convert it to ASCII.
  *
  * @author       Colin Cogle
  * @param speed  The wind speed, in miles per hour.
  * @since        0.2
  */
 char compressedWindSpeed(const unsigned short speed) {
-	return (char)(pow(1.08, 1/speed) + 32);
+    return (char)(round(log(speed + 1) / log(1.08)) + 33);
 }
 
 /**
@@ -75,7 +84,7 @@ char compressedWindSpeed(const unsigned short speed) {
  * @since           0.2
  */
 char compressedWindDirection(const unsigned short direction) {
-	return (char)(direction / 4 + 33);
+	return (char)(round(direction / 4) + 33);
 }
 
 /**
@@ -124,8 +133,8 @@ void compressedPosition(char* const pResult, const double decimal, const char is
  */
 void uncompressedPosition(char* const pResult, const double decimal, const char isLongitude) {
 	signed char   degrees;
-	unsigned char minutes = 0;
-	unsigned char seconds = 0;
+	unsigned char minutes;
+	unsigned char seconds;
 	float         x;
 
 	if (decimal > 90) {
@@ -195,13 +204,16 @@ void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, cha
 	struct tm *now            = gmtime(&t); /* APRS uses GMT */
 
 	if (compressPacket == COMPRESSED_PACKET) {
-		/*                    header_________ timestamp____ pos_wc_s_Tt__*/
+        /* Compression type byte ("T"):
+         * (GPS fix: current) | (NMEA source: other) | (Origin: software)
+         *                                                           ↓
+		 *                    header_________ timestamp____ pos_wc_s_Tt__*/
 		snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
 			p->latitude, p->longitude, p->windDirection[0], p->windSpeed[0], p->temperature);
 	}
 	else {
-		/*                    header_________ timestamp____pos__wc_ s_T__*/
+		/*                    header_________ timestamp____pos__wc_ s_t__*/
 		snprintf(result, 61, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%st%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
 			p->latitude, p->longitude, p->windDirection, p->windSpeed, p->temperature);

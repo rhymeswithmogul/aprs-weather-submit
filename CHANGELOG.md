@@ -2,7 +2,9 @@
 In progress
 * Added &lt;stdint.h&gt; to prevent compiler errors.  (Thank you to UR3QJW for reporting this.)
 * Switched from ANSI C to the C99 standard, in order to keep using <tt>snprintf()</tt>.  Some compilers are stricter than mine and refuse to compile K&R C with it.  (Another thank you to UR3QJW.)
+* Since we switched to C99, I added some tiny performance enhancements with <tt>restrict</tt>.
 * Fixed a pair of bugs where uncompressed packets would fail to encode the location correctly.
+* Fixed a bug where wind speeds would not be reported properly in compressed packets, because math is hard.
 * Code cleanup.
 
 ## Version 1.2
