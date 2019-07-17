@@ -46,7 +46,7 @@
  * @param toSend	The (constant pointer to the constant) APRS-IS packet, as a string.
  * @since 0.3
  */
-void sendPacket(const char* const server, const unsigned short port, const char* const username, const char* const password, const char* const toSend) {
+void sendPacket(const char* const restrict server, const unsigned short port, const char* const restrict username, const char* const restrict password, const char* const restrict toSend) {
 	int					error = 0;
 	int					bytesRead = 0;
 	char				authenticated = 0;
