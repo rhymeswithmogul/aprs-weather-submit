@@ -13,7 +13,7 @@ CC=cc
 #  -Wno-format-truncation  …but don't complain about snprintf() format truncation (GCC).
 #  -Os		               optimize for size
 #
-CFLAGS=-I. -std=c99 -Os -Wall
+CFLAGS=-I. -std=gnu99 -Wall -Os
 
 #
 # Linker flags:
