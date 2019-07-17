@@ -2,7 +2,8 @@
 APPNAME=aprs-weather-submit
 
 # The compiler.
-CC=gcc
+# This means to just use the system default, like GCC or Clang.
+CC=cc
 
 #
 # Compiler flags:
