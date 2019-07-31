@@ -20,12 +20,15 @@
 
 #include "main.h"
 #include "aprs-wx.h"
-#include "aprs-is.h"
 #include <stdio.h>          /* *printf(), *puts(), and friends */
 #include <stdlib.h>         /* atof(), EXIT_SUCCESS, EXIT_FAILURE */
 #include <string.h>         /* str*cpy() and friends */
 #include <math.h>           /* round(), floor() */
 #include <stdint.h>         /* uint16_t*/
+
+#ifndef NO_APRSIS
+#include "aprs-is.h"
+#endif
 
 #ifndef _WIN32
 #include <getopt.h>         /* getopt_long() */
@@ -39,25 +42,29 @@
 
 int main(const int argc, const char** argv) {
 	char         packetToSend[BUFSIZE] = "";
-	char         username[BUFSIZE] = "";
-	char         password[BUFSIZE] = "";
-	char         server[NI_MAXHOST] = "";
 	char         packetFormat = COMPRESSED_PACKET;
+    char         c = '\0';          /* for getopt_long() */
+    int          option_index = 0;  /* for getopt_long() */
 	unsigned int i = 0;
-	uint16_t     port = 0;
 	APRSPacket   packet;
-	int          option_index = 0;  /* for getopt_long() */
-	char         c = '\0';          /* for getopt_long() */
+#ifndef NO_APRSIS
+    char         username[BUFSIZE] = "";
+    char         password[BUFSIZE] = "";
+    char         server[NI_MAXHOST] = "";
+    uint16_t     port = 0;
+#endif
 
 	const static struct option long_options[] = {
 		{"uncompressed-position",   no_argument,       0, '0'},
 		{"help",                    no_argument,       0, 'H'},
 		{"version",                 no_argument,       0, 'v'},
-		{"server",                  required_argument, 0, 'I'},
+#ifndef NO_APRSIS
+        {"server",                  required_argument, 0, 'I'},
 		{"port",                    required_argument, 0, 'o'},
 		{"username",                required_argument, 0, 'u'},
 		{"password",                required_argument, 0, 'd'},
-		{"callsign",                required_argument, 0, 'k'},
+#endif
+        {"callsign",                required_argument, 0, 'k'},
 		{"latitude",                required_argument, 0, 'n'},
 		{"longitude",               required_argument, 0, 'e'},
 		/*
@@ -119,7 +126,8 @@ int main(const int argc, const char** argv) {
 				version();
 				return EXIT_SUCCESS;
 
-			/* IGate server name (-I | --server) */
+#ifndef NO_APRSIS
+            /* IGate server name (-I | --server) */
 			case 'I':
 				snprintf(server, strlen(optarg)+1, "%s", optarg);
 				break;
@@ -143,6 +151,7 @@ int main(const int argc, const char** argv) {
 			case 'd':
 				snprintf(password, strlen(optarg)+1, "%s", optarg);
 				break;
+#endif // NO_APRSIS
 
 			/* Callsign, with SSID if desired (-k | --callsign) */
 			case 'k':
@@ -407,11 +416,15 @@ int main(const int argc, const char** argv) {
 	 * If we specified all of the server information, send the packet.
 	 * Otherwise, print the packet to stdout and let the user deal with it.
 	 */
+#ifndef NO_APRSIS
 	if (strlen(server) && strlen(username) && strlen(password) && port != 0) {
 		sendPacket(server, port, username, password, packetToSend);
 	} else {
+#endif
 		fputs(packetToSend, stdout);
+#ifndef NO_APRSIS
 	}
+#endif
 	
 	return EXIT_SUCCESS;
 }
@@ -423,14 +436,18 @@ int main(const int argc, const char** argv) {
  * @since  0.1
  */
 void version(void) {
-	printf("%s, version %s\n\
+    printf("%s, version %s", PROGRAM_NAME, VERSION);
+#ifdef DEBUG
+    fputs(", compiled with debugging output", stdout);
+#endif
+#ifdef NO_APRSIS
+    fputs(", compiled without APRS-IS support", stdout);
+#endif
+    puts(".\n\
 Copyright (c) 2019 Colin Cogle.\n\
 This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n\
 are welcome to redistribute it under certain conditions.  See the GNU General\n\
-Public License (version 3.0) for more details.\n", PROGRAM_NAME, VERSION);
-#ifdef DEBUG
-    puts("Compiled with debugging output.");
-#endif
+Public License (version 3.0) for more details.");
 	return;
 }
 
@@ -464,15 +481,15 @@ Special parameters:\n\
 Required parameters:\n\
 	-k, --callsign      Your callsign, with SSID if desired.\n\
 	-e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n\
-	-n, --latitude      The latitude of your weather station, in degrees north of the equator.\n\
-\n\
-APRS-IS IGate parameters:\n\
+	-n, --latitude      The latitude of your weather station, in degrees north of the equator.\n");
+#ifndef NO_APRSIS
+    puts("APRS-IS IGate parameters:\n\
 	-I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
 	-o, --port          Port that the APRS-IS IGate service is listening on.\n\
 	-u, --username      Authenticate to the server with this username.\n\
-	-d, --password      Authenticate to the server with this password.\n\
-\n\
-Optional weather parameters:\n\
+	-d, --password      Authenticate to the server with this password.\n");
+#endif
+    puts("Optional weather parameters:\n\
 	-b, --pressure                 Barometric pressure (in millibars or hectopascals).\n\
 	-c, --wind-direction           Direction that the wind is blowing (degrees).\n\
 	-F, --water-level-above-stage  Water level above flood stage or mean tide (feet).\n\

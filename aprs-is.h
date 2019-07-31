@@ -18,6 +18,8 @@
  along with aprs-weather-submit. If not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifndef NO_APRSIS
+
 #ifndef aprs_is_h
 #define aprs_is_h
 
@@ -46,3 +48,5 @@ void sendPacket(const char* const restrict server, const unsigned short port, co
 
 
 #endif /* aprs_is_h */
+
+#endif // NO_APRSIS

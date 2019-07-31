@@ -7,10 +7,13 @@ CC=cc
 
 #
 # Compiler flags:
-#  -I.		               look in the current folder for headers.
-#  -std=gnu99	           compile C99 with GNU extensions
-#  -Wall	               complain heavily
-#  -Os		               optimize for size
+#  -I.                      Look in the current folder for headers.
+#  -std=gnu99               Compile C99 with GNU extensions.
+#  -Wall                    Complain heavily.
+#  -Wno-format-truncation   ...but limit warnings -- add this on GCC 7+.
+#  -Os                      Optimize for size.
+#  -s                       Strip the binary (Linux).
+#  -DNO_APRSIS              Compile without APRS-IS support -- add this if desired.
 #
 CFLAGS=-I. -std=gnu99 -Wall -Os
 
