@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.2.1-beta
+ aprs-weather-submit version 1.2.1
  Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
  
  This file, aprs-is.h, is part of aprs-weather-submit.

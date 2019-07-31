@@ -9,8 +9,7 @@ CC=cc
 # Compiler flags:
 #  -I.		               look in the current folder for headers.
 #  -std=gnu99	           compile C99 with GNU extensions
-#  -Wall	               complain heavily…
-#  -Wno-format-truncation  …but don't complain about snprintf() format truncation (GCC).
+#  -Wall	               complain heavily
 #  -Os		               optimize for size
 #
 CFLAGS=-I. -std=gnu99 -Wall -Os
