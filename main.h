@@ -39,7 +39,7 @@ void usage(void);
  * @author Colin Cogle
  * @since  0.1
  */
-void help(void);
+extern void help(void);
 
 /**
  * version() -- show the version.

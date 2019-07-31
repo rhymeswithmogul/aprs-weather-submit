@@ -451,7 +451,7 @@ void usage(void) {
  * @author Colin Cogle
  * @since  0.1
  */
-void help(void) {
+inline void help(void) {
 	version();
 	puts("");
 	usage();
