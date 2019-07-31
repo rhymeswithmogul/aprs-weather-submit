@@ -1,3 +1,7 @@
+## Version 1.3
+<time datetime="2019-07-31T01:54:29-04:00">July 31, 2019</time>
+* Added the compile-time option <tt>NO_APRSIS</tt> to strip all Internet-related functionality, just in case you're <em>really</em> low on space.
+
 ## Version 1.2.1
 <time datetime="2019-07-31T01:13:29-04:00">July 31, 2019</time>
 * Added &lt;stdint.h&gt; to prevent compiler errors.  (Thank you to UR3QJW for reporting this.)

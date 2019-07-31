@@ -1,4 +1,4 @@
-.\" aprs-weather-submit version 1.2.1
+.\" aprs-weather-submit version 1.3
 .\" Copyright (c) 2019 Colin Cogle
 .\"
 .\" This file, aprs-weather-submit.1, is part of aprs-weather-submit.
@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "aprs-weather-submit" "July 31, 2019" "Version 1.2.1"
+.TH aprs\-weather\-submit 1 "aprs-weather-submit" "July 31, 2019" "Version 1.3"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -238,9 +238,7 @@ This app does not allow submitting WinAPRS-style positionless weather reports as
 However, APRS 1.2.1 says that the raw and positionless formats are "strongly discouraged for use."
 There are no plans to implement this deprecated functionality.
 .PP
-The -q/-\-use\-uncompressed\-position switch is not yet implemented.
-This is a known issue.
-For now, all positions are always sent in compressed format, unless this app was compiled without \fB-D\fICOMPRESS_POSITIONS\fR.
+If this app was compiled with \fB-D\fINO_APRSIS\fR set to remove all APRS-IS functionality, then the \fB--server\fR, \fB--port\fR, \fB--username\fR, and \fB--password\fR switches will be unavailable.  On top of that, using them will throw an error.  This is to be expected.
 .PP
 You cannot connect to an APRS-IS IGate that does \fInot\fP require authentication.
 The developer assumed that all APRS-IS servers would want to authenticate people sending in data to be published to the entire world.
@@ -255,23 +253,24 @@ Some older apps and devices may unintentionally display the new APRS 1.2 measure
 This is compliant with the APRS specification and not a bug in this app.
 
 .SH STANDARDS CONFORMING TO
+aprs-weather-submit compiles with APRS version 1.2.1, as documented in the following:
 .TP
 .UR http://\:www.aprs.org/\:doc/\:APRS101.PDF
-.B "APRS Protocol Reference: Protocol Version 1.0" (29 Aug 2000)
+"APRS Protocol Reference: Protocol Version 1.0" (29 Aug 2000)
 .UE
 .TP
-\fBAPRS Version 1.1 Errata (3 Nov 2011)
+"APRS Version 1.1 Errata" (3 Nov 2011)
 .TP
 .UR http://\:www.aprs.org/\:aprs11\:spec-wx.txt
 "APRS Weather Specification Comments" (24 Mar 2011)
 .UE
 .TP
 .UR http://\:www.aprs.org/\:aprs12/\:weather-new.txt
-\fBAPRS Version 1.2.1\fP, "Weather Updates to the Spec" (24 Mar 2011)
+APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 1.2.1"
+.BR aprs\-weather\-submit ", version 1.3"
 .br
 Copyright (c) 2019 Colin Cogle.
 .br
