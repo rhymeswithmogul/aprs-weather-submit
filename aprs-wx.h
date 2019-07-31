@@ -64,7 +64,7 @@ void packetConstructor(APRSPacket* const p);
  * @param precip  A constant representing how much precipitation precipitated.
  * @since         0.2
  */
-void rain(char* const pResult, const double precip);
+extern void rain(char* const pResult, const double precip);
 
 /**
  * notNull() -- return !0 if the user specified a meaningful value.
@@ -77,7 +77,7 @@ void rain(char* const pResult, const double precip);
  * @return    0 if this value is unspecified/not meaningful; !0 otherwise.
  * @since     0.2
  */
-int notNull(const char* const val);
+extern int notNull(const char* const val);
 
 /**
  * printAPRSPacket() -- create a textual representation of an APRS weather packet.
@@ -110,7 +110,7 @@ void compressedPosition(char* const pResult, const double decimal, const char is
  * @param direction The direction in which the wind is blowing, in degrees from true north.
  * @since           0.2
  */
-char compressedWindDirection(const unsigned short direction);
+extern char compressedWindDirection(const unsigned short direction);
 
 /**
  * compressedWindSpeed() -- return an APRS-compressed wind speed.
@@ -121,7 +121,7 @@ char compressedWindDirection(const unsigned short direction);
  * @param speed  The wind speed, in miles per hour.
  * @since        0.2
  */
-char compressedWindSpeed(const unsigned short speed);
+extern char compressedWindSpeed(const unsigned short speed);
 
 /**
  * uncompressedPosition() -- return an APRS-uncompressed latitude or longitude value.

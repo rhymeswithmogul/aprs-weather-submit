@@ -70,7 +70,7 @@ void packetConstructor(APRSPacket* const p) {
  * @param speed  The wind speed, in miles per hour.
  * @since        0.2
  */
-char compressedWindSpeed(const unsigned short speed) {
+inline char compressedWindSpeed(const unsigned short speed) {
     return (char)(round(log(speed + 1) / logf(1.08)) + 33);
 }
 
@@ -83,7 +83,7 @@ char compressedWindSpeed(const unsigned short speed) {
  * @param direction The direction in which the wind is blowing, in degrees from true north.
  * @since           0.2
  */
-char compressedWindDirection(const unsigned short direction) {
+inline char compressedWindDirection(const unsigned short direction) {
 	return (char)(round(direction / 4) + 33);
 }
 
@@ -170,7 +170,7 @@ void uncompressedPosition(char* const pResult, const double decimal, const char 
  * @param precip  A constant representing how much precipitation precipitated.
  * @since         0.2
  */
-void rain(char* const pResult, const double precip) {
+inline void rain(char* const pResult, const double precip) {
 	snprintf(pResult, 4, "%03d", (unsigned short)precip);
 	return;
 }
@@ -186,7 +186,7 @@ void rain(char* const pResult, const double precip) {
  * @return    0 if this value is unspecified/not meaningful; !0 otherwise.
  * @since     0.2
  */
-int notNull(const char* const val) {
+inline int notNull(const char* const val) {
 	return val[0] != '.';
 }
 
