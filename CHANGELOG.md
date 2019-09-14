@@ -1,3 +1,7 @@
+## Version 1.3.1
+<time datetime="2019-09-14T11:46:52-04:00">September 14, 2019</time>
+* Fixed a bug where uncompressed latitudes greater than 90° were truncated.  This was not the default behavior. My apologies to anyone in Asia, Australia, Oceania, and most of the Americas.
+
 ## Version 1.3
 <time datetime="2019-07-31T01:54:29-04:00">July 31, 2019</time>
 * Added the compile-time option <tt>NO_APRSIS</tt> to strip all Internet-related functionality, just in case you're <em>really</em> low on space.

@@ -7,7 +7,6 @@
 *.d
 
 # Object files
-aprs-weather-submit
 *.o
 *.ko
 *.obj
@@ -58,3 +57,9 @@ Mkfile.old
 dkms.conf
 
 # End of https://www.gitignore.io/api/c
+
+### Mac stuff
+.DS_Store
+
+### Binary
+aprs-weather-submit

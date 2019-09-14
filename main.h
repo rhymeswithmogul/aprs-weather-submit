@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.3
+ aprs-weather-submit version 1.3.1
  Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
  
  This file, main.h, is part of aprs-weather-submit.
@@ -23,7 +23,7 @@
 
 /* Program constants. */
 #define PROGRAM_NAME "aprs-weather-submit"
-#define VERSION      "1.3"
+#define VERSION      "1.3.1"
 
 /**
  * usage() -- show some help.

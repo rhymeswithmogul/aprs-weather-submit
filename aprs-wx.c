@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.3
+ aprs-weather-submit version 1.3.1
  Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
 
  This file, aprs-wx.c, is part of aprs-weather-submit.
@@ -132,19 +132,16 @@ void compressedPosition(char* const pResult, const double decimal, const char is
  * @since             0.2
  */
 void uncompressedPosition(char* const pResult, const double decimal, const char isLongitude) {
-	signed char   degrees;
-	unsigned char minutes = 0; /* initialized here to prevent compiler warnings */
-	unsigned char seconds = 0;
-	float         x;
+	unsigned char degrees, minutes = 0, seconds = 0;
 
-	if (decimal > 90) {
+	if (!isLongitude && (decimal > 90 || decimal < -90)) {
 		degrees = 90;
 	}
-	else if (decimal < -90) {
-		degrees = -90;
+	else if (isLongitude && (decimal < -180 || decimal > 180)) {
+		degrees = 180;
 	}
 	else {
-		x = fabs(decimal);
+		float x = fabs(decimal);
 		degrees = (signed char)floor(x);
 		x -= degrees;
 		x *= 60;
@@ -153,10 +150,10 @@ void uncompressedPosition(char* const pResult, const double decimal, const char 
 	}
 
 	if (isLongitude == IS_LATITUDE) {
-		snprintf(pResult,  9, "%02d%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'S' : 'N'));
+		snprintf(pResult,  9, "%02u%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'S' : 'N'));
 	}
 	else {
-		snprintf(pResult, 10, "%03d%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'W' : 'E'));
+		snprintf(pResult, 10, "%03u%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'W' : 'E'));
 	}
 
 	return;
