@@ -1,3 +1,7 @@
+## Pending changes for the next version
+* Copyright date change.
+* Better documentation for the compression type byte.
+
 ## Version 1.3.1
 <time datetime="2019-09-14T11:46:52-04:00">September 14, 2019</time>
 * Fixed a bug where uncompressed latitudes greater than 90° were truncated.  This was not the default behavior. My apologies to anyone in Asia, Australia, Oceania, and most of the Americas.

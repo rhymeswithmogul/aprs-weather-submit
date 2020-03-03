@@ -1,9 +1,10 @@
 /*
  aprs-weather-submit version 1.3.1
- Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
+ Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
  
  This file, main.h, is part of aprs-weather-submit.
- 
+ <https://github.com/rhymeswithmogul/aprs-weather-submit>
+
  aprs-weather-submit is free software: you can redistribute it and/or
  modify it under the terms of the GNU General Public License as published
  by the Free Software Foundation, either version 3 of the License, or

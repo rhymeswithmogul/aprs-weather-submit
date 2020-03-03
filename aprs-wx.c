@@ -1,8 +1,9 @@
 /*
  aprs-weather-submit version 1.3.1
- Copyright (c) 2019 Colin Cogle <colin@colincogle.name>
+ Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
 
  This file, aprs-wx.c, is part of aprs-weather-submit.
+ <https://github.com/rhymeswithmogul/aprs-weather-submit>
 
  aprs-weather-submit is free software: you can redistribute it and/or
  modify it under the terms of the GNU General Public License as published
@@ -201,9 +202,9 @@ void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, cha
 	struct tm *now            = gmtime(&t); /* APRS uses GMT */
 
 	if (compressPacket == COMPRESSED_PACKET) {
-        /* Compression type byte ("T"):
-         * (GPS fix: current) | (NMEA source: other) | (Origin: software)
-         *                                                           ↓
+		/* Compression type byte ("T"):
+		 * (GPS fix: current) | (NMEA source: other) | (Origin: software)
+		 *                                                           ?
 		 *                    header_________ timestamp____ pos_wc_s_Tt__*/
 		snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
