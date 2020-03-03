@@ -203,7 +203,8 @@ void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, cha
 
 	if (compressPacket == COMPRESSED_PACKET) {
 		/* Compression type byte ("T"):
-		 * (GPS fix: current) | (NMEA source: other) | (Origin: software)
+		 * (GPS fix: current) | (NMEA source: other) | (Origin: software) = 34
+		 * Add 33 as per the spec, and you get 67, the ASCII code for 'C'.
 		 *                                                           ?
 		 *                    header_________ timestamp____ pos_wc_s_Tt__*/
 		snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
