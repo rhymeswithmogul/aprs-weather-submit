@@ -32,7 +32,8 @@
  * @author Colin Cogle
  * @since  0.1
  */
-void usage(void);
+void
+usage (void);
 
 /**
  * help() -- show even more help.
@@ -40,7 +41,8 @@ void usage(void);
  * @author Colin Cogle
  * @since  0.1
  */
-extern void help(void);
+extern void
+help (void);
 
 /**
  * version() -- show the version.
@@ -48,7 +50,8 @@ extern void help(void);
  * @author Colin Cogle
  * @since  0.1
  */
-void version(void);
+void
+version (void);
 
 /* A decent buffer size (plus one). */
 #ifndef	BUFSIZE

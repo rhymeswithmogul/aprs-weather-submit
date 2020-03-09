@@ -41,7 +41,9 @@
 #define MAX(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
-int main(const int argc, const char** argv) {
+int
+main (const int argc, const char** argv)
+{
 	char         packetToSend[BUFSIZE] = "";
 	char         packetFormat = UNCOMPRESSED_PACKET;
     char         c = '\0';          /* for getopt_long() */
@@ -100,24 +102,28 @@ int main(const int argc, const char** argv) {
 	packetConstructor(&packet);
 
 	/* Check for --compressed-position early. */
-	for (i = 0; i < argc; i++) {
-		if (
-			strncmp(argv[i], "-C", MAX(2, strlen(argv[i]))) == 0 ||
-			strncmp(argv[i], "--compressed-position", MAX(21, strlen(argv[i]))) == 0
-		) {
+	for (i = 0; i < argc; i++)
+	{
+		if (strncmp(argv[i], "-C", MAX(2, strlen(argv[i]))) == 0
+		    || strncmp(argv[i], "--compressed-position", MAX(21, strlen(argv[i]))) == 0)
+		{
 			packetFormat = COMPRESSED_PACKET;
 			break;
 		}
 	}
-	if (packetFormat == UNCOMPRESSED_PACKET) {
+
+	if (packetFormat == UNCOMPRESSED_PACKET)
+	{
 		strcpy(packet.windDirection, "...");
 		strcpy(packet.windSpeed, "...");
 	}
 
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1) {
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1)
+	{
 		double x = 0.0;	 /* scratch space */
 
-		switch (c) {
+		switch (c)
+		{
 			/* Use compressed position (-C | --compressed-position). */
 			case 'C':
 				/* We handled this before the while loop. */
@@ -125,9 +131,10 @@ int main(const int argc, const char** argv) {
 
 			/* Use uncompressed position (-0 | --uncompressed-position). */
 			case '0':
-				/* This is now the default option as of version 1.4.  This switch
-				 * does nothing now, and is only defined for backwards compatibility.
-				*/
+				/* This is now the default option as of version 1.4.  This
+				 * switch does nothing now, and is only defined for backwards
+				 * compatibility.
+				 */
 				break;
 
 			/* Complete help (-H | --help) */
@@ -149,7 +156,8 @@ int main(const int argc, const char** argv) {
 			/* IGate server port (-o | --port) */
 			case 'o':
 				x = (double)atoi(optarg);
-				if (x <= 0 || x > 65535) {
+				if (x <= 0 || x > 65535)
+				{
 					fprintf(stderr, "%s: argument for option '-%c' was invalid.  Valid port numbers are 1 through 65535.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
@@ -175,14 +183,19 @@ int main(const int argc, const char** argv) {
 			/* Your latitude, in degrees north (-n | --latitude) */
 			case 'n':
 				x = atof(optarg);
-				if (x < -90 || x > 90) {
+				if (x < -90 || x > 90)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between -90 and 90 degrees north.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
-					if (packetFormat == COMPRESSED_PACKET) {
+				}
+				else
+				{
+					if (packetFormat == COMPRESSED_PACKET)
+					{
 						compressedPosition(packet.latitude, x, IS_LATITUDE);
 					}
-					else {
+					else
+					{
 						uncompressedPosition(packet.latitude, x, IS_LATITUDE);
 					}
 				}
@@ -191,15 +204,19 @@ int main(const int argc, const char** argv) {
 			/* Your longitude, in degrees east (-e | --longitude) */
 			case 'e':
 				x = atof(optarg);
-				if (x < -180 || x > 180) {
+				if (x < -180 || x > 180)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between -180 and 180 degrees east.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
-				else {
-					if (packetFormat == COMPRESSED_PACKET) {
+				else
+				{
+					if (packetFormat == COMPRESSED_PACKET)
+					{
 						compressedPosition(packet.longitude, x, IS_LONGITUDE);
 					}
-					else {
+					else
+					{
 						uncompressedPosition(packet.longitude, x, IS_LONGITUDE);
 					}
 				}
@@ -208,14 +225,19 @@ int main(const int argc, const char** argv) {
 			/* Wind direction, in degrees from true north (-c | --wind-direction) */
 			case 'c':
 				x = atof(optarg);
-				if (x < 0 || x > 360) {
+				if (x < 0 || x > 360)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 360 degrees.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
-					if (packetFormat == COMPRESSED_PACKET) {
+				}
+				else
+				{
+					if (packetFormat == COMPRESSED_PACKET)
+					{
 						snprintf(packet.windDirection, 2, "%c", compressedWindDirection((int)x % 360));
 					}
-					else {
+					else
+					{
 						snprintf(packet.windDirection, 4, "%03d", (int)(round(x)) % 360);
 					}
 				}
@@ -224,12 +246,18 @@ int main(const int argc, const char** argv) {
 			/* Wind speed in miles per hour (-S | --wind-speed) */
 			case 'S':
 				x = atof(optarg);
-				if (x < 0 || x > 999) {
+				if (x < 0 || x > 999)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 999 miles per hour.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
-					if (packetFormat == COMPRESSED_PACKET) {
-						snprintf(packet.windSpeed, 2, "%c", compressedWindSpeed( (const uint16_t)x  ) );
+				}
+				else
+				{
+					if (packetFormat == COMPRESSED_PACKET)
+					{
+						snprintf(packet.windSpeed, 2, "%c",
+						         compressedWindSpeed((const uint16_t)x)
+						);
 					}
 					else {
 						snprintf(packet.windSpeed, 4, "%03d", (int)(round(x)));
@@ -240,10 +268,13 @@ int main(const int argc, const char** argv) {
 			/* Wind gust, in miles per hour (-g | --gust) */
 			case 'g':
 				x = atof(optarg);
-				if (x < 0 || x > 999) {
+				if (x < 0 || x > 999)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 999 miles per hour.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
+				}
+				else
+				{
 					snprintf(packet.gust, 4, "%03d", (int)(round(x)) );
 				}
 				break;
@@ -251,10 +282,13 @@ int main(const int argc, const char** argv) {
 			/* Temperature in degrees Fahrenheit (-t | --temperature) */
 			case 't':
 				x = atof(optarg);
-				if (x < -99 || x > 999) {
+				if (x < -99 || x > 999)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between -99 and 999 degrees Fahrenheit.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
+				}
+				else
+				{
 					snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
 				}
 				break;
@@ -263,10 +297,13 @@ int main(const int argc, const char** argv) {
 			case 'T':
 				x = atof(optarg);
 				x = x * 1.8 + 32;
-				if (x < -99 || x > 999) {
+				if (x < -99 || x > 999)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between -72 and 537 degrees Celsius.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
+				}
+				else
+				{
 					snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
 				}
 				break;
@@ -274,10 +311,13 @@ int main(const int argc, const char** argv) {
 			/* Rainfall in the past hour, in inches (-r | --rainfall-last-hour) */
 			case 'r':
 				x = atof(optarg);
-				if (x < 0 || x > 9.99) {
+				if (x < 0 || x > 9.99)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 9.99 inches.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
+				}
+				else
+				{
 					rain(packet.rainfallLastHour, x * 100);
 				}
 				break;
@@ -285,10 +325,13 @@ int main(const int argc, const char** argv) {
 			/* Rainfall in the past 24 hours, in inches (-p | --rainfall-last-day) */
 			case 'p':
 				x = atof(optarg);
-				if (x < 0 || x > 9.99) {
+				if (x < 0 || x > 9.99)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 9.99 inches.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
+				}
+				else
+				{
 					rain(packet.rainfallLast24Hours, x * 100);
 				}
 				break;
@@ -296,10 +339,13 @@ int main(const int argc, const char** argv) {
 			/* Rainfall since midnight, in inches (-P | --rainfall-since-midnight) */
 			case 'P':
 				x = atof(optarg);
-				if (x < 0 || x > 9.99) {
+				if (x < 0 || x > 9.99)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 9.99 inches.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
+				}
+				else
+				{
 					rain(packet.rainfallSinceMidnight, x * 100);
 				}
 				break;
@@ -307,15 +353,25 @@ int main(const int argc, const char** argv) {
 			/* (APRS 1.1) Snowfall in the last 24 hours, in inches (-s | --snowfall) */
 			case 's':
 				x = atof(optarg);
-				if (x < 0 || x > 999) {
+				if (x < 0 || x > 999)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 999 inches.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
-					/* According to the APRS 1.1 errata, if we have more than ten inches, remove the decimal part.
-					 APRS doesn't give us enough resolution to report it. http://www.aprs.org/aprs11/spec-wx.txt */
-					if (x > 10) {
-						snprintf(packet.snowfallLast24Hours, 4, "%03d", (unsigned short)floor(x));
-					} else {
+				}
+				else
+				{
+					/* According to the APRS 1.1 errata, if we have more than
+					 * ten inches, remove the decimal part. APRS doesn't give us
+					 * enough resolution to report it.
+					 * http://www.aprs.org/aprs11/spec-wx.txt
+					 */
+					if (x > 10)
+					{
+						snprintf(packet.snowfallLast24Hours, 4, "%03d",
+						         (unsigned short)floor(x));
+					}
+					else
+					{
 						snprintf(packet.snowfallLast24Hours, 4, "%1f", x);
 					}
 				}
@@ -324,10 +380,13 @@ int main(const int argc, const char** argv) {
 			/* Humidity, in the range from 1 to 100% (-h | --humidity) */
 			case 'h':
 				x = atoi(optarg);
-				if (x < 0 || x > 99) {
+				if (x < 0 || x > 99)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0%% and 100%%.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
+				}
+				else
+				{
 					unsigned short int h = (unsigned short)(round(x));
 					/* APRS only supports values 1-100. Round 0% up to 1%. */
 					if (h == 0) {
@@ -344,10 +403,13 @@ int main(const int argc, const char** argv) {
 			/* Barometric pressure, in millibars or hectopascals (-b | --pressure) */
 			case 'b':
 				x = atof(optarg);
-				if (x < 0 || x > 9999.9) {
+				if (x < 0 || x > 9999.9)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 9999.9 millibars.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
+				}
+				else
+				{
 					snprintf(packet.pressure, 6, "%.5d", (int)(round(x * 10)) );
 				}
 				break;
@@ -359,9 +421,10 @@ int main(const int argc, const char** argv) {
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 1999 watts per square meter.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				} else {
-					/*
-					 This is where it gets weird.  APRS supports readings of up to 2,000 W/m^2, but only gives us three digits'
-					 resolution to use.  Values under 1000 are encoded as "L000" and values over 1000 are encoded as "l000".
+					/* This is where it gets weird.  APRS supports readings of
+					 * up to 2,000 W/m^2, but only gives us three digits' 
+					 * resolution to use.  Values under 1000 are encoded as
+					 * "L000" and values over 1000 are encoded as "l000".
 					 */
 					snprintf(packet.luminosity, 5, "L%.3d", (int)(x) % 1000);
 					if (x > 999) {
@@ -381,7 +444,8 @@ int main(const int argc, const char** argv) {
 					for (; x > 100; magnitude++) {
 						x /= 10;
 					}
-					snprintf(packet.radiation, 4, "%.2d%d", (unsigned short)x, magnitude);
+					snprintf(packet.radiation, 4, "%.2d%d",
+					         (unsigned short)x, magnitude);
 				}
 				break;
 
@@ -423,7 +487,10 @@ int main(const int argc, const char** argv) {
 	 * Check for mandatory parameters.
 	 * If any are missing, show usage() and quit.
 	 */
-	if (strlen(packet.callsign) == 0 || strlen(packet.latitude) == 0 || strlen(packet.longitude) == 0) {
+	if (strlen(packet.callsign) == 0
+	    || strlen(packet.latitude) == 0
+		|| strlen(packet.longitude) == 0)
+	{
 		usage();
 		return EXIT_FAILURE;
 	}
@@ -436,9 +503,12 @@ int main(const int argc, const char** argv) {
 	 * Otherwise, print the packet to stdout and let the user deal with it.
 	 */
 #ifndef NO_APRSIS
-	if (strlen(server) && strlen(username) && strlen(password) && port != 0) {
+	if (strlen(server) && strlen(username) && strlen(password) && port != 0)
+	{
 		sendPacket(server, port, username, password, packetToSend);
-	} else {
+	}
+	else
+	{
 #endif
 		fputs(packetToSend, stdout);
 #ifndef NO_APRSIS
@@ -454,7 +524,9 @@ int main(const int argc, const char** argv) {
  * @author Colin Cogle
  * @since  0.1
  */
-void version(void) {
+void
+version (void)
+{
     printf("%s, version %s", PROGRAM_NAME, VERSION);
 #ifdef DEBUG
     fputs(", compiled with debugging output", stdout);
@@ -476,7 +548,9 @@ Public License (version 3.0) for more details.");
  * @author Colin Cogle
  * @since  0.1
  */
-void usage(void) {
+void
+usage(void)
+{
 	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER PARAMETERS]\n", PROGRAM_NAME);
 	return;
 }
@@ -487,7 +561,9 @@ void usage(void) {
  * @author Colin Cogle
  * @since  0.1
  */
-inline void help(void) {
+inline void
+help (void)
+{
 	version();
 	puts("");
 	usage();

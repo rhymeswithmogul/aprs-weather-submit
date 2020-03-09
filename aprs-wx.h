@@ -22,7 +22,8 @@
 #ifndef aprs_wx_h
 #define aprs_wx_h
 
-typedef struct APRSPacket {
+typedef struct APRSPacket
+{
 	char callsign[10]; /* callsign (strlen <= 6), dash, SSID (strlen <= 2) */
 	char latitude[9];
 	char longitude[10];
@@ -55,7 +56,8 @@ typedef struct APRSPacket {
  * @param p The struct to instantiate.
  * @since 0.1
  */
-void packetConstructor(APRSPacket* const p);
+void
+packetConstructor (APRSPacket* const p);
 
 /**
  * rain() -- format a rainfall measurement
@@ -65,20 +67,23 @@ void packetConstructor(APRSPacket* const p);
  * @param precip  A constant representing how much precipitation precipitated.
  * @since         0.2
  */
-extern void rain(char* const pResult, const double precip);
+extern void
+rain (char* const pResult, const double precip);
 
 /**
  * notNull() -- return !0 if the user specified a meaningful value.
  *
- * Return !0 if there is a numerical value for this parameter.  If the user hasn't specified
- * a value, then packetConstructor() would have filled this with dots, so return 0.
+ * Return !0 if there is a numerical value for this parameter.  If the user
+ * hasn't specified a value, then packetConstructor() would have filled this
+ * with dots, so return 0.
  *
  * @author    Colin Cogle
  * @param val A constant pointer to the raw value, which will remain constant.
  * @return    0 if this value is unspecified/not meaningful; !0 otherwise.
  * @since     0.2
  */
-extern int notNull(const char* const val);
+extern int
+notNull (const char* const val);
 
 /**
  * printAPRSPacket() -- create a textual representation of an APRS weather packet.
@@ -87,9 +92,12 @@ extern int notNull(const char* const val);
  * @param p                 A pointer to an APRS packet of type (struct APRSPacket).
  * @param ret               A pointer to a string that will hold the return value.
  * @param compressedPacket  The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
- * @param suppressUserAgent If !=0, don't put the Linux flag ('X') nor the app name and version in the comment field.
+ * @param suppressUserAgent If !=0, don't put the Linux flag ('X') nor the app
+ *                          name and version in the comment field.
  */
-void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, char compressedPacket, char suppressUserAgent);
+void
+printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
+                 char compressedPacket, char suppressUserAgent);
 
 /**
  * compressedPosition() -- return an APRS-compressed latitude or longitude value.
@@ -100,7 +108,9 @@ void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, cha
  * @param isLongitude  The constant IS_LATITUDE or IS_LONGITUDE.
  * @since              0.2
  */
-void compressedPosition(char* const pResult, const double decimal, const char isLongitude);
+void
+compressedPosition (char* const pResult, const double decimal,
+                    const char isLongitude);
 
 /**
  * compressedWindDirection() -- return an APRS-compressed wind direction.
@@ -108,10 +118,12 @@ void compressedPosition(char* const pResult, const double decimal, const char is
  * This value will fill the APRS direction/heading value.
  *
  * @author          Colin Cogle
- * @param direction The direction in which the wind is blowing, in degrees from true north.
+ * @param direction The direction in which the wind is blowing, in degrees from
+ *                  true north.
  * @since           0.2
  */
-extern char compressedWindDirection(const unsigned short direction);
+extern char
+compressedWindDirection (const unsigned short direction);
 
 /**
  * compressedWindSpeed() -- return an APRS-compressed wind speed.
@@ -122,10 +134,12 @@ extern char compressedWindDirection(const unsigned short direction);
  * @param speed  The wind speed, in miles per hour.
  * @since        0.2
  */
-extern char compressedWindSpeed(const unsigned short speed);
+extern char
+compressedWindSpeed (const unsigned short speed);
 
 /**
- * uncompressedPosition() -- return an APRS-uncompressed latitude or longitude value.
+ * uncompressedPosition() -- return an APRS-uncompressed latitude or longitude
+ * value.
  *
  * @author            Colin Cogle
  * @param pResult     A constant pointer to the return value.
@@ -133,6 +147,8 @@ extern char compressedWindSpeed(const unsigned short speed);
  * @param isLongitude The constant IS_LATITUDE or IS_LONGITUDE.
  * @since             0.2
  */
-void uncompressedPosition(char* const pResult, double decimal, const char isLongitude);
+void
+uncompressedPosition(char* const pResult, double decimal,
+                     const char isLongitude);
 
 #endif /* aprs_wx_h */
