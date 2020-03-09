@@ -1,4 +1,4 @@
-.\" aprs-weather-submit version 1.3.1
+.\" aprs-weather-submit version 1.4
 .\" Copyright (c) 2019-2020 Colin Cogle
 .\"
 .\" This file, aprs-weather-submit.1, is part of aprs-weather-submit.
@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "aprs-weather-submit" "September 14, 2019" "Version 1.3.1"
+.TH aprs\-weather\-submit 1 "aprs-weather-submit" "September 14, 2019" "Version 1.4"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -206,7 +206,7 @@ If you wanted to print an APRS packet showing the current barometric pressure of
 .nf
 .RS
 .B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-b 990.1 \-t \-1
-W1AW-13>APRS,TCPIP*:@090251z4142.88N/07243.71W_.../...t-01b09901Xaprs-weather-submit/1.3.1
+W1AW-13>APRS,TCPIP*:@090251z4142.88N/07243.71W_.../...t-01b09901Xaprs-weather-submit/1.4
 .RE
 .fi
 .PP
@@ -274,7 +274,7 @@ APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 1.3.1"
+.BR aprs\-weather\-submit ", version 1.4"
 .br
 Copyright (c) 2019 Colin Cogle.
 .br
