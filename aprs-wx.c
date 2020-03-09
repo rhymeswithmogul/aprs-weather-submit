@@ -133,7 +133,8 @@ void compressedPosition(char* const pResult, const double decimal, const char is
  * @since             0.2
  */
 void uncompressedPosition(char* const pResult, const double decimal, const char isLongitude) {
-	unsigned char degrees, minutes = 0, seconds = 0;
+	short degrees;
+	float minutes;
 
 	if (!isLongitude && (decimal > 90 || decimal < -90)) {
 		degrees = 90;
@@ -143,18 +144,15 @@ void uncompressedPosition(char* const pResult, const double decimal, const char 
 	}
 	else {
 		float x = fabs(decimal);
-		degrees = (signed char)floor(x);
-		x -= degrees;
-		x *= 60;
-		minutes = (unsigned char)floor(x);
-		seconds = (unsigned char)floor((x - minutes) * 60);
+		degrees = (short)floor(x);
+		minutes = (x - degrees) * 60;
 	}
 
 	if (isLongitude == IS_LATITUDE) {
-		snprintf(pResult,  9, "%02u%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'S' : 'N'));
+		snprintf(pResult,  9, "%02u%.2f%c", degrees, minutes, (decimal < 0 ? 'S' : 'N'));
 	}
 	else {
-		snprintf(pResult, 10, "%03u%02u.%02u%c", degrees, minutes, seconds, (decimal < 0 ? 'W' : 'E'));
+		snprintf(pResult, 10, "%03u%.2f%c", degrees, minutes, (decimal < 0 ? 'W' : 'E'));
 	}
 
 	return;
