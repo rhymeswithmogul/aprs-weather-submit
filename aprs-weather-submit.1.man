@@ -78,10 +78,12 @@ Show long help and exit.
 .BR \-v ", " \-\-version
 Show version information and exit.
 .TP
-.BR \-q ", " \-\-use\-uncompressed\-position
-Report using uncompressed position data.
-By default, aprs\-weather\-submit will send packets with the position in compressed format.
-This option will decompress the latitude, longitude, wind direction, and wind speed information.
+.BR \-C ", " \-\-compressed\-position
+Report using compressed position data.
+By default, aprs\-weather\-submit will send packets with the position in uncompressed format.
+This option will compress the latitude, longitude, wind direction, and wind speed information.
+It is recommended to use compressed positions; however, it is not the default option because
+the popular website https://APRS.fi does not support compressed positions in weather packets.
 
 .SS REQUIRED OPTIONS
 The APRS specification requires all packets to have a callsign, and strongly encourages all weather reports to have position information.
@@ -204,7 +206,7 @@ If you wanted to print an APRS packet showing the current barometric pressure of
 .nf
 .RS
 .B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-b 990.1 \-t \-1
-W1AW-13>APRS,TCPIP*:@230338z/9F,=<+74_  Ct0-1b09901Xaprs-weather-submit/1.3.1
+W1AW-13>APRS,TCPIP*:@090251z4142.88N/07243.71W_.../...t-01b09901Xaprs-weather-submit/1.3.1
 .RE
 .fi
 .PP
@@ -247,6 +249,8 @@ This will be fixed in a future release.
 APRS-IS usernames and passwords, as well as your packet, are sent over the Internet in cleartext.
 This app does not use TLS to secure the data in transit, nor is the developer aware of such a protocol.
 (If secure APRS-IS exists, please let me know and I'll code it!)
+.PP
+Uncompressed positions were made the default option again as of version 1.4.  For backwards compatibility with older versions of this app, the undocumented \fB-0\fR and \fB--uncompressed-position\fR switches are still accepted (but they do nothing).
 
 .SH NOTES
 Some older apps and devices may unintentionally display the new APRS 1.2 measurements (radiation, water level, and voltage) as a comment rather than a measurement.

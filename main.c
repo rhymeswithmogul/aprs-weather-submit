@@ -43,7 +43,7 @@
 
 int main(const int argc, const char** argv) {
 	char         packetToSend[BUFSIZE] = "";
-	char         packetFormat = COMPRESSED_PACKET;
+	char         packetFormat = UNCOMPRESSED_PACKET;
     char         c = '\0';          /* for getopt_long() */
     int          option_index = 0;  /* for getopt_long() */
 	unsigned int i = 0;
@@ -56,7 +56,8 @@ int main(const int argc, const char** argv) {
 #endif
 
 	const static struct option long_options[] = {
-		{"uncompressed-position",   no_argument,       0, '0'},
+		{"compressed-position",     no_argument,       0, 'C'},
+		{"uncompressed-position",   no_argument,       0, '0'},	/* ignored as of v1.4 */
 		{"help",                    no_argument,       0, 'H'},
 		{"version",                 no_argument,       0, 'v'},
 #ifndef NO_APRSIS
@@ -96,25 +97,35 @@ int main(const int argc, const char** argv) {
 #endif
 	packetConstructor(&packet);
 
-	/* Check for --uncompressed-position early. */
+	/* Check for --compressed-position early. */
 	for (i = 0; i < argc; i++) {
 		if (
-			strncmp(argv[i], "-0", MAX(2, strlen(argv[i]))) == 0 ||
-			strncmp(argv[i], "--uncompressed-position", MAX(23, strlen(argv[i]))) == 0
+			strncmp(argv[i], "-C", MAX(2, strlen(argv[i]))) == 0 ||
+			strncmp(argv[i], "--compressed-position", MAX(21, strlen(argv[i]))) == 0
 		) {
-			packetFormat = UNCOMPRESSED_PACKET;
-			strcpy(packet.windDirection, "...");
-			strcpy(packet.windSpeed, "...");
+			packetFormat = COMPRESSED_PACKET;
 			break;
 		}
 	}
+	if (packetFormat == UNCOMPRESSED_PACKET) {
+		strcpy(packet.windDirection, "...");
+		strcpy(packet.windSpeed, "...");
+	}
 
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "0HvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1) {
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1) {
 		double x = 0.0;	 /* scratch space */
 
 		switch (c) {
-			/* --uncompressed-position was already handled */
+			/* Use compressed position (-C | --compressed-position). */
+			case 'C':
+				/* We handled this before the while loop. */
+				break;
+
+			/* Use uncompressed position (-0 | --uncompressed-position). */
 			case '0':
+				/* This is now the default option as of version 1.4.  This switch
+				 * does nothing now, and is only defined for backwards compatibility.
+				*/
 				break;
 
 			/* Complete help (-H | --help) */
@@ -445,7 +456,7 @@ void version(void) {
     fputs(", compiled without APRS-IS support", stdout);
 #endif
     puts(".\n\
-Copyright (c) 2019 Colin Cogle.\n\
+Copyright (c) 2019-2020 Colin Cogle.\n\
 This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n\
 are welcome to redistribute it under certain conditions.  See the GNU General\n\
 Public License (version 3.0) for more details.");
@@ -475,9 +486,9 @@ inline void help(void) {
 	usage();
 	puts("\n\
 Special parameters:\n\
-	-H, --help               Show this help and exit.\n\
-	-v, --version            Show version and licensing information, and exit.\n\
-	--uncompressed-position  Create a packet with the uncompressed position format.\n\
+	-H, --help                 Show this help and exit.\n\
+	-v, --version              Show version and licensing information, and exit.\n\
+	-C, --compressed-position  Create a packet with the compressed position format.\n\
 \n\
 Required parameters:\n\
 	-k, --callsign      Your callsign, with SSID if desired.\n\
