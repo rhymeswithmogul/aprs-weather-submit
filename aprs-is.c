@@ -34,7 +34,7 @@
 #include <unistd.h>     /* EAI_SYSTEM */
 #else  /* _WIN32 */
 #include <WinSock2.h>   /* all that socket stuff on Windows */
-#include <WS2tcpip.h>   /* inet_pton() -- only available on Windows Vista and higher */
+#include <WS2tcpip.h>   /* inet_pton(), only available on Windows Vista and up */
 #endif /* _WIN32 */
 
 /**
@@ -70,34 +70,44 @@ sendPacket (const char* const restrict server, const unsigned short port,
 	WSADATA          wsaData;
 
 	wsaResult = WSAStartup(MAKEWORD(2,2), &wsaData);
-	if (wsaResult != 0) {
-		fprintf(stderr, "WinSock2: WSAStartup failed with error: %d\n", wsaResult);
+	if (wsaResult != 0)
+	{
+		fprintf(stderr,
+		        "WinSock2: WSAStartup failed with error: %d\n", wsaResult);
 		exit(EXIT_FAILURE);
 	}
 #endif
 
 	error = getaddrinfo(server, NULL, NULL, &results);
-	if (error != 0) {
-		if (error == EAI_SYSTEM) {
+	if (error != 0)
+	{
+		if (error == EAI_SYSTEM)
+		{
 			perror("getaddrinfo");
-		} else {
-			fprintf(stderr, "error in getaddrinfo: %s: %s\n", server, gai_strerror(error));
+		}
+		else
+		{
+			fprintf(stderr, "error in getaddrinfo: %s: %s\n", server,
+			        gai_strerror(error));
 		}
 		exit(EXIT_FAILURE);
 	}
 
-	for (result = results; result != NULL; result = result->ai_next) {
+	for (result = results; result != NULL; result = result->ai_next)
+	{
 		/* For readability later: */
 		struct sockaddr* const addressinfo = result->ai_addr;
 
 		socket_desc = socket(addressinfo->sa_family, SOCK_STREAM, IPPROTO_TCP);
-		if (socket_desc < 0) {
+		if (socket_desc < 0)
+		{
 			perror("error in socket()");
 			continue; /* for loop */
 		}
 
 		/* Assign the port number. */
-		switch (addressinfo->sa_family) {
+		switch (addressinfo->sa_family)
+		{
 			case AF_INET:
 				((struct sockaddr_in*)addressinfo)->sin_port   = htons(port);
 				break;
@@ -107,38 +117,53 @@ sendPacket (const char* const restrict server, const unsigned short port,
 		}
 
 		/* Connect */
-		switch (addressinfo->sa_family) {
+		switch (addressinfo->sa_family)
+		{
 			case AF_INET:
-				inet_ntop(AF_INET, &((struct sockaddr_in*)addressinfo)->sin_addr, buffer, INET_ADDRSTRLEN);
+				inet_ntop(
+					AF_INET,
+					&((struct sockaddr_in*)addressinfo)->sin_addr,
+					buffer,
+					INET_ADDRSTRLEN);
 #ifdef DEBUG
-				printf("Connecting to %s:%d...\n", buffer, ntohs(((struct sockaddr_in*)addressinfo)->sin_port));
+				printf("Connecting to %s:%d...\n", buffer,
+				       ntohs(((struct sockaddr_in*)addressinfo)->sin_port));
 #endif
 				break;
 			case AF_INET6:
-				inet_ntop(AF_INET6, &((struct sockaddr_in6*)addressinfo)->sin6_addr, buffer, INET6_ADDRSTRLEN);
+				inet_ntop(
+					AF_INET6,
+					&((struct sockaddr_in6*)addressinfo)->sin6_addr,
+					buffer,
+					INET6_ADDRSTRLEN);
 #ifdef DEBUG
-				printf("Connecting to [%s]:%d...\n", buffer, ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port));
+				printf("Connecting to [%s]:%d...\n", buffer,
+				       ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port));
 #endif
 				break;
 		}
 
-		if (connect(socket_desc, addressinfo, (size_t)(result->ai_addrlen)) >= 0) {
+		if (connect(socket_desc, addressinfo, (size_t)(result->ai_addrlen)) >= 0)
+		{
 			foundValidServerIP = 1;
 			break; /* for loop */
 		}
-		else {
+		else
+		{
 			perror("error in connect()");
 			shutdown(socket_desc, 2);
 		}
 	}
 	freeaddrinfo(results);
-	if (foundValidServerIP == 0) {
+	if (foundValidServerIP == 0)
+	{
 		fputs("Could not connect to the server.\n", stderr);
 		exit(EXIT_FAILURE);
 	}
 
 	/* Authenticate */
-	sprintf(buffer, "user %s pass %s vers %s/%s\n", username, password, PROGRAM_NAME, VERSION);
+	sprintf(buffer, "user %s pass %s vers %s/%s\n",
+	        username, password, PROGRAM_NAME, VERSION);
 #ifdef DEBUG
 	printf("> %s", buffer);
 #endif
@@ -147,20 +172,25 @@ sendPacket (const char* const restrict server, const unsigned short port,
 	strncpy(verificationMessage, username, (size_t)strlen(username)+1);
 	strncat(verificationMessage, " verified", 9);
 	bytesRead = recv(socket_desc, buffer, BUFSIZE, 0);
-	while (bytesRead > 0) {
+	while (bytesRead > 0)
+	{
 		buffer[bytesRead] = '\0';
 #ifdef DEBUG
 		printf("< %s", buffer);
 #endif
-		if (strstr(buffer, verificationMessage) != NULL) {
+		if (strstr(buffer, verificationMessage) != NULL)
+		{
 			authenticated = 1;
 			break;
-		} else {
+		}
+		else
+		{
 			bytesRead = recv(socket_desc, buffer, BUFSIZE, 0);
 		}
 	}
 	free(buffer);
-	if (!authenticated) {
+	if (!authenticated)
+	{
 		fputs("Authentication failed!", stderr);
 		exit(EXIT_FAILURE);
 	}
