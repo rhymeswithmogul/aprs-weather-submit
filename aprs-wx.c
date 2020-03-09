@@ -189,12 +189,14 @@ inline int notNull(const char* const val) {
 /**
  * printAPRSPacket() -- create a textual representation of an APRS weather packet.
  *
- * @author    Colin Cogle
- * @param p   A constant pointer to an APRS packet of type (struct APRSPacket).
- * @param ret A constant pointer to a string that will hold the return value.
+ * @author                  Colin Cogle
+ * @param p                 A constant pointer to an APRS packet of type (struct APRSPacket).
+ * @param ret               A constant pointer to a string that will hold the return value.
+ * @param compressedPacket  The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
+ * @param suppressUserAgent If !=0, don't put the Linux flag ('X') nor the app name and version in the comment field.
  * @since     0.1
  */
-void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, char compressPacket) {
+void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, char compressPacket, char suppressUserAgent) {
 	char      result[BUFSIZE] = "\0";
 	time_t    t               = time(NULL);
 	struct tm *now            = gmtime(&t); /* APRS uses GMT */
@@ -266,10 +268,12 @@ void printAPRSPacket(APRSPacket* restrict const p, char* restrict const ret, cha
 		strncat(result, p->snowfallLast24Hours, 3);
 	}
 	
-	strncat(result, "X", 1);
-	strncat(result, PROGRAM_NAME, strlen(PROGRAM_NAME));
-	strncat(result, "/", 1);
-	strncat(result, VERSION, strlen(VERSION));
+	if (suppressUserAgent != 0) {
+		strncat(result, "X", 1);
+		strncat(result, PROGRAM_NAME, strlen(PROGRAM_NAME));
+		strncat(result, "/", 1);
+		strncat(result, VERSION, strlen(VERSION));
+	}
 
 	strncat(result, "\n\0", 2);
 	strncpy(ret, result, strlen(result));

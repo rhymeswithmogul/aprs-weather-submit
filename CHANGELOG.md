@@ -1,3 +1,6 @@
+## Changes since version 1.4
+* Added the `--no-comment` option to suppress this app's user agent in the comment section of the packet.
+
 ## Version 1.4
 <time datetime="2020-03-08T22:59:19-04:00">March 8, 2020</time>
 * Fixed a bug where latitudes and longitudes were not being converted into <abbr title="Degrees, minutes, seconds">DMS</abbr> *exactly* as they should be, which had been leading to minor position inaccuracies.

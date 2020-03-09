@@ -84,6 +84,9 @@ By default, aprs\-weather\-submit will send packets with the position in uncompr
 This option will compress the latitude, longitude, wind direction, and wind speed information.
 It is recommended to use compressed positions; however, it is not the default option because
 the popular website https://APRS.fi does not support compressed positions in weather packets.
+.TP
+.BR \-Q ", " \-\-no\-comment
+Do not include the Linux flag ('X') nor the app's name and version in the comment field of the APRS packet.
 
 .SS REQUIRED OPTIONS
 The APRS specification requires all packets to have a callsign, and strongly encourages all weather reports to have position information.

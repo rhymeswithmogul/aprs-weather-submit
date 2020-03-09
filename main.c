@@ -53,11 +53,13 @@ int main(const int argc, const char** argv) {
     char         password[BUFSIZE] = "";
     char         server[NI_MAXHOST] = "";
     uint16_t     port = 0;
+	char         suppressUserAgent = 0;
 #endif
 
 	const static struct option long_options[] = {
 		{"compressed-position",     no_argument,       0, 'C'},
 		{"uncompressed-position",   no_argument,       0, '0'},	/* ignored as of v1.4 */
+		{"no-comment",              no_argument,       0, 'Q'},
 		{"help",                    no_argument,       0, 'H'},
 		{"version",                 no_argument,       0, 'v'},
 #ifndef NO_APRSIS
@@ -405,6 +407,11 @@ int main(const int argc, const char** argv) {
 				}
 				break;
 
+			/* -Q | --no-comment: Suppress our user agent, if desired. */
+			case 'Q':
+				suppressUserAgent = 1;
+				break;
+				
 			/* Unknown argument handler (quick help). */
 			default:
 				usage();
@@ -422,7 +429,7 @@ int main(const int argc, const char** argv) {
 	}
 
 	/* Create the APRS packet. */
-	printAPRSPacket(&packet, packetToSend, packetFormat);
+	printAPRSPacket(&packet, packetToSend, packetFormat, suppressUserAgent);
 
 	/*
 	 * If we specified all of the server information, send the packet.
@@ -489,6 +496,7 @@ Special parameters:\n\
 	-H, --help                 Show this help and exit.\n\
 	-v, --version              Show version and licensing information, and exit.\n\
 	-C, --compressed-position  Create a packet with the compressed position format.\n\
+	-Q, --no-comment           Don't include this app's name and version in the comment field.\n\
 \n\
 Required parameters:\n\
 	-k, --callsign      Your callsign, with SSID if desired.\n\
