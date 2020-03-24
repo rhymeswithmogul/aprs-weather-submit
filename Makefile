@@ -43,7 +43,7 @@ CFLAGS=-I. -std=gnu99 -Wall -Os
 LDFLAGS=-lm
 
 # Some variables.
-SRCS = main.c aprs-wx.c aprs-is.c
+SRCS = src/main.c src/aprs-wx.c src/aprs-is.c
 DEPS = $(SRCS:.c=.h)
 OBJS = $(SRCS:.c=.o)
 ifeq ($(PREFIX),)
@@ -58,14 +58,14 @@ all: $(SRCS) $(APPNAME)
 $(APPNAME): $(OBJS)
 	$(CC) $(CFLAGS) $(SRCS) -o $(APPNAME) $(LDFLAGS)
 
-main.o:    main.c main.h aprs-is.h aprs-wx.h
-	$(CC) $(CFLAGS) -c main.c
+main.o:    src/main.c src/main.h src/aprs-is.h src/aprs-wx.h
+	$(CC) $(CFLAGS) -c src/main.c
 
-aprs-is.o: aprs-is.c aprs-is.h main.h
-	$(CC) $(CFLAGS) -c aprs-is.c
+aprs-is.o: src/aprs-is.c src/aprs-is.h src/main.h
+	$(CC) $(CFLAGS) -c src/aprs-is.c
 
-aprs-wx.o: aprs-wx.c aprs-wx.h main.h
-	$(CC) $(CFLAGS) -c aprs-wx.c
+aprs-wx.o: src/aprs-wx.c src/aprs-wx.h src/main.h
+	$(CC) $(CFLAGS) -c src/aprs-wx.c
 
 .PHONY: clean
 
@@ -76,5 +76,4 @@ install:
 	install -d $(DESTDIR)$(PREFIX)/bin
 	install -m 755 $(APPNAME) $(DESTDIR)$(PREFIX)/bin/$(APPNAME)
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1
-	install -m 644 $(APPNAME).1.man $(DESTDIR)$(PREFIX)/share/man/man1/$(APPNAME).1
-
+	install -m 644 man/$(APPNAME).1.man $(DESTDIR)$(PREFIX)/share/man/man1/$(APPNAME).1
