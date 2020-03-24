@@ -77,3 +77,7 @@ install:
 	install -m 755 $(APPNAME) $(DESTDIR)$(PREFIX)/bin/$(APPNAME)
 	install -d $(DESTDIR)$(PREFIX)/share/man/man1
 	install -m 644 man/$(APPNAME).1.man $(DESTDIR)$(PREFIX)/share/man/man1/$(APPNAME).1
+
+uninstall:
+	rm -f $(DESTDIR)$(PREFIX)/bin/$(APPNAME)
+	rm -f $(DESTDIR)$(PREFIX)/share/man/man1/$(APPNAME).1
