@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>   /* fprintf(), printf(), snprintf(), fputs() */
+#include <assert.h>  /* assert() */
 #include <string.h>  /* strcpy(), strncpy(), strncat(), strlen() */
 #include <math.h>    /* floor(), round(), pow(), fabs() */
 #include <time.h>    /* struct tm, time_t, time(), gmtime() */
@@ -155,7 +156,7 @@ uncompressedPosition (char* const pResult, const double decimal,
                       const char isLongitude)
 {
 	short degrees;
-	float minutes;
+	float minutes = 0;
 
 	if (!isLongitude && (decimal > 90 || decimal < -90))
 	{
@@ -174,13 +175,15 @@ uncompressedPosition (char* const pResult, const double decimal,
 
 	if (isLongitude == IS_LATITUDE)
 	{
-		snprintf(pResult,  9, "%02u%.2f%c",
-		         degrees, minutes, (decimal < 0 ? 'S' : 'N'));
+		int ret = snprintf(pResult,  9, "%02u%.2f%c",
+		                   degrees, minutes, (decimal < 0 ? 'S' : 'N'));
+		assert(ret >= 0);
 	}
 	else
 	{
-		snprintf(pResult, 10, "%03u%.2f%c",
+		int ret = snprintf(pResult, 10, "%03u%.2f%c",
 		         degrees, minutes, (decimal < 0 ? 'W' : 'E'));
+		assert(ret >= 0);
 	}
 
 	return;
@@ -197,7 +200,8 @@ uncompressedPosition (char* const pResult, const double decimal,
 inline void
 rain (char* const pResult, const double precip)
 {
-	snprintf(pResult, 4, "%03d", (unsigned short)precip);
+	int ret = snprintf(pResult, 4, "%03d", (unsigned short)precip);
+	assert(ret >= 0);
 	return;
 }
 
@@ -246,18 +250,20 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		 * (GPS fix: current) | (NMEA source: other) | (Origin: software) = 34
 		 * Add 33 as per the spec, and you get 67, the ASCII code for 'C'.
 		 *                                                           ?
-		 *                    header_________ timestamp____ pos_wc_s_Tt__*/
-		snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
+		 *                              header_________ timestamp____ pos_wc_s_Tt__*/
+		int ret = snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
 			p->latitude, p->longitude, p->windDirection[0], p->windSpeed[0],
 			p->temperature);
+		assert(ret >= 0);
 	}
 	else {
-		/*                    header_________ timestamp____pos__wc_ s_t__*/
-		snprintf(result, 61, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%st%s",
+		/*                              header_________ timestamp____pos__wc_ s_t__*/
+		int ret = snprintf(result, 61, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%st%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
 			p->latitude, p->longitude, p->windDirection, p->windSpeed,
 			p->temperature);
+		assert(ret >= 0);
 	}
 
 	if (notNull(p->gust))
