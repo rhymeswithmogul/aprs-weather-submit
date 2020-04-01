@@ -48,7 +48,7 @@ main (const int argc, const char** argv)
 	char         packetFormat = UNCOMPRESSED_PACKET;
     char         c = '\0';          /* for getopt_long() */
     int          option_index = 0;  /* for getopt_long() */
-	unsigned int i = 0;
+	int          i = 0;
 	APRSPacket   packet;
 #ifndef NO_APRSIS
     char         username[BUFSIZE] = "";
