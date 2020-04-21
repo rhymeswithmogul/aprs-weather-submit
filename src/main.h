@@ -32,7 +32,7 @@
  * @author Colin Cogle
  * @since  0.1
  */
-void
+extern void
 usage (void);
 
 /**
@@ -50,7 +50,7 @@ help (void);
  * @author Colin Cogle
  * @since  0.1
  */
-void
+extern void
 version (void);
 
 /* A decent buffer size (plus one). */

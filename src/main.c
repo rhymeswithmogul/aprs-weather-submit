@@ -548,7 +548,7 @@ main (const int argc, const char** argv)
  * @author Colin Cogle
  * @since  0.1
  */
-void
+inline void
 version (void)
 {
     printf("%s, version %s", PROGRAM_NAME, VERSION);
@@ -572,7 +572,7 @@ Public License (version 3.0) for more details.");
  * @author Colin Cogle
  * @since  0.1
  */
-void
+inline void
 usage(void)
 {
 	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER PARAMETERS]\n", PROGRAM_NAME);
