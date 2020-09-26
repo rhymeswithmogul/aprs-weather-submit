@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.4
+ aprs-weather-submit version 1.5
  Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
 
  This file, aprs-wx.c, is part of aprs-weather-submit.
@@ -20,11 +20,12 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  */
 
 #include <stdio.h>   /* fprintf(), printf(), snprintf(), fputs() */
-#include <assert.h>  /* assert() */
 #include <string.h>  /* strcpy(), strncpy(), strncat(), strlen() */
 #include <math.h>    /* floor(), round(), pow(), fabs() */
 #include <time.h>    /* struct tm, time_t, time(), gmtime() */
-#include "main.h"    /* PROGRAM_NAME, VERSION, BUFSIZE */
+#include <assert.h>  /* assert() */
+
+#include "main.h"    /* PACKAGE, VERSION, BUFSIZE */
 #include "aprs-wx.h"
 
 /**
@@ -39,6 +40,7 @@ packetConstructor (APRSPacket* const p)
 	strcpy(p->callsign, "");
 	strcpy(p->latitude, "");
 	strcpy(p->longitude, "");
+	strcpy(p->altitude, "");
 	strcpy(p->windDirection, " ");
 	strcpy(p->windSpeed, " ");
 	strcpy(p->gust, "..");
@@ -240,9 +242,9 @@ void
 printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
                  char compressPacket, char suppressUserAgent)
 {
-	char      result[BUFSIZE] = "\0";
-	time_t    t               = time(NULL);
-	struct tm *now            = gmtime(&t); /* APRS uses GMT */
+	char       result[BUFSIZE] = "\0";
+	time_t     t               = time(NULL);
+	struct tm* now             = gmtime(&t); /* APRS uses GMT */
 
 	if (compressPacket == COMPRESSED_PACKET)
 	{
@@ -269,62 +271,62 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 	if (notNull(p->gust))
 	{
 		strncat(result, "g", 1);
-		strncat(result, p->gust, 3);
+		strncat(result, p->gust, 4);
 	}
 
 	if (notNull(p->rainfallLastHour))
 	{
 		strncat(result, "r", 1);
-		strncat(result, p->rainfallLastHour, 3);
+		strncat(result, p->rainfallLastHour, 4);
 	}
 
 	if (notNull(p->rainfallLast24Hours))
 	{
 		strncat(result, "p", 1);
-		strncat(result, p->rainfallLast24Hours, 3);
+		strncat(result, p->rainfallLast24Hours, 4);
 	}
 
 	if (notNull(p->rainfallSinceMidnight))
 	{
 		strncat(result, "P", 1);
-		strncat(result, p->rainfallSinceMidnight, 3);
+		strncat(result, p->rainfallSinceMidnight, 4);
 	}
 
 	if (notNull(p->humidity))
 	{
 		strncat(result, "h", 1);
-		strncat(result, p->humidity, 2);
+		strncat(result, p->humidity, 3);
 	}
 
 	if (notNull(p->pressure))
 	{
 		strncat(result, "b", 1);
-		strncat(result, p->pressure, 5);
+		strncat(result, p->pressure, 6);
 	}
 
 	if (notNull(p->luminosity))
 	{
 		/* Remember, the letter is included below. */
-		strncat(result, p->luminosity, 4);
+		strncat(result, p->luminosity, 5);
 	}
 
 	if (notNull(p->radiation))
 	{
 		strncat(result, "X", 1);
-		strncat(result, p->radiation, 3);
+		strncat(result, p->radiation, 5);
 	}
 
 	/* F is required by APRS 1.2 if voltage is present  */
 	if (notNull(p->waterLevel) || notNull(p->voltage))
 	{
 		strncat(result, "F", 1);
-		strncat(result, p->waterLevel, 4);
+		strncat(result, p->waterLevel, 5);
 	}
 
 	if (notNull(p->voltage))
 	{
 		strncat(result, "V", 1);
-		strncat(result, p->voltage, 3);
+		strncat(result, p->voltage, 4);
 	}
 
 	if (notNull(p->snowfallLast24Hours))
@@ -334,18 +336,24 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		 * after it.
 		 */
 		strncat(result, "s", 1);
-		strncat(result, p->snowfallLast24Hours, 3);
+		strncat(result, p->snowfallLast24Hours, 4);
+	}
+
+	if (notNull(p->altitude))
+	{
+		strncat(result, "/A=", 3);
+		strncat(result, p->altitude, 7);
 	}
 	
 	if (suppressUserAgent != 0)
 	{
 		strncat(result, "X", 1);
-		strncat(result, PROGRAM_NAME, strlen(PROGRAM_NAME));
+		strncat(result, PACKAGE, strlen(PACKAGE));
 		strncat(result, "/", 1);
 		strncat(result, VERSION, strlen(VERSION));
 	}
 
 	strncat(result, "\n\0", 2);
-	strncpy(ret, result, strlen(result));
+	strcpy(ret, result);
 	return;
 }

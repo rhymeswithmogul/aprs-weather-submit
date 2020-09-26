@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.4
+ aprs-weather-submit version 1.5
  Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
  
  This file, aprs-wx.h, is part of aprs-weather-submit.
@@ -27,6 +27,7 @@ typedef struct APRSPacket
 	char callsign[10]; /* callsign (strlen <= 6), dash, SSID (strlen <= 2) */
 	char latitude[9];
 	char longitude[10];
+	char altitude[6];
 	char windDirection[4];
 	char windSpeed[4];
 	char gust[4];

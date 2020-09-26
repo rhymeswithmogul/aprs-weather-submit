@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.4
+ aprs-weather-submit version 1.5
  Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
  
  This file, aprs-is.h, is part of aprs-weather-submit.
@@ -19,7 +19,7 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  */
 
-#ifndef NO_APRSIS
+#ifdef HAVE_APRSIS_SUPPORT
 
 #ifndef aprs_is_h
 #define aprs_is_h
@@ -54,4 +54,4 @@ sendPacket (const char* const restrict server, const unsigned short port,
 
 #endif /* aprs_is_h */
 
-#endif // NO_APRSIS
+#endif /* HAVE_APRSIS_SUPPORT */

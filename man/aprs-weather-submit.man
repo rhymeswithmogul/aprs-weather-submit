@@ -1,4 +1,4 @@
-.\" aprs-weather-submit version 1.4
+.\" aprs-weather-submit version 1.5
 .\" Copyright (c) 2019-2020 Colin Cogle
 .\"
 .\" This file, aprs-weather-submit.1, is part of aprs-weather-submit.
@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "aprs-weather-submit" "March 9, 2020" "Version 1.4"
+.TH aprs\-weather\-submit 1 "aprs-weather-submit" "Unreleased" "Version 1.5"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -34,6 +34,8 @@ This command-line app will manually submit APRS 1.2.1-compliant weather informat
 [
 .BI "\-I " SERVER_NAME " \-o " PORT_NUMBER " \-u " USERNAME " \-d " PASSWORD
 ]
+.RB [ " \-A "
+.IR FEET " ]\:"
 .RB [ " \-b "
 .IR MILLIBARS_OR_HECTOPASCALS " ]\:"
 .RB [ " \-c "
@@ -82,13 +84,12 @@ Show version information and exit.
 Report using compressed position data.
 By default, aprs\-weather\-submit will send packets with the position in uncompressed format.
 This option will compress the latitude, longitude, wind direction, and wind speed information.
-It is recommended to use compressed positions; however, it is not the default option because
-the popular website https://APRS.fi does not support compressed positions in weather packets.
+It is recommended to use compressed positions;  however, it is not the default option because the popular website https://APRS.fi does not support compressed positions in weather packets.
 .TP
 .BR \-Q ", " \-\-no\-comment
-Do not include the Linux flag ('X') nor the app's name and version in the comment field of the APRS packet.
+Do not include the APRS software type character ('X') nor the app's name and version in the comment field of the APRS packet.
 
-.SS REQUIRED OPTIONS
+.SS CALLSIGN AND LOCATION OPTIONS
 The APRS specification requires all packets to have a callsign, and strongly encourages all weather reports to have position information.
 (See the BUGS AND ERRATA section.)
 .TP
@@ -105,6 +106,11 @@ For locations in the Southern Hemisphere, make the number negative.
 Required parameter.
 Enter your weather station's current longitude, in decimal degrees east of the Prime Meridian.
 For locations in the Western Hemisphere, make the number negative.
+.TP
+.BR \-A ", " \-\-altitude =\fIFEET\fP
+Optional parameter.
+The altitude of your weather station, expressed in feet about the mean sea level.
+You may report values up to 999,999 feet, with a one-foot resolution.
 
 .SS REQUIRED APRS-IS OPTIONS
 If you do not specify \fIall\fP of the following options to connect to and authenticate with an IGate, then the APRS packet will only be printed to stdout.
@@ -208,8 +214,8 @@ If you were operating the ARRL's (theoretical) weather station at their headquar
 If you wanted to print an APRS packet showing the current barometric pressure of 990.1 mbar and a temperature of -1 degree Fahrenheit:
 .nf
 .RS
-.B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-b 990.1 \-t \-1
-W1AW-13>APRS,TCPIP*:@090251z4142.88N/07243.71W_.../...t-01b09901Xaprs-weather-submit/1.4
+.B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-b 990.1 \-t \-1 \-A 240
+W1AW-13>APRS,TCPIP*:@090251z4142.88N/07243.71W_.../...t-01b09901/A=000240Xaprs-weather-submit/1.5
 .RE
 .fi
 .PP
@@ -243,7 +249,7 @@ This app does not allow submitting WinAPRS-style positionless weather reports as
 However, APRS 1.2.1 says that the raw and positionless formats are "strongly discouraged for use."
 There are no plans to implement this deprecated functionality.
 .PP
-If this app was compiled with \fB-D\fINO_APRSIS\fR set to remove all APRS-IS functionality, then the \fB--server\fR, \fB--port\fR, \fB--username\fR, and \fB--password\fR switches will be unavailable.  On top of that, using them will throw an error.  This is to be expected.
+If this app was compiled with \fB--without-aprs-is\fR to remove all APRS-IS functionality, then the \fB--server\fR, \fB--port\fR, \fB--username\fR, and \fB--password\fR switches will be unavailable.  On top of that, using them will throw an error.  This is to be expected.
 .PP
 You cannot connect to an APRS-IS IGate that does \fInot\fP require authentication.
 The developer assumed that all APRS-IS servers would want to authenticate people sending in data to be published to the entire world.
@@ -277,9 +283,9 @@ APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 1.4"
+.BR aprs\-weather\-submit ", version 1.5"
 .br
-Copyright (c) 2019 Colin Cogle.
+Copyright (c) 2019-2020 Colin Cogle.
 .br
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it under certain conditions.

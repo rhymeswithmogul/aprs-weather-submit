@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.4
+ aprs-weather-submit version 1.5
  Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
 
  This file, aprs-is.c, is part of aprs-weather-submit.
@@ -19,10 +19,12 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  */
 
+#ifdef HAVE_APRSIS_SUPPORT
+
 #include <stdio.h>      /* fprintf(), printf(), fputs() */
 #include <stdlib.h>     /* malloc(), free(), exit() and constants */
 #include <string.h>     /* str?cat() */
-#include "main.h"       /* PROGRAM_NAME, VERSION */
+#include "main.h"       /* PACKAGE, VERSION */
 #include "aprs-is.h"
 
 #ifndef _WIN32
@@ -163,13 +165,13 @@ sendPacket (const char* const restrict server, const unsigned short port,
 
 	/* Authenticate */
 	sprintf(buffer, "user %s pass %s vers %s/%s\n",
-	        username, password, PROGRAM_NAME, VERSION);
+	        username, password, PACKAGE, VERSION);
 #ifdef DEBUG
 	printf("> %s", buffer);
 #endif
 	send(socket_desc, buffer, (size_t)strlen(buffer), 0);
 
-	strncpy(verificationMessage, username, (size_t)strlen(username)+1);
+	strcpy(verificationMessage, username);
 	strncat(verificationMessage, " verified", 9);
 	bytesRead = recv(socket_desc, buffer, BUFSIZE, 0);
 	while (bytesRead > 0)
@@ -205,3 +207,5 @@ sendPacket (const char* const restrict server, const unsigned short port,
 	shutdown(socket_desc, 2);
 	return;
 }
+
+#endif /* HAVE_APRSIS_SUPPORT */

@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.4
+ aprs-weather-submit version 1.5
  Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
  
  This file, main.c, is part of aprs-weather-submit.
@@ -25,10 +25,10 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <stdlib.h>         /* atof(), EXIT_SUCCESS, EXIT_FAILURE */
 #include <string.h>         /* str*cpy() and friends */
 #include <math.h>           /* round(), floor() */
-#include <stdint.h>         /* uint16_t*/
+#include <stdint.h>         /* uint16_t */
 #include <assert.h>			/* assert() */
 
-#ifndef NO_APRSIS
+#ifdef HAVE_APRSIS_SUPPORT
 #include "aprs-is.h"
 #endif
 
@@ -47,18 +47,18 @@ main (const int argc, const char** argv)
 {
 	char         packetToSend[BUFSIZE] = "";
 	char         packetFormat = UNCOMPRESSED_PACKET;
+	char         suppressUserAgent = 0;
     char         c = '\0';          /* for getopt_long() */
     int          option_index = 0;  /* for getopt_long() */
 	int          i = 0;
 	int          formatTruncationCheck;  /* so we can compile without
 	                                        -Wno-format-trunctionation */
 	APRSPacket   packet;
-#ifndef NO_APRSIS
+#ifdef HAVE_APRSIS_SUPPORT
     char         username[BUFSIZE] = "";
     char         password[BUFSIZE] = "";
     char         server[NI_MAXHOST] = "";
     uint16_t     port = 0;
-	char         suppressUserAgent = 0;
 #endif
 
 	const static struct option long_options[] = {
@@ -67,7 +67,7 @@ main (const int argc, const char** argv)
 		{"no-comment",              no_argument,       0, 'Q'},
 		{"help",                    no_argument,       0, 'H'},
 		{"version",                 no_argument,       0, 'v'},
-#ifndef NO_APRSIS
+#ifdef HAVE_APRSIS_SUPPORT
         {"server",                  required_argument, 0, 'I'},
 		{"port",                    required_argument, 0, 'o'},
 		{"username",                required_argument, 0, 'u'},
@@ -76,6 +76,7 @@ main (const int argc, const char** argv)
         {"callsign",                required_argument, 0, 'k'},
 		{"latitude",                required_argument, 0, 'n'},
 		{"longitude",               required_argument, 0, 'e'},
+		{"altitude",                required_argument, 0, 'A'},
 		/*
 			The following options are using APRS-standard short options,
 			for clarity.  The exception is wind speed, because that's
@@ -150,8 +151,8 @@ main (const int argc, const char** argv)
 				version();
 				return EXIT_SUCCESS;
 
-#ifndef NO_APRSIS
-            /* IGate server name (-I | --server) */
+#ifdef HAVE_APRSIS_SUPPORT
+			/* IGate server name (-I | --server) */
 			case 'I':
 				formatTruncationCheck = snprintf(server, strlen(optarg)+1, "%s", optarg);
 				assert(formatTruncationCheck >= 0);
@@ -179,7 +180,7 @@ main (const int argc, const char** argv)
 				formatTruncationCheck = snprintf(password, strlen(optarg)+1, "%s", optarg);
 				assert(formatTruncationCheck >= 0);
 				break;
-#endif // NO_APRSIS
+#endif /* HAVE_APRSIS_SUPPORT */
 
 			/* Callsign, with SSID if desired (-k | --callsign) */
 			case 'k':
@@ -226,6 +227,21 @@ main (const int argc, const char** argv)
 					{
 						uncompressedPosition(packet.longitude, x, IS_LONGITUDE);
 					}
+				}
+				break;
+
+			/* Your altitude, in feet about mean sea level (-A | --altitude) */
+			case 'A':
+				x = atoi(optarg);
+				if (x > 999999)
+				{
+					fprintf(stderr, "%s: option `-%c' must be less than 999,999 feet.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				}
+				else
+				{
+					formatTruncationCheck = snprintf(packet.altitude, 6, "%05d", (int)x);
+					assert(formatTruncationCheck >= 0);
 				}
 				break;
 
@@ -522,11 +538,11 @@ main (const int argc, const char** argv)
 	/* Create the APRS packet. */
 	printAPRSPacket(&packet, packetToSend, packetFormat, suppressUserAgent);
 
+#ifdef HAVE_APRSIS_SUPPORT
 	/*
 	 * If we specified all of the server information, send the packet.
 	 * Otherwise, print the packet to stdout and let the user deal with it.
 	 */
-#ifndef NO_APRSIS
 	if (strlen(server) && strlen(username) && strlen(password) && port != 0)
 	{
 		sendPacket(server, port, username, password, packetToSend);
@@ -535,7 +551,7 @@ main (const int argc, const char** argv)
 	{
 #endif
 		fputs(packetToSend, stdout);
-#ifndef NO_APRSIS
+#ifdef HAVE_APRSIS_SUPPORT
 	}
 #endif
 	
@@ -551,11 +567,11 @@ main (const int argc, const char** argv)
 inline void
 version (void)
 {
-    printf("%s, version %s", PROGRAM_NAME, VERSION);
+    printf("%s, version %s", PACKAGE, VERSION);
 #ifdef DEBUG
     fputs(", compiled with debugging output", stdout);
 #endif
-#ifdef NO_APRSIS
+#ifndef HAVE_APRSIS_SUPPORT
     fputs(", compiled without APRS-IS support", stdout);
 #endif
     puts(".\n\
@@ -575,7 +591,7 @@ Public License (version 3.0) for more details.");
 inline void
 usage(void)
 {
-	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER PARAMETERS]\n", PROGRAM_NAME);
+	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER PARAMETERS]\n", PACKAGE);
 	return;
 }
 
@@ -602,15 +618,16 @@ Required parameters:\n\
 	-k, --callsign      Your callsign, with SSID if desired.\n\
 	-e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n\
 	-n, --latitude      The latitude of your weather station, in degrees north of the equator.\n");
-#ifndef NO_APRSIS
+#ifdef HAVE_APRSIS_SUPPORT
     puts("APRS-IS IGate parameters:\n\
 	-I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
 	-o, --port          Port that the APRS-IS IGate service is listening on.\n\
 	-u, --username      Authenticate to the server with this username.\n\
 	-d, --password      Authenticate to the server with this password.\n");
 #endif
-    puts("Optional weather parameters:\n\
-	-b, --pressure                 Barometric pressure (in millibars or hectopascals).\n\
+    puts("Optional parameters:\n\
+	-A, --altitude                 The altitude of your weather station (in feet above mean sea level).\n\
+	-b, --pressure                 Barometric pressure (millibars or hectopascals).\n\
 	-c, --wind-direction           Direction that the wind is blowing (degrees).\n\
 	-F, --water-level-above-stage  Water level above flood stage or mean tide (feet).\n\
 	-g, --gust                     Peak wind speed in the last five minutes (miles per hour).\n\

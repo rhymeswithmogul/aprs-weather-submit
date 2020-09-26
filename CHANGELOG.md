@@ -1,5 +1,11 @@
-## Changes since version 1.4
-* Added the `--no-comment` option to suppress this app's user agent in the comment section of the packet.
+## Version 1.5
+<time datetime="2020-09-26T13:19:22-05:00">September 26, 2020</time>
+* Replace the Makefile with an Autoconf script.
+* Replace the `-DNO_APRSIS` make option with the `--disable-aprs-is` configure switch.
+* Add support for disabling assertions with the `--disable-assert` configure switch (though I recommend not using this).
+* Conform with GNU standards by adding a ChangeLog file (plain-text copy of GitHub's CHANGELOG.md), COPYING (a copy of LICENSE), NEWS, and README (a plaintext copy of GitHub's README.md).
+* Add the `--no-comment` option to suppress this app's user agent in the comment section of the packet.
+* Add the `--altitude` (`-A`) option to allow for reporting the location's altitude, in feet above mean sea level.
 
 ## Version 1.4
 <time datetime="2020-03-08T22:59:19-04:00">March 8, 2020</time>

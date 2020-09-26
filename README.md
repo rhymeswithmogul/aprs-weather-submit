@@ -7,7 +7,7 @@ Anyone can use this app to create [an APRS packet](http://www.aprs.org/doc/APRS1
 ## Examples
 At the bare minimum, you can submit your weather station's position with a command line like this:
 ```console
-$ ./aprs-weather-submit --callsign W1AW-13 --latitude 41.714692 --longitude -72.728514 --server example-igate-server.foo --port 12345 --username hiram --password percymaxim
+$ ./aprs-weather-submit --callsign W1AW-13 --latitude 41.714692 --longitude -72.728514 --altitude 240 --server example-igate-server.foo --port 12345 --username hiram --password percymaxim
 ```
 
 If you'd like to report a temperature of 68°F, you can use a command like this:
@@ -18,10 +18,11 @@ $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -I example-igate-s
 Or, if you just want the raw packet for your own use, don't specify server information:
 ```console
 $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -t 68
-W1AW-13>APRS,TCPIP*:@090247z4142.88N/07243.71W_.../...t068Xaprs-weather-submit/1.4
+W1AW-13>APRS,TCPIP*:@090247z4142.88N/07243.71W_.../...t068Xaprs-weather-submit/1.5
 ```
 
 This app supports all of the weather data parameters defined in APRS versions up to and including version 1.2.1:
+* Altitude (`-A`, `--altitude`)
 * Barometric pressure (`-b`, `--pressure`)
 * Luminosity (`-L`, `--luminosity`)
 * Radiation (`-X`, `--radiation`)
