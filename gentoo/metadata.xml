@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<bugs-to>https://github.com/rhymeswithmogul/aprs-weather-submit/issues</bugs-to>
+	<changelog>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/e31dbcc356a2adf596b0200394ce8bbcb83b604c/CHANGELOG.md</changelog>
+	<doc>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/e31dbcc356a2adf596b0200394ce8bbcb83b604c/README.md</doc>
+	<longdescription>Manually submit weather data to the APRS network.</longdescription>
+	<maintainer type="person" status="active">
+		<name>Colin Cogle</name>
+		<email>colin@colincogle.name</email>
+		<description>You may also open an issue on GitHub.</description>
+	</maintainer>
+	<stabilize-allarches/>
+	<upstream>
+		<remote-id type="github">aprs-weather-submit</remote-id>
+	</upstream>
+	<use>
+		<flag name="aprs-is">Compile this app with APRS-IS support.  If disabled, this app will only output the raw packet to stdout.</flag>
+	</use>
+</pkgmetadata>
