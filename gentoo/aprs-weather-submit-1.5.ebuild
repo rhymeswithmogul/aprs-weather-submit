@@ -4,7 +4,7 @@
 EAPI=7
 DESCRIPTION="Manually submit weather data to the APRS network."
 HOMEPAGE="https://github.com/rhymeswithmogul/aprs-weather-submit"
-SRC_URI="https://github.com/rhymeswithmogul/aprs-weather-submit/archive/v1.5.tar.gz"
+SRC_URI="https://github.com/rhymeswithmogul/aprs-weather-submit/archive/v1.5.tar.gz" -> "aprs-weather-submit_1.5.tar.gz"
 LICENSE="AGPL-3 AGPL-3+"
 SLOT="0"
 KEYWORDS="~amd64"

@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes"?>
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
-	<longdescription>Manually submit weather data to the APRS network.</longdescription>
+	<longdescription>Not everyone has a fancy weather station with APRS connectivity built in.  Maybe you're like me, and have an old-school thermometer and CoCoRaHS-approved rain gauge.  This command-line app can compile on most Linux toolchains and will manually submit APRS 1.2.1-compliant information via APRS-IS.</longdescription>
 	<maintainer type="person">
 		<name>Colin Cogle</name>
 		<email>colin@colincogle.name</email>
