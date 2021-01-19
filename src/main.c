@@ -1,6 +1,6 @@
 /*
  aprs-weather-submit version 1.5
- Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
+ Copyright (c) 2019-2021 Colin Cogle <colin@colincogle.name>
  
  This file, main.c, is part of aprs-weather-submit.
  <https://github.com/rhymeswithmogul/aprs-weather-submit>
@@ -575,7 +575,7 @@ version (void)
     fputs(", compiled without APRS-IS support", stdout);
 #endif
     puts(".\n\
-Copyright (c) 2019-2020 Colin Cogle.\n\
+Copyright (c) 2019-2021 Colin Cogle.\n\
 This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n\
 are welcome to redistribute it under certain conditions.  See the GNU General\n\
 Public License (version 3.0) for more details.");

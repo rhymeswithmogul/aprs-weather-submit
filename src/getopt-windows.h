@@ -1,6 +1,6 @@
 /*
  * aprs-weather-submit version 1.5
- * Copyright (c) 2019-2020 Colin Cogle <colin@colincogle.name>
+ * Copyright (c) 2019-2021 Colin Cogle <colin@colincogle.name>
  *
  * This file, getopt-windows.h, is part of aprs-weather-submit.
  * <https://github.com/rhymeswithmogul/aprs-weather-submit>
