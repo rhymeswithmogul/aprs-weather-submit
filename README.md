@@ -1,4 +1,7 @@
 # aprs-weather-submit
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a5e5337dd57b486089391aabd2f5429b)](https://app.codacy.com/gh/rhymeswithmogul/aprs-weather-submit?utm_source=github.com&utm_medium=referral&utm_content=rhymeswithmogul/aprs-weather-submit&utm_campaign=Badge_Grade_Settings)
+
 Not everyone has a fancy weather station with APRS connectivity built in.  Maybe you're like me, and have an old-school thermometer and CoCoRaHS-approved rain gauge.  This command-line app, written in C99, can compile on most Linux toolchains (Windows support is in the works) and will manually submit APRS 1.2.1-compliant weather information to the APRS-IS network.
 
 ## Help
