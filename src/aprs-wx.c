@@ -79,7 +79,7 @@ packetConstructor (APRSPacket* const p)
 inline char
 compressedWindSpeed (const unsigned short speed)
 {
-    return (char)(round(log(speed + 1) / logf(1.08)) + 33);
+    return (char)(round(log1p(speed) / logf(1.08)) + 33);
 }
 
 /**
@@ -177,13 +177,13 @@ uncompressedPosition (char* const pResult, const double decimal,
 
 	if (isLongitude == IS_LATITUDE)
 	{
-		int ret = snprintf(pResult,  9, "%02u%.2f%c",
+		int ret = snprintf(pResult,  9, "%02hi%.2f%c",
 		                   degrees, minutes, (decimal < 0 ? 'S' : 'N'));
 		assert(ret >= 0);
 	}
 	else
 	{
-		int ret = snprintf(pResult, 10, "%03u%.2f%c",
+		int ret = snprintf(pResult, 10, "%03hi%.2f%c",
 		         degrees, minutes, (decimal < 0 ? 'W' : 'E'));
 		assert(ret >= 0);
 	}
