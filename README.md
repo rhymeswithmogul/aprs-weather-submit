@@ -1,5 +1,7 @@
 # aprs-weather-submit
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/a5e5337dd57b486089391aabd2f5429b)](https://app.codacy.com/gh/rhymeswithmogul/aprs-weather-submit?utm_source=github.com\&utm_medium=referral\&utm_content=rhymeswithmogul/aprs-weather-submit\&utm_campaign=Badge_Grade_Settings)
+
 Not everyone has a fancy weather station with APRS connectivity built in.  Maybe you're like me, and have an old-school thermometer and CoCoRaHS-approved rain gauge.  This command-line app, written in C99, can compile on most Linux toolchains (Windows support is in the works) and will manually submit APRS 1.2.1-compliant weather information to the APRS-IS network.
 
 ## Help
@@ -23,6 +25,7 @@ $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -I example-igate-s
 Or, if you just want the raw packet for your own use, don't specify server information:
 
 ```console
+>>>>>>> 03eee40774a16ec1398e6c52ce82557d30d17f78
 $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -t 68
 W1AW-13>APRS,TCPIP*:@090247z4142.88N/07243.71W_.../...t068Xaprs-weather-submit/1.5
 ```
