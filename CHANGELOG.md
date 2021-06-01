@@ -35,11 +35,17 @@
 <time datetime="2019-07-31T01:13:29-04:00">July 31, 2019</time>
 
 *   Added \<stdint.h> to prevent compiler errors.  (Thank you to UR3QJW for reporting this.)
+
 *   Switched from ANSI C to the C99 standard, in order to keep using `snprintf()`.  Some compilers are stricter than mine and refuse to compile K\&R C with it.  (Another thank you to UR3QJW.)
+
 *   Since we switched to C99, I added some tiny performance enhancements with `restrict` and `inline`.
+
 *   Fixed a pair of bugs where uncompressed packets would fail to encode the location correctly.
+
 *   Fixed a bug where wind speeds would not be reported properly in compressed packets, because math is hard.
+
 *   Added linker options to the Makefile to fix linking errors with GCC 7.
+
 *   Code cleanup.
     \*<strong>Known issue:</strong> when compiling with GCC 7 and newer, there will be many warnings about formatting.  These can be ignored.  Adding `-Wno-format-detection` to the Makefile will quiet it down.  This will be patched in a future release.
 
