@@ -48,7 +48,7 @@ main (const int argc, const char** argv)
 	char         packetToSend[BUFSIZE] = "";
 	char         packetFormat = UNCOMPRESSED_PACKET;
 	char         suppressUserAgent = 0;
-    char         c = '\0';          /* for getopt_long() */
+    int          c = '\0';          /* for getopt_long() */
     int          option_index = 0;  /* for getopt_long() */
 	int          i = 0;
 	int          formatTruncationCheck;  /* so we can compile without
@@ -122,7 +122,7 @@ main (const int argc, const char** argv)
 		strcpy(packet.windSpeed, "...");
 	}
 
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1)
+	while ((c = getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1)
 	{
 		double x = 0.0;	 /* scratch space */
 
