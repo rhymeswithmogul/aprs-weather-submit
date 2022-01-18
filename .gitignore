@@ -63,3 +63,9 @@ dkms.conf
 
 ### Binary
 aprs-weather-submit
+
+### Intermediate files
+aclocal.m4
+autom4te.cache/
+config.log
+configure
