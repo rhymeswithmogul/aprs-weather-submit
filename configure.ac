@@ -1,5 +1,5 @@
 dnl  aprs-weather-submit version 1.5
-dnl  Copyright (c) 2019-2021 Colin Cogle <colin@colincogle.name>
+dnl  Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
 dnl
 dnl  This file, configure.ac, is part of aprs-weather-submit.
 dnl  <https://github.com/rhymeswithmogul/aprs-weather-submit>
