@@ -67,5 +67,10 @@ aprs-weather-submit
 ### Intermediate files
 aclocal.m4
 autom4te.cache/
+compile
 config.log
 configure
+depcomp
+install-sh
+Makefile.in
+missing
