@@ -49,6 +49,9 @@ This app supports all of the weather data parameters defined in APRS versions up
 *   Wind speed, peak in the last five minutes (`-g`, `--gust`)
 *   Wind speed, sustained over the last minute (`-S`, `--wind-speed`)
 
+## Installing
+This finally has a standard `configure` script.  See INSTALL.md for more information.
+
 ## Legal Notices
 
 To use this app, you *must* be either:

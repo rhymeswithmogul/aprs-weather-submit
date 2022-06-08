@@ -1,9 +1,8 @@
 ## Version 1.5.1
+<time datetime="2022-06-08T08:31:00-04:00">June 8, 2022</time>
 
-<time datetime="2022-01-18T07:47:51-05:00">January 18, 2022</time>
-
-*   Update copyright years.
-*   Fix a bug in `configure.ac` where the GNU option, as well intended as it was, caused the package not to compile on some versions of `autoconf`.
+*   Completely rewrite the build script to have a standard `autogen`, `configure`, and `make`.
+*   Eliminate compiler errors when using `-Wextra`.
 *   Fix a bug where [APRS.fi](https://APRS.fi) would not accept wind gust speeds if it was placed before the temperature.  This is a bug on their end, but it's a painless change over here.  (Thank you, [Menno](https://github.com/pd9mwo)!)
 
 ## Version 1.5

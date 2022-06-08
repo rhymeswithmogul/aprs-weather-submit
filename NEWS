@@ -1,20 +1,21 @@
 # aprs-weather-submit news
 
-This file details all of the user-facing changes that are in version 1.5 of
+This file details all of the user-facing changes that are in version 1.5.1 of
 aprs-weather-submit. For more details, please consult the CHANGELOG file or
 this project's GitHub page.
 
 ## NEW AND IMPROVED INSTALLATION PROCESS
 
-The Makefile was replaced by an Autoconf script.  Users will be able to
-install this package with the usual *nix process:
+The Makefile was replaced by an Autoconf script and a proper *nix build process.
+Users will be able to install this package with the usual *nix process:
 
+./autogen.sh
 ./configure
 make
 make install
 
 Because of this, the -DNO_APRSIS make option is being removed.  Instead, run
-./configure --without-aprs-is.
+./configure --disable-aprs-is
 
 
 ## ALTITUDE REPORTING
@@ -38,5 +39,4 @@ However, if you do use this option, please consider telling a friend about
 aprs-weather-submit.
 
 -----
-For information about older versions, consult the CHANGELOG or CHANGELOG.md
-files.
+For information about older versions, consult the CHANGELOG.md files.

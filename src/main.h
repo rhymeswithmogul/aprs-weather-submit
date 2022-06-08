@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.5
+ aprs-weather-submit version 1.5.1
  Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
  
  This file, main.h, is part of aprs-weather-submit.
