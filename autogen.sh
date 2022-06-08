@@ -1,7 +1,8 @@
+#!/bin/sh
 # aprs-weather-submit version 1.5
 # Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
 #
-# This file, Makefile.am, is part of aprs-weather-submit.
+# This file, autogen.sh, is part of aprs-weather-submit.
 # <https://github.com/rhymeswithmogul/aprs-weather-submit>
 #
 # This program is free software: you can redistribute it and/or modify it under
@@ -17,8 +18,7 @@
 # You should have received a copy of the GNU Affero General Public License along
 # with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 
-AUTOMAKE_OPTIONS = foreign
-bin_PROGRAMS = aprs-weather-submit
-aprs_weather_submit_SOURCES = src/main.c src/aprs-wx.c src/aprs-is.c
-man1_MANS = man/aprs-weather-submit.man
-LDADD = -lm
+aclocal || die "aclocal failed"
+autoconf || die "autoconf failed"
+automake --add-missing || die "automake failed"
+make clean
