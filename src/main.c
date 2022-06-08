@@ -61,7 +61,7 @@ main (const int argc, const char** argv)
     uint16_t     port = 0;
 #endif
 
-	const static struct option long_options[] = {
+	static const struct option long_options[] = {
 		{"compressed-position",     no_argument,       0, 'C'},
 		{"uncompressed-position",   no_argument,       0, '0'},	/* ignored as of v1.4 */
 		{"no-comment",              no_argument,       0, 'Q'},
