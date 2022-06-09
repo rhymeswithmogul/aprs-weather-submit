@@ -25,7 +25,6 @@ $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -I example-igate-s
 Or, if you just want the raw packet for your own use, don't specify server information:
 
 ```console
->>>>>>> 03eee40774a16ec1398e6c52ce82557d30d17f78
 $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -t 68
 W1AW-13>APRS,TCPIP*:@090247z4142.88N/07243.71W_.../...t068Xaprs-weather-submit/1.5
 ```
