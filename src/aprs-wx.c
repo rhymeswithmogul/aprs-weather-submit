@@ -345,7 +345,7 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strncat(result, p->altitude, 7);
 	}
 	
-	if (suppressUserAgent != 0)
+	if (suppressUserAgent != 1)
 	{
 		strncat(result, "X", 1);
 		strncat(result, PACKAGE, strlen(PACKAGE));

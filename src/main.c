@@ -122,7 +122,7 @@ main (const int argc, const char** argv)
 		strcpy(packet.windSpeed, "...");
 	}
 
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q", long_options, &option_index)) != -1)
 	{
 		double x = 0.0;	 /* scratch space */
 
