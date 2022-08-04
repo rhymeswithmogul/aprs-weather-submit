@@ -1,0 +1,19 @@
+Source: aprs-weather-submit
+Section: hamradio
+Priority: optional
+Maintainer: Colin Cogle <colin@colincogle.name>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.0
+Homepage: https://github.com/rhymeswithmogul/aprs-weather-submit
+#Vcs-Browser: https://salsa.debian.org/debian/aprs-weather-submit
+#Vcs-Git: https://salsa.debian.org/debian/aprs-weather-submit.git
+Rules-Requires-Root: no
+
+Package: aprs-weather-submit
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Manually submits weather station information to the APRS-IS network
+ Not everyone has a fancy weather station with APRS connectivity built in.
+ Maybe you are like me, and have an old-school thermometer and CoCoRaHS-approved
+ rain gauge. This command-line app can compile on most Linux toolchains and will
+ manually submit APRS 1.2.1-compliant information via APRS-IS.

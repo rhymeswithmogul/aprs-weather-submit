@@ -1,0 +1,5 @@
+aprs-weather-submit (1.5.2-1) unstable; urgency=medium
+
+  * First release for Debian.
+
+ -- Colin Cogle <colin@colincogle.name>  Thu, 04 Aug 2022 00:57:51 -0400
