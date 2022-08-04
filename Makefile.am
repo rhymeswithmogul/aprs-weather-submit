@@ -1,4 +1,4 @@
-# aprs-weather-submit version 1.5.1
+# aprs-weather-submit version 1.5.2
 # Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
 #
 # This file, Makefile.am, is part of aprs-weather-submit.

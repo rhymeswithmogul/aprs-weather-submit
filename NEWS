@@ -1,6 +1,6 @@
 # aprs-weather-submit news
 
-This file details all of the user-facing changes that are in version 1.5.x of
+This file details all of the user-facing changes that are in versions 1.5.x of
 aprs-weather-submit. For more details, please consult the CHANGELOG file or
 this project's GitHub page.
 
@@ -37,6 +37,13 @@ that this will not affect the aforementioned altitude reporting.
 
 However, if you do use this option, please consider telling a friend about
 aprs-weather-submit.
+
+## SUPPORT FOR NON-INTEL/AMD ARCHITECTURES
+
+Minor changes to the code have allowed this to compile and run on non-AMD64 and
+non-Intel systems.  So far, 64-bit PowerPC (big- and little-endian) has been
+tested and verified to work.  Please file a bug report to let us know if this
+code runs on other architectures!
 
 -----
 For information about older versions, consult the CHANGELOG.md files.

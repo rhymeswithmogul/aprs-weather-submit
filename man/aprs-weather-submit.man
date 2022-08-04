@@ -1,4 +1,4 @@
-.\" aprs-weather-submit version 1.5.1
+.\" aprs-weather-submit version 1.5.2
 .\" Copyright (c) 2019-2022 Colin Cogle
 .\"
 .\" This file, aprs-weather-submit.1, is part of aprs-weather-submit.

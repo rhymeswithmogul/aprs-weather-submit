@@ -1,8 +1,9 @@
-## Version 1.5.2 (in progress)
+## Version 1.5.2
+<time datetime="2022-08-04T00:45:00-04:00">August 4, 2022</time>
 *   Fix a bug where the `--no-comment` flag accidentally did the opposite of what it was supposed to do.
 *   Fix a bug where the short option `-Q` was not recognized.
 *   Fix a bug where altitude reports (`/A=`) were always included in packets, even when no altitude was specified.
-*   Various small improvements to allow this to compile on PowerPC systems.
+*   Small code change to allow this to compile on PowerPC (ppc64/ppc64le) and other non-x86 architectures.
 
 ## Version 1.5.1
 <time datetime="2022-06-08T08:31:00-04:00">June 8, 2022</time>
