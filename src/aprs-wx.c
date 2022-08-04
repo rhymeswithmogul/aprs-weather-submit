@@ -339,7 +339,7 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strncat(result, p->snowfallLast24Hours, 4);
 	}
 
-	if (notNull(p->altitude))
+	if (strlen(p->altitude))
 	{
 		strncat(result, "/A=", 3);
 		strncat(result, p->altitude, 7);
