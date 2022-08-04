@@ -7,3 +7,7 @@ To build and install `aprs-weather-submit`, do this:
 make
 sudo make install
 ```
+## Dependencies
+* autoconf
+* automake
+* GCC (Ubuntu: `build-essential`)

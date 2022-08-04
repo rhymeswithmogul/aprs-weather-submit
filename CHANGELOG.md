@@ -1,4 +1,4 @@
-## Version 1.5.2
+## Version 1.5.2 (in progress)
 *   Fix a bug where the `--no-comment` flag accidentally did the opposite of what it was supposed to do.
 *   Fix a bug where the short option `-Q` was not recognized.
 *   Fix a bug where altitude reports (`/A=`) were always included in packets, even when no altitude was specified.
@@ -12,7 +12,6 @@
 *   Fix a bug where [APRS.fi](https://APRS.fi) would not accept wind gust speeds if it was placed before the temperature.  This is a bug on their end, but it's a painless change over here.  (Thank you, [Menno](https://github.com/pd9mwo)!)
 
 ## Version 1.5
-
 <time datetime="2020-09-26T13:19:22-05:00">September 26, 2020</time>
 
 *   Replace the Makefile with an Autoconf script.
