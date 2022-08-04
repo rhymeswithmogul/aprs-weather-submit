@@ -48,7 +48,7 @@ main (const int argc, const char** argv)
 	char         packetToSend[BUFSIZE] = "";
 	char         packetFormat = UNCOMPRESSED_PACKET;
 	char         suppressUserAgent = 0;
-    char         c = '\0';          /* for getopt_long() */
+	signed char  c = '\0';          /* for getopt_long() */
     int          option_index = 0;  /* for getopt_long() */
 	int          i = 0;
 	int          formatTruncationCheck;  /* so we can compile without
