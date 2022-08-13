@@ -20,7 +20,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  */
 
 #include <stdio.h>   /* fprintf(), printf(), snprintf(), fputs() */
-#include <string.h>  /* strcpy(), strncpy(), strncat(), strlen() */
+#include <string.h>  /* strcpy(), strncpy(), strcat(), strlen() */
 #include <math.h>    /* floor(), round(), pow(), fabs() */
 #include <time.h>    /* struct tm, time_t, time(), gmtime() */
 #include <assert.h>  /* assert() */
@@ -270,63 +270,63 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 
 	if (notNull(p->gust))
 	{
-		strncat(result, "g", 1);
-		strncat(result, p->gust, 4);
+		strcat(result, "g");
+		strcat(result, p->gust);
 	}
 
 	if (notNull(p->rainfallLastHour))
 	{
-		strncat(result, "r", 1);
-		strncat(result, p->rainfallLastHour, 4);
+		strcat(result, "r");
+		strcat(result, p->rainfallLastHour);
 	}
 
 	if (notNull(p->rainfallLast24Hours))
 	{
-		strncat(result, "p", 1);
-		strncat(result, p->rainfallLast24Hours, 4);
+		strcat(result, "p");
+		strcat(result, p->rainfallLast24Hours);
 	}
 
 	if (notNull(p->rainfallSinceMidnight))
 	{
-		strncat(result, "P", 1);
-		strncat(result, p->rainfallSinceMidnight, 4);
+		strcat(result, "P");
+		strcat(result, p->rainfallSinceMidnight);
 	}
 
 	if (notNull(p->humidity))
 	{
-		strncat(result, "h", 1);
-		strncat(result, p->humidity, 3);
+		strcat(result, "h");
+		strcat(result, p->humidity);
 	}
 
 	if (notNull(p->pressure))
 	{
-		strncat(result, "b", 1);
-		strncat(result, p->pressure, 6);
+		strcat(result, "b");
+		strcat(result, p->pressure);
 	}
 
 	if (notNull(p->luminosity))
 	{
 		/* Remember, the letter is included below. */
-		strncat(result, p->luminosity, 5);
+		strcat(result, p->luminosity);
 	}
 
 	if (notNull(p->radiation))
 	{
-		strncat(result, "X", 1);
-		strncat(result, p->radiation, 5);
+		strcat(result, "X");
+		strcat(result, p->radiation);
 	}
 
 	/* F is required by APRS 1.2 if voltage is present  */
 	if (notNull(p->waterLevel) || notNull(p->voltage))
 	{
-		strncat(result, "F", 1);
-		strncat(result, p->waterLevel, 5);
+		strcat(result, "F");
+		strcat(result, p->waterLevel);
 	}
 
 	if (notNull(p->voltage))
 	{
-		strncat(result, "V", 1);
-		strncat(result, p->voltage, 4);
+		strcat(result, "V");
+		strcat(result, p->voltage);
 	}
 
 	if (notNull(p->snowfallLast24Hours))
@@ -335,25 +335,25 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		 * period as the start of a comment, and will ignore the weather data
 		 * after it.
 		 */
-		strncat(result, "s", 1);
-		strncat(result, p->snowfallLast24Hours, 4);
+		strcat(result, "s");
+		strcat(result, p->snowfallLast24Hours);
 	}
 
 	if (strlen(p->altitude))
 	{
-		strncat(result, "/A=", 3);
-		strncat(result, p->altitude, 7);
+		strcat(result, "/A=");
+		strcat(result, p->altitude);
 	}
 	
 	if (suppressUserAgent != 1)
 	{
-		strncat(result, "X", 1);
-		strncat(result, PACKAGE, strlen(PACKAGE));
-		strncat(result, "/", 1);
-		strncat(result, VERSION, strlen(VERSION));
+		strcat(result, "X");
+		strcat(result, PACKAGE);
+		strcat(result, "/");
+		strcat(result, VERSION);
 	}
 
-	strncat(result, "\n\0", 2);
+	strcat(result, "\n\0");
 	strcpy(ret, result);
 	return;
 }

@@ -1,3 +1,6 @@
+## Recent Changes
+*   Replace calls to `strncat()` with calls to `strcat()`.  This eliminates on-by-default warnings in GCC 8.1.  [Thank you](https://github.com/rhymeswithmogul/aprs-weather-submit/pull/4), [KR4DIO](https://github.com/KR4DIO)!
+
 ## Version 1.5.2
 <time datetime="2022-08-04T00:45:00-04:00">August 4, 2022</time>
 *   Fix a bug where the `--no-comment` flag accidentally did the opposite of what it was supposed to do.

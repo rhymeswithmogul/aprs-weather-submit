@@ -23,7 +23,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 
 #include <stdio.h>      /* fprintf(), printf(), fputs() */
 #include <stdlib.h>     /* malloc(), free(), exit() and constants */
-#include <string.h>     /* str?cat() */
+#include <string.h>     /* strcat() */
 #include "main.h"       /* PACKAGE, VERSION */
 #include "aprs-is.h"
 
@@ -172,7 +172,7 @@ sendPacket (const char* const restrict server, const unsigned short port,
 	send(socket_desc, buffer, (size_t)strlen(buffer), 0);
 
 	strcpy(verificationMessage, username);
-	strncat(verificationMessage, " verified", 9);
+	strcat(verificationMessage, " verified");
 	bytesRead = recv(socket_desc, buffer, BUFSIZE, 0);
 	while (bytesRead > 0)
 	{
