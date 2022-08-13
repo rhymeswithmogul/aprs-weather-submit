@@ -30,10 +30,9 @@ all APRS parsers may recognize it.
 ## DISABLE COMMENTS
 
 Do you want to shrink your APRS packets?  Use the --no-comment runtime option,
-and aprs-weather-submit will no longer include a comment.  This will remove its
-name and version in the comment section of your packet, and it will strip the
-"APRS Software Type" character (which has been hardcoded to X for Linux).  Note
-that this will not affect the aforementioned altitude reporting.
+and aprs-weather-submit will no longer include a comment.  This will remove the
+app's name and version from the comment section of your packet.  Note that this
+will not affect the aforementioned altitude reporting.
 
 However, if you do use this option, please consider telling a friend about
 aprs-weather-submit.

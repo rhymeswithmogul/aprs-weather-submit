@@ -93,8 +93,7 @@ notNull (const char* const val);
  * @param p                 A pointer to an APRS packet of type (struct APRSPacket).
  * @param ret               A pointer to a string that will hold the return value.
  * @param compressedPacket  The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
- * @param suppressUserAgent If !=0, don't put the Linux flag ('X') nor the app
- *                          name and version in the comment field.
+ * @param suppressUserAgent If !=0, don't put the app name and version in the comment field.
  */
 void
 printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,

@@ -347,7 +347,6 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 	
 	if (suppressUserAgent != 1)
 	{
-		strcat(result, "X");
 		strcat(result, PACKAGE);
 		strcat(result, "/");
 		strcat(result, VERSION);

@@ -1,4 +1,5 @@
 ## Recent Changes
+*   The "X" in the comment field is removed.  APRS packets rarely, if ever, use the operating system identifier these days.
 *   Replace calls to `strncat()` with calls to `strcat()`.  This eliminates on-by-default warnings in GCC 8.1.  [Thank you](https://github.com/rhymeswithmogul/aprs-weather-submit/pull/4), [KR4DIO](https://github.com/KR4DIO)!
 
 ## Version 1.5.2
