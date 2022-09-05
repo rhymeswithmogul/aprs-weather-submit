@@ -66,6 +66,9 @@ This command-line app will manually submit APRS 1.2.1-compliant weather informat
 .IR VOLTS " ]\:"
 .RB [ " \-X "
 .IR NANOSIEVERTS " ]\:"
+.RB [ " \-Q "
+.RB | " \-M "
+.IR COMMENT " ]\:"
 
 .SH OPTIONS
 aprs-weather-submit is not interactive;
@@ -88,6 +91,9 @@ It is recommended to use compressed positions;  however, it is not the default o
 .TP
 .BR \-Q ", " \-\-no\-comment
 Do not include the APRS software type character ('X') nor the app's name and version in the comment field of the APRS packet.
+.TP
+.BR \-M ", " \-\-comment =\fICOMMENT\fP
+Replace the comment field (by default, the aprs-weather-submit user agent).  This option will override the \-Q (\-\-no\-comment) option.
 
 .SS CALLSIGN AND LOCATION OPTIONS
 The APRS specification requires all packets to have a callsign, and strongly encourages all weather reports to have position information.

@@ -49,11 +49,13 @@ main (const int argc, const char** argv)
 	char         packetFormat = UNCOMPRESSED_PACKET;
 	char         suppressUserAgent = 0;
 	signed char  c = '\0';          /* for getopt_long() */
-    int          option_index = 0;  /* for getopt_long() */
+	int          option_index = 0;  /* for getopt_long() */
 	int          i = 0;
 	int          formatTruncationCheck;  /* so we can compile without
 	                                        -Wno-format-trunctionation */
 	APRSPacket   packet;
+	char         comment[BUFSIZE] = "";	/* comments limited to 43 characters,
+	                                       but we will truncate it later. */
 #ifdef HAVE_APRSIS_SUPPORT
     char         username[BUFSIZE] = "";
     char         password[BUFSIZE] = "";
@@ -65,6 +67,7 @@ main (const int argc, const char** argv)
 		{"compressed-position",     no_argument,       0, 'C'},
 		{"uncompressed-position",   no_argument,       0, '0'},	/* ignored as of v1.4 */
 		{"no-comment",              no_argument,       0, 'Q'},
+		{"comment",	                required_argument, 0, 'M'},
 		{"help",                    no_argument,       0, 'H'},
 		{"version",                 no_argument,       0, 'v'},
 #ifdef HAVE_APRSIS_SUPPORT
@@ -515,6 +518,19 @@ main (const int argc, const char** argv)
 			case 'Q':
 				suppressUserAgent = 1;
 				break;
+			
+			/* -M | --comment: Add comment to packet. */
+			case 'M':
+				formatTruncationCheck = snprintf(packet.comment, strlen(optarg)+1, "%s", optarg);
+				if (formatTruncationCheck > 0)
+				{
+					fprintf(stderr, "Your comment was truncated by %d characters.", formatTruncationCheck);
+				}
+				if strlen(packet.comment) > 43)
+				{
+					fprintf(stderr, "Your comment was %d characters long.  APRS allows 43 characters.  Your comment may be truncated.", strlen(packet.comment));
+				}
+				break;
 				
 			/* Unknown argument handler (quick help). */
 			default:
@@ -633,6 +649,7 @@ Required parameters:\n\
 	-g, --gust                     Peak wind speed in the last five minutes (miles per hour).\n\
 	-h, --humidity                 Relative humidity (percentage).\n\
 	-L, --luminosity               Luminosity (watts per square meter).\n\
+	-M, --comment                  Add a custom comment to the packet.\n\
 	-p, --rainfall-last-24-hours   Total rainfall in the past 24 hours (inches).\n\
 	-P, --rainfall-since-midnight  Total rainfall since midnight local time (inches).\n\
 	-r, --rainfall-last-hour       Total rainfall in the past hour (inches).\n\

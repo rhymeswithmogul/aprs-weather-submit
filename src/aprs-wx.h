@@ -42,6 +42,7 @@ typedef struct APRSPacket
 	char radiation[4];
 	char waterLevel[5];
 	char voltage[4];
+	char comment[43];	/* Max length (see APRS 1.01) for some packet types. */
 } APRSPacket;
 
 #define IS_LATITUDE  0

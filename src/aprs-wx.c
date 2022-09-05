@@ -55,6 +55,7 @@ packetConstructor (APRSPacket* const p)
 	strcpy(p->waterLevel, "....");
 	strcpy(p->voltage, "...");
 	strcpy(p->snowfallLast24Hours, "...");
+	strcpy(p->comment, "");
 	return;
 }
 
@@ -345,7 +346,16 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strcat(result, p->altitude);
 	}
 	
-	if (suppressUserAgent != 1)
+	/* If the user provided a comment, we will use that.  Otherwise, we
+	 * will check and see if --no-comment was specified, and _not_ emit
+	 * the user agent then.
+	 */
+	if (strlen(p->comment))
+	{
+		strcat(result, p->comment);
+		
+	}
+	else if (suppressUserAgent != 1)
 	{
 		strcat(result, PACKAGE);
 		strcat(result, "/");
