@@ -26,7 +26,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <string.h>         /* str*cpy() and friends */
 #include <math.h>           /* round(), floor() */
 #include <stdint.h>         /* uint16_t */
-#include <assert.h>			/* assert() */
+#include <assert.h>         /* assert() */
 
 #ifdef HAVE_APRSIS_SUPPORT
 #include "aprs-is.h"
@@ -57,10 +57,10 @@ main (const int argc, const char** argv)
 	char         comment[BUFSIZE] = "";	/* comments limited to 43 characters,
 	                                       but we will truncate it later. */
 #ifdef HAVE_APRSIS_SUPPORT
-    char         username[BUFSIZE] = "";
-    char         password[BUFSIZE] = "";
-    char         server[NI_MAXHOST] = "";
-    uint16_t     port = 0;
+	char         username[BUFSIZE] = "";
+	char         password[BUFSIZE] = "";
+	char         server[NI_MAXHOST] = "";
+	uint16_t     port = 0;
 #endif
 
 	static const struct option long_options[] = {
@@ -71,12 +71,12 @@ main (const int argc, const char** argv)
 		{"help",                    no_argument,       0, 'H'},
 		{"version",                 no_argument,       0, 'v'},
 #ifdef HAVE_APRSIS_SUPPORT
-        {"server",                  required_argument, 0, 'I'},
+		{"server",                  required_argument, 0, 'I'},
 		{"port",                    required_argument, 0, 'o'},
 		{"username",                required_argument, 0, 'u'},
 		{"password",                required_argument, 0, 'd'},
 #endif
-        {"callsign",                required_argument, 0, 'k'},
+		{"callsign",                required_argument, 0, 'k'},
 		{"latitude",                required_argument, 0, 'n'},
 		{"longitude",               required_argument, 0, 'e'},
 		{"altitude",                required_argument, 0, 'A'},
@@ -484,8 +484,7 @@ main (const int argc, const char** argv)
 					for (; x > 100; magnitude++) {
 						x /= 10;
 					}
-					formatTruncationCheck = snprintf(packet.radiation, 4, "%.2d%d",
-					               (unsigned short)x, magnitude);
+					formatTruncationCheck = snprintf(packet.radiation, 4, "%.2d%d", (unsigned short)x, magnitude);
 					assert(formatTruncationCheck >= 0);
 				}
 				break;
@@ -545,8 +544,8 @@ main (const int argc, const char** argv)
 	 */
 	if (strlen(packet.callsign) == 0
 	    || strlen(packet.latitude) == 0
-		|| strlen(packet.longitude) == 0)
-	{
+	    || strlen(packet.longitude) == 0
+	) {
 		usage();
 		return EXIT_FAILURE;
 	}
@@ -583,14 +582,14 @@ main (const int argc, const char** argv)
 inline void
 version (void)
 {
-    printf("%s, version %s", PACKAGE, VERSION);
+	printf("%s, version %s", PACKAGE, VERSION);
 #ifdef DEBUG
-    fputs(", compiled with debugging output", stdout);
+	fputs(", compiled with debugging output", stdout);
 #endif
 #ifndef HAVE_APRSIS_SUPPORT
-    fputs(", compiled without APRS-IS support", stdout);
+	fputs(", compiled without APRS-IS support", stdout);
 #endif
-    puts(".\n\
+	puts(".\n\
 Copyright (c) 2019-2022 Colin Cogle.\n\
 This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n\
 are welcome to redistribute it under certain conditions.  See the GNU Affero\n\
@@ -635,13 +634,13 @@ Required parameters:\n\
 	-e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n\
 	-n, --latitude      The latitude of your weather station, in degrees north of the equator.\n");
 #ifdef HAVE_APRSIS_SUPPORT
-    puts("APRS-IS IGate parameters:\n\
+	puts("APRS-IS IGate parameters:\n\
 	-I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
 	-o, --port          Port that the APRS-IS IGate service is listening on.\n\
 	-u, --username      Authenticate to the server with this username.\n\
 	-d, --password      Authenticate to the server with this password.\n");
 #endif
-    puts("Optional parameters:\n\
+	puts("Optional parameters:\n\
 	-A, --altitude                 The altitude of your weather station (in feet above mean sea level).\n\
 	-b, --pressure                 Barometric pressure (millibars or hectopascals).\n\
 	-c, --wind-direction           Direction that the wind is blowing (degrees).\n\

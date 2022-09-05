@@ -149,7 +149,7 @@ compressedWindSpeed (const unsigned short speed);
  * @since             0.2
  */
 void
-uncompressedPosition(char* const pResult, double decimal,
-                     const char isLongitude);
+uncompressedPosition (char* const pResult, double decimal,
+                      const char isLongitude);
 
 #endif /* aprs_wx_h */

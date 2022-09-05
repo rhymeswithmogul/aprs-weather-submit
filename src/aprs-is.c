@@ -51,7 +51,8 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  * @since 0.3
  */
 void
-sendPacket (const char* const restrict server, const unsigned short port,
+sendPacket (const char* const restrict server,
+            const unsigned short port,
             const char* const restrict username,
             const char* const restrict password,
             const char* const restrict toSend)
