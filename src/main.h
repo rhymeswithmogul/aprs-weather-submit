@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.5.2
+ aprs-weather-submit
  Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
  
  This file, main.h, is part of aprs-weather-submit.
@@ -28,7 +28,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #endif
 
 #ifndef VERSION
-#define VERSION "1.5.2"
+#define VERSION "1.6-git"
 #endif
 
 /**

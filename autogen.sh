@@ -1,5 +1,5 @@
 #!/bin/sh
-# aprs-weather-submit version 1.5.2
+# aprs-weather-submit
 # Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
 #
 # This file, autogen.sh, is part of aprs-weather-submit.

@@ -1,5 +1,5 @@
 /*
- aprs-weather-submit version 1.5.2
+ aprs-weather-submit
  Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
  
  This file, main.c, is part of aprs-weather-submit.
@@ -525,7 +525,7 @@ main (const int argc, const char** argv)
 				{
 					fprintf(stderr, "Your comment was truncated by %d characters.", formatTruncationCheck);
 				}
-				if strlen(packet.comment) > 43)
+				if (strlen(packet.comment) > 43)
 				{
 					fprintf(stderr, "Your comment was %d characters long.  APRS allows 43 characters.  Your comment may be truncated.", strlen(packet.comment));
 				}
