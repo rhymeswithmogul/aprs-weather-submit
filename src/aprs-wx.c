@@ -20,7 +20,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  */
 
 #include <stdio.h>   /* fprintf(), printf(), snprintf(), fputs() */
-#include <string.h>  /* strcpy(), strncpy(), strcat(), strlen() */
+#include <string.h>  /* strcpy(), strcat(), strlen() */
 #include <math.h>    /* floor(), round(), pow(), fabs() */
 #include <time.h>    /* struct tm, time_t, time(), gmtime() */
 #include <assert.h>  /* assert() */

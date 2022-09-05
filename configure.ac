@@ -62,9 +62,7 @@ dnl  Check for string functions.
 AC_CHECK_HEADER(string.h, [], AC_MSG_ERROR([string.h is required to build this package.]))
 AC_CHECK_FUNC([strcpy],   [], AC_MSG_ERROR([strcpy() is required to build this package but was not found in string.h.]))
 AC_CHECK_FUNC([strlen],   [], AC_MSG_ERROR([strlen() is required to build this package but was not found in string.h.]))
-AC_CHECK_FUNC([strncat],  [], AC_MSG_ERROR([strncat() is required to build this package but was not found in string.h.]))
 AC_CHECK_FUNC([strncmp],  [], AC_MSG_ERROR([strncmp() is required to build this package but was not found in string.h.]))
-AC_CHECK_FUNC([strncpy],  [], AC_MSG_ERROR([strncpy() is required to build this package but was not found in string.h.]))
 AC_CHECK_FUNC([strstr],   [], AC_MSG_ERROR([strstr() is required to build this package but was not found in string.h.]))
 
 dnl  Check for malloc() support.
