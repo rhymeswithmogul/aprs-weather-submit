@@ -54,8 +54,6 @@ main (const int argc, const char** argv)
 	int          formatTruncationCheck;  /* so we can compile without
 	                                        -Wno-format-trunctionation */
 	APRSPacket   packet;
-	char         comment[BUFSIZE] = "";	/* comments limited to 43 characters,
-	                                       but we will truncate it later. */
 #ifdef HAVE_APRSIS_SUPPORT
 	char         username[BUFSIZE] = "";
 	char         password[BUFSIZE] = "";
@@ -527,7 +525,7 @@ main (const int argc, const char** argv)
 				}
 				if (strlen(packet.comment) > 43)
 				{
-					fprintf(stderr, "Your comment was %d characters long.  APRS allows 43 characters.  Your comment may be truncated.", strlen(packet.comment));
+					fprintf(stderr, "Your comment was %lu characters long.  APRS allows 43 characters.  Your comment may be truncated.", strlen(packet.comment));
 				}
 				break;
 				
