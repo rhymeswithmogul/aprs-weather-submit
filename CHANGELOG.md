@@ -1,8 +1,10 @@
 ## Version 1.6
-*   Support for compiling with OpenWatcom (with `-D_DOS`).  This will allow us to target 16-bit targets and retro machines, all the way back to MS-DOS and the 8086 (without APRS-IS support).  I've only tested it on FreeDos and an emulated 486 thus far.
+*   Support for compiling with OpenWatcom (with `-D_DOS`).  This will allow us to target 16-bit targets and retro machines, all the way back to MS-DOS and the 8086 (without APRS-IS support, unless we figure out [mTCP](https://www.brutman.com/mTCP/)).  I've only tested it on FreeDos and an emulated 486 thus far.
 *   Custom comments can be added to packets!  Use `--comment` to add your own notes to a packet.
-*   when not using custom comments, the "X" in the comment field is removed.  APRS packets rarely, if ever, use the operating system identifier these days, so there is no need to prefix the user agent with it.
+*   When not using custom comments, the "X" in the comment field is removed.  APRS packets rarely, if ever, use the operating system identifier these days, so there is no need to prefix the user agent with it.
 *   Replace calls to `strncat()` with calls to `strcat()`.  This eliminates on-by-default warnings in GCC 8.1.  [Thank you](https://github.com/rhymeswithmogul/aprs-weather-submit/pull/4), [KR4DIO](https://github.com/KR4DIO)!
+*   The `--altitude` parameter was not being detected in its short form (`-A`).  This has been corrected.
+*   TODO: comments are always truncated, it says, but they're fine.
 
 ## Version 1.5.2
 <time datetime="2022-08-04T00:45:00-04:00">August 4, 2022</time>

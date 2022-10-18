@@ -134,9 +134,9 @@ main (const int argc, const char** argv)
 	}
 
 #ifdef _DOS
-	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q")) != -1)
+	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q")) != -1)
 #else
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q", long_options, &option_index)) != -1)
 #endif
 	{
 		double x = 0.0;	 /* scratch space */
