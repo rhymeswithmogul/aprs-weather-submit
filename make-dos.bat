@@ -18,6 +18,3 @@ REM You should have received a copy of the GNU Affero General Public License alo
 REM with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 
 owcc -std=c99 -march=i86 -mcmodel=s -Wall -Wextra -bdos -D_DOS=1 -fr -fmaprswx.map -oaprswx.exe -Os src\*.h src\*.c
-
-Partner Admins can assign.
-
