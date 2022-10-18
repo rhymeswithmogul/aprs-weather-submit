@@ -95,10 +95,6 @@ AC_CHECK_HEADER(time.h, [], AC_MSG_ERROR([time.h is required to build this packa
 AC_CHECK_FUNC([gmtime], [], AC_MSG_ERROR([gmtime() is required to build this package but was not found in time.h.]))
 AC_CHECK_FUNC([time],   [], AC_MSG_ERROR([time() is required to build this package but was not found in time.h.]))
 
-dnl  Check for assert.h.  This is not strictly necessary, but eliminates some
-dnl  compiler warnings if we have it available.
-AC_HEADER_ASSERT
-
 dnl  Check to see if we can compile this with APRS-IS support, unless the user
 dnl  asked us not to.  If --disable-aprs-is was *not* specified and we cannot
 dnl  compile with APRS-IS support for whatever reason, fail.

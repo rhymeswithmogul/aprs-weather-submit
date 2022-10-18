@@ -82,6 +82,23 @@ extern
 void
 version (void);
 
+/**
+ * snprintfVerify(x) -- verify that a call to snprintf() worked.
+ *     If x >= 0, then that means snprintf() was able to put all of its
+ *     data into the string.  Otherwise, we just overflowed a buffer and
+ *     should terminate execution.
+ * 
+ * @author Colin Cogle
+ * @brief  Verify that the call to snprintf() returned a positive value.
+ * @param  x  Return value of snprintf().
+ * @since  1.6
+ */
+#ifndef _DOS
+extern
+#endif
+void
+snprintf_verify(const int x);
+
 /*
 	A decent buffer size (plus one) for use in various places around this app.
 	When compiling without APRS-IS support, we will be using the buffer for user

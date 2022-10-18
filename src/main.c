@@ -24,7 +24,6 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <string.h>         /* str*cpy() and friends */
 #include <math.h>           /* round(), floor() */
 #include <stdint.h>         /* uint16_t */
-#include <assert.h>         /* assert() */
 
 #if defined(_DOS)
 #include "getoptfd.h"       /* getopt() */
@@ -45,6 +44,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #define MAX(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
+
 int
 main (const int argc, const char** argv)
 {
@@ -59,8 +59,6 @@ main (const int argc, const char** argv)
 	int          option_index = 0;  /* for getopt_long() */
 #endif
 	int          i = 0;
-	int          formatTruncationCheck;  /* so we can compile without
-	                                        -Wno-format-trunctionation */
 	APRSPacket   packet;
 #ifdef HAVE_APRSIS_SUPPORT
 	char         username[BUFSIZE] = "";
@@ -170,8 +168,9 @@ main (const int argc, const char** argv)
 #ifdef HAVE_APRSIS_SUPPORT
 			/* IGate server name (-I | --server) */
 			case 'I':
-				formatTruncationCheck = snprintf(server, strlen(optarg)+1, "%s", optarg);
-				assert(formatTruncationCheck >= 0);
+				snprintf_verify(
+					snprintf(server, strlen(optarg)+1, "%s", optarg)
+				);
 				break;
 
 			/* IGate server port (-o | --port) */
@@ -187,21 +186,24 @@ main (const int argc, const char** argv)
 
 			/* IGate server username (-u | --username) */
 			case 'u':
-				formatTruncationCheck = snprintf(username, strlen(optarg)+1, "%s", optarg);
-				assert(formatTruncationCheck >= 0);
+				snprintf_verify(
+					snprintf(username, strlen(optarg)+1, "%s", optarg)
+				);
 				break;
 
 			/* IGate server password (-d | --password) */
 			case 'd':
-				formatTruncationCheck = snprintf(password, strlen(optarg)+1, "%s", optarg);
-				assert(formatTruncationCheck >= 0);
+				snprintf_verify(
+					snprintf(password, strlen(optarg)+1, "%s", optarg)
+				);
 				break;
 #endif /* HAVE_APRSIS_SUPPORT */
 
 			/* Callsign, with SSID if desired (-k | --callsign) */
 			case 'k':
-				formatTruncationCheck = snprintf(packet.callsign, 10, "%s", optarg);
-				assert(formatTruncationCheck >= 0);
+				snprintf_verify(
+					snprintf(packet.callsign, 10, "%s", optarg)
+				);
 				break;
 
 			/* Your latitude, in degrees north (-n | --latitude) */
@@ -256,8 +258,9 @@ main (const int argc, const char** argv)
 				}
 				else
 				{
-					formatTruncationCheck = snprintf(packet.altitude, 6, "%05d", (int)x);
-					assert(formatTruncationCheck >= 0);
+					snprintf_verify(
+						snprintf(packet.altitude, 6, "%05d", (int)x)
+					);
 				}
 				break;
 
@@ -273,13 +276,22 @@ main (const int argc, const char** argv)
 				{
 					if (packetFormat == COMPRESSED_PACKET)
 					{
-						formatTruncationCheck = snprintf(packet.windDirection, 2, "%c", compressedWindDirection((int)x % 360));
+						snprintf_verify(
+							snprintf(
+								packet.windDirection, 2, "%c",
+								compressedWindDirection((int)x % 360)
+							)
+						);
 					}
 					else
 					{
-						formatTruncationCheck = snprintf(packet.windDirection, 4, "%03d", (int)(round(x)) % 360);
+						snprintf_verify(
+							snprintf(
+								packet.windDirection, 4, "%03d",
+								(int)(round(x)) % 360
+							)
+						);
 					}
-					assert(formatTruncationCheck >= 0);
 				}
 				break;
 
@@ -295,13 +307,21 @@ main (const int argc, const char** argv)
 				{
 					if (packetFormat == COMPRESSED_PACKET)
 					{
-						formatTruncationCheck = snprintf(packet.windSpeed, 2, "%c",
-						                                 compressedWindSpeed((const uint16_t)x));
+						snprintf_verify(
+							snprintf(
+								packet.windSpeed, 2, "%c",
+						    	compressedWindSpeed((const uint16_t)x)
+							)
+						);
 					}
 					else {
-						formatTruncationCheck = snprintf(packet.windSpeed, 4, "%03d", (int)(round(x)));
+						snprintf_verify(
+							snprintf(
+								packet.windSpeed, 4, "%03d",
+								(int)(round(x))
+							)
+						);
 					}
-					assert(formatTruncationCheck >= 0);
 				}
 				break;
 
@@ -315,8 +335,9 @@ main (const int argc, const char** argv)
 				}
 				else
 				{
-					formatTruncationCheck = snprintf(packet.gust, 4, "%03d", (int)(round(x)) );
-					assert(formatTruncationCheck >= 0);
+					snprintf_verify(
+						snprintf(packet.gust, 4, "%03d", (int)(round(x)))
+					);
 				}
 				break;
 
@@ -330,8 +351,9 @@ main (const int argc, const char** argv)
 				}
 				else
 				{
-					formatTruncationCheck = snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
-					assert(formatTruncationCheck >= 0);
+					snprintf_verify(
+						snprintf(packet.temperature, 4, "%03d", (int)(round(x)))
+					);
 				}
 				break;
 
@@ -346,8 +368,9 @@ main (const int argc, const char** argv)
 				}
 				else
 				{
-					formatTruncationCheck = snprintf(packet.temperature, 4, "%03d", (int)(round(x)) );
-					assert(formatTruncationCheck >= 0);
+					snprintf_verify(
+						snprintf(packet.temperature, 4, "%03d", (int)(round(x)) )
+					);
 				}
 				break;
 
@@ -410,20 +433,27 @@ main (const int argc, const char** argv)
 					 */
 					if (x > 10)
 					{
-						formatTruncationCheck = snprintf(packet.snowfallLast24Hours, 4, "%03d",
-						                                 (unsigned short)floor(x));
+						snprintf_verify(
+							snprintf(
+								packet.snowfallLast24Hours, 4, "%03d",
+								(unsigned short)floor(x)
+							)
+						);
 					}
 					else if (x >= 9.95)
 					{
 						/* This avoids the previous case from printing "10.",
 						   while keeping the accuracy of the other two cases. */
-						formatTruncationCheck = snprintf(packet.snowfallLast24Hours, 4, "%03d", 10);
+						snprintf_verify(
+							snprintf(packet.snowfallLast24Hours, 4, "%03d", 10)
+						);
 					}
 					else
 					{
-						formatTruncationCheck = snprintf(packet.snowfallLast24Hours, 4, "%1.1f", x);
+						snprintf_verify(
+							snprintf(packet.snowfallLast24Hours, 4, "%1.1f", x)
+						);
 					}
-					assert(formatTruncationCheck >= 0);
 				}
 				break;
 
@@ -446,8 +476,8 @@ main (const int argc, const char** argv)
 					else if (h == 100) {
 						h = 0;
 					}
-					formatTruncationCheck = snprintf(packet.humidity, 3, "%.2d", h);
-					assert(formatTruncationCheck >= 0);
+
+					snprintf_verify( snprintf(packet.humidity, 3, "%.2d", h) );
 				}
 				break;
 
@@ -461,8 +491,11 @@ main (const int argc, const char** argv)
 				}
 				else
 				{
-					formatTruncationCheck = snprintf(packet.pressure, 6, "%.5d", (int)(round(x * 10)) );
-					assert(formatTruncationCheck >= 0);
+					snprintf_verify(
+						snprintf(
+							packet.pressure, 6, "%.5d", (int)(round(x * 10))
+						)
+					);
 				}
 				break;
 
@@ -478,8 +511,10 @@ main (const int argc, const char** argv)
 					 * resolution to use.  Values under 1000 are encoded as
 					 * "L000" and values over 1000 are encoded as "l000".
 					 */
-					formatTruncationCheck = snprintf(packet.luminosity, 5, "L%.3d", (int)(x) % 1000);
-					assert(formatTruncationCheck >= 0);
+					snprintf_verify(
+						snprintf(packet.luminosity, 5, "L%.3d", (int)(x) % 1000)
+					);
+
 					if (x > 999) {
 						packet.luminosity[0] = 'l';
 					}
@@ -497,8 +532,12 @@ main (const int argc, const char** argv)
 					for (; x > 100; magnitude++) {
 						x /= 10;
 					}
-					formatTruncationCheck = snprintf(packet.radiation, 4, "%.2d%d", (unsigned short)x, magnitude);
-					assert(formatTruncationCheck >= 0);
+					snprintf_verify(
+						snprintf(
+							packet.radiation, 4, "%.2d%d", (unsigned short)x,
+							magnitude
+						)
+					);
 				}
 				break;
 
@@ -509,20 +548,25 @@ main (const int argc, const char** argv)
 					fprintf(stderr, "%s: option `-%c' must be between -99.9 and 99.9 feet.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				} else {
-					formatTruncationCheck = snprintf(packet.waterLevel, 4, "%.3d", (short)x * 10);
-					assert(formatTruncationCheck >= 0);
+					snprintf_verify(
+						snprintf(packet.waterLevel, 4, "%.3d", (short)x * 10)
+					);
 				}
 				break;
 
 			/* (APRS 1.2) Weather station battery voltage (-V | --voltage) */
 			case 'V':
 				x = atof(optarg);
-				if (x < 0 || x > 99.9) {
+				if (x < 0 || x > 99.9)
+				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 99.9 volts.\n", argv[0], optopt);
 					return EXIT_FAILURE;
-				} else {
-					formatTruncationCheck = snprintf(packet.voltage, 4, "%.3d", (short)x * 10);
-					assert(formatTruncationCheck >= 0);
+				}
+				else
+				{
+					snprintf_verify(
+						snprintf(packet.voltage, 4, "%.3d", (short)x * 10)
+					);
 				}
 				break;
 
@@ -533,8 +577,9 @@ main (const int argc, const char** argv)
 			
 			/* -M | --comment: Add comment to packet. */
 			case 'M':
-				formatTruncationCheck = snprintf(packet.comment, strlen(optarg)+1, "%s", optarg);
-				assert(formatTruncationCheck >= 0);
+				snprintf_verify(
+					snprintf(packet.comment, strlen(optarg)+1, "%s", optarg)
+				);
 				
 				if (strlen(packet.comment) > 43)
 				{
@@ -582,4 +627,28 @@ main (const int argc, const char** argv)
 #endif
 	
 	return EXIT_SUCCESS;
+}
+
+/**
+ * snprintf_verify(x) -- verify that a call to snprintf() worked.
+ *     If x >= 0, then that means snprintf() was able to put all of its
+ *     data into the string.  Otherwise, we just overflowed a buffer and
+ *     should terminate execution.
+ * 
+ * @author Colin Cogle
+ * @brief  Verify that the call to snprintf() returned a positive value.
+ * @param  x  Return value of snprintf().
+ * @since  1.6
+ */
+#ifndef _DOS
+inline
+#endif
+void
+snprintf_verify (const int x)
+{
+	if (x < 0)
+	{
+		exit(EXIT_FAILURE);
+	}
+	return;
 }

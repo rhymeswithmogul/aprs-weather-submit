@@ -4,7 +4,7 @@
 *   When not using custom comments, the "X" in the comment field is removed.  APRS packets rarely, if ever, use the operating system identifier these days, so there is no need to prefix the user agent with it.
 *   Replace calls to `strncat()` with calls to `strcat()`.  This eliminates on-by-default warnings in GCC 8.1.  [Thank you](https://github.com/rhymeswithmogul/aprs-weather-submit/pull/4), [KR4DIO](https://github.com/KR4DIO)!
 *   The `--altitude` parameter was not being detected in its short form (`-A`).  This has been corrected.
-*   TODO: comments are always truncated, it says, but they're fine.
+*   Removed dependency on `<assert.h>`.
 
 ## Version 1.5.2
 <time datetime="2022-08-04T00:45:00-04:00">August 4, 2022</time>

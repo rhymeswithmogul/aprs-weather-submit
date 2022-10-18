@@ -23,10 +23,9 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <string.h>   /* strcpy(), strcat(), strlen() */
 #include <math.h>     /* floor(), round(), pow(), fabs() */
 #include <time.h>     /* struct tm, time_t, time(), gmtime() */
-#include <assert.h>   /* assert() */
 #include <stdint.h>   /* uint32_t */
 
-#include "main.h"     /* PACKAGE, VERSION, BUFSIZE */
+#include "main.h"     /* PACKAGE, VERSION, BUFSIZE, snprintf_verify() */
 #include "aprs-wx.h"
 #include "c99math.h"  /* logf(), log1p(), and round() as needed , for
                          incomplete C99 implementations. */
@@ -192,17 +191,18 @@ uncompressedPosition (char* const pResult, const double decimal,
 
 	if (isLongitude == IS_LATITUDE)
 	{
-		int ret = snprintf(pResult,  9, "%02hi%.2f%c",
-		                   degrees, minutes, (decimal < 0 ? 'S' : 'N'));
-		assert(ret >= 0);
+		snprintf_verify(snprintf(
+			pResult, 9, "%02hi%.2f%c",
+			degrees, minutes, (decimal < 0 ? 'S' : 'N')
+		));
 	}
 	else
 	{
-		int ret = snprintf(pResult, 10, "%03hi%.2f%c",
-		         degrees, minutes, (decimal < 0 ? 'W' : 'E'));
-		assert(ret >= 0);
+		snprintf_verify(snprintf(
+			pResult, 10, "%03hi%.2f%c",
+			degrees, minutes, (decimal < 0 ? 'W' : 'E')
+		));
 	}
-
 	return;
 }
 
@@ -220,8 +220,7 @@ inline
 void
 rain (char* const pResult, const double precip)
 {
-	int ret = snprintf(pResult, 4, "%03d", (unsigned short)precip);
-	assert(ret >= 0);
+	snprintf_verify( snprintf(pResult, 4, "%03d", (unsigned short)precip) );
 	return;
 }
 
@@ -272,21 +271,23 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		/* Compression type byte ("T"):
 		 * (GPS fix: current) | (NMEA source: other) | (Origin: software) = 34
 		 * Add 33 as per the spec, and you get 67, the ASCII code for 'C'.
-		 *                                                           ?
-		 *                              header_________ timestamp____ pos_wc_s_Tt__*/
-		int ret = snprintf(result, 48, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
-			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
-			p->latitude, p->longitude, p->windDirection[0], p->windSpeed[0],
-			p->temperature);
-		assert(ret >= 0);
+		 */
+		snprintf_verify(snprintf(
+			result, 48,
+		/*	 header_________ timestamp____ pos_wc_s_Tt__*/
+			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
+			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
+			p->longitude, p->windDirection[0], p->windSpeed[0], p->temperature
+		));
 	}
 	else {
-		/*                              header_________ timestamp____pos__wc_ s_t__*/
-		int ret = snprintf(result, 61, "%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%st%s",
-			p->callsign, now->tm_mday, now->tm_hour, now->tm_min,
-			p->latitude, p->longitude, p->windDirection, p->windSpeed,
-			p->temperature);
-		assert(ret >= 0);
+		snprintf_verify(snprintf(
+			result, 61,
+		/*	 header_________ timestamp____pos__wc_ s_t__*/
+			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%st%s",
+			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
+			p->longitude, p->windDirection, p->windSpeed, p->temperature
+		));
 	}
 
 	if (notNull(p->gust))
