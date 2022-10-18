@@ -1,0 +1,23 @@
+REM aprs-weather-submit
+REM Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
+REM
+REM This file, make-dos.bat, is part of aprs-weather-submit.
+REM <https://github.com/rhymeswithmogul/aprs-weather-submit>
+REM
+REM This program is free software: you can redistribute it and/or modify it under
+REM the terms of the GNU Affero General Public License as published by the Free
+REM Software Foundation, either version 3 of the License, or (at your option) any
+REM later version.
+REM
+REM This program is distributed in the hope that it will be useful, but WITHOUT
+REM ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+REM FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
+REM details.
+REM
+REM You should have received a copy of the GNU Affero General Public License along
+REM with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
+
+owcc -std=c99 -march=i86 -mcmodel=s -Wall -Wextra -bdos -D_DOS=1 -fr -fmaprswx.map -oaprswx.exe -Os src\*.h src\*.c
+
+Partner Admins can assign.
+
