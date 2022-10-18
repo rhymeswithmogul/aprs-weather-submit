@@ -19,14 +19,23 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  */
 
-#include <stdio.h>   /* fprintf(), printf(), snprintf(), fputs() */
-#include <string.h>  /* strcpy(), strcat(), strlen() */
-#include <math.h>    /* floor(), round(), pow(), fabs() */
-#include <time.h>    /* struct tm, time_t, time(), gmtime() */
-#include <assert.h>  /* assert() */
+#include <stdio.h>    /* fprintf(), printf(), snprintf(), fputs() */
+#include <string.h>   /* strcpy(), strcat(), strlen() */
+#include <math.h>     /* floor(), round(), pow(), fabs() */
+#include <time.h>     /* struct tm, time_t, time(), gmtime() */
+#include <assert.h>   /* assert() */
+#include <stdint.h>   /* uint32_t */
 
-#include "main.h"    /* PACKAGE, VERSION, BUFSIZE */
+#include "main.h"     /* PACKAGE, VERSION, BUFSIZE */
 #include "aprs-wx.h"
+#include "c99math.h"  /* logf(), log1p(), and round() as needed , for
+                         incomplete C99 implementations. */
+
+/* As we begin our function definitions, you'll notice that "inline" is inside
+   an #ifndef statement everywhere it occurs. This is because OpenWatcom's POSIX
+   linker doesn't recognize these functions when they're marked as inline.  So,
+   if this is a DOS build, the user is likely using OpenWatcom, so we'll ignore
+   these inlines and the externs in aprs-wx.h.	*/
 
 /**
  * packetConstructor() -- put some default values into an APRSPacket
@@ -77,7 +86,10 @@ packetConstructor (APRSPacket* const p)
  * @param speed  The wind speed, in miles per hour.
  * @since        0.2
  */
-inline char
+#ifndef _DOS
+inline
+#endif
+char
 compressedWindSpeed (const unsigned short speed)
 {
     return (char)(round(log1p(speed) / logf(1.08)) + 33);
@@ -93,7 +105,10 @@ compressedWindSpeed (const unsigned short speed)
  *                  true north.
  * @since           0.2
  */
-inline char
+#ifndef _DOS
+inline
+#endif
+char
 compressedWindDirection (const unsigned short direction)
 {
 	return (char)(round(direction / 4) + 33);
@@ -113,27 +128,26 @@ void
 compressedPosition (char* const pResult, const double decimal,
                     const char isLongitude)
 {
-	char         pos = 0;       /* position; an iterator */
-	unsigned int x   = 190463;  /* magic number for longitude
-	                             * (see APRS 1.0 spec, p.38) */
+	char     pos = 0;       /* position; an iterator */
+	uint32_t x   = 190463;  /* magic number for longitude (APRS 1.0 spec, p.38) */
 
 	if (isLongitude == IS_LONGITUDE)
 	{
-		x = (unsigned int)(x * (180 + decimal));
+		x = (uint32_t)(x * (180 + decimal));
 	}
 	else
 	{
 		/* The magic number for latitude is exactly twice that of longitude,
 		 * so that's why we're doubling it here (also on p.38 of the APRS spec).
 		 */
-		x = (unsigned int)(x * 2 * (90 - decimal));
+		x = (uint32_t)(x * 2 * (90 - decimal));
 	}
 
 	for (; pos < 3; pos++)
 	{
-		unsigned int divisor = (unsigned int)pow(91, 3 - pos);
-		unsigned int result  = (unsigned int)floor(x / divisor);
-		pResult[(unsigned int)pos] = (char)(result + 33);
+		uint32_t divisor = (uint32_t)pow(91, 3 - pos);
+		uint32_t result  = (uint32_t)floor(x / divisor);
+		pResult[(uint32_t)pos] = (char)(result + 33);
 		x %= divisor;
 	}
 	pResult[3] = (char)((x % 91) + 33);
@@ -200,7 +214,10 @@ uncompressedPosition (char* const pResult, const double decimal,
  * @param precip  A constant representing how much precipitation precipitated.
  * @since         0.2
  */
-inline void
+#ifndef _DOS
+inline
+#endif
+void
 rain (char* const pResult, const double precip)
 {
 	int ret = snprintf(pResult, 4, "%03d", (unsigned short)precip);
@@ -220,7 +237,10 @@ rain (char* const pResult, const double precip)
  * @return    0 if this value is unspecified/not meaningful; !0 otherwise.
  * @since     0.2
  */
-inline int
+#ifndef _DOS
+inline
+#endif
+int
 notNull (const char* const val)
 {
 	return val[0] != '.';
@@ -241,7 +261,7 @@ notNull (const char* const val)
  */
 void
 printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
-                 char compressPacket, char suppressUserAgent)
+                 char compressPacket, const char suppressUserAgent)
 {
 	char       result[BUFSIZE] = "\0";
 	time_t     t               = time(NULL);

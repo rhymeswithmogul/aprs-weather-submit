@@ -19,6 +19,6 @@
 
 AUTOMAKE_OPTIONS = foreign
 bin_PROGRAMS = aprs-weather-submit
-aprs_weather_submit_SOURCES = src/main.c src/aprs-wx.c src/aprs-is.c src/help.c src/c99math.c src/getoptfd.c
+aprs_weather_submit_SOURCES = src/main.c src/aprs-wx.c src/aprs-is.c
 man1_MANS = man/aprs-weather-submit.man
 LDADD = -lm

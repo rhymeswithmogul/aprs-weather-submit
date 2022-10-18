@@ -1,0 +1,12 @@
+# aprs-weather-submit news
+
+This file details all of the user-facing changes that are in versions 1.6 of
+aprs-weather-submit. For more details, please consult the CHANGELOG file or
+this project's GitHub page.
+
+## CUSTOM COMMENTS
+
+Custom comments can now be included with the `--comment` option.
+
+-----
+For information about older versions, consult the CHANGELOG.md files.

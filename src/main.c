@@ -17,10 +17,8 @@ details.
 
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
- */
+*/
 
-#include "main.h"
-#include "aprs-wx.h"
 #include <stdio.h>          /* *printf(), *puts(), and friends */
 #include <stdlib.h>         /* atof(), EXIT_SUCCESS, EXIT_FAILURE */
 #include <string.h>         /* str*cpy() and friends */
@@ -28,14 +26,19 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <stdint.h>         /* uint16_t */
 #include <assert.h>         /* assert() */
 
-#ifdef HAVE_APRSIS_SUPPORT
-#include "aprs-is.h"
+#if defined(_DOS)
+#include "getoptfd.h"       /* getopt() */
+#elif defined(_WIN32)
+#include "getopt-windows.h" /* getopt_long() */
+#else /* POSIX */
+#include <getopt.h>         /* getopt_long() */
 #endif
 
-#ifndef _WIN32
-#include <getopt.h>         /* getopt_long() */
-#else
-#include "getopt-windows.h" /* getopt_long() */
+#include "main.h"
+#include "aprs-wx.h"
+
+#ifdef HAVE_APRSIS_SUPPORT
+#include "aprs-is.h"
 #endif
 
 #ifndef MAX
@@ -48,8 +51,13 @@ main (const int argc, const char** argv)
 	char         packetToSend[BUFSIZE] = "";
 	char         packetFormat = UNCOMPRESSED_PACKET;
 	char         suppressUserAgent = 0;
-	signed char  c = '\0';          /* for getopt_long() */
+	signed char  c = '\0';          /* for getopt */
+
+#ifdef __OW_GETOPT_H /* we're using "getoptfd.h" */
+	extern int   optopt;
+#else
 	int          option_index = 0;  /* for getopt_long() */
+#endif
 	int          i = 0;
 	int          formatTruncationCheck;  /* so we can compile without
 	                                        -Wno-format-trunctionation */
@@ -61,6 +69,7 @@ main (const int argc, const char** argv)
 	uint16_t     port = 0;
 #endif
 
+#ifndef _DOS
 	static const struct option long_options[] = {
 		{"compressed-position",     no_argument,       0, 'C'},
 		{"uncompressed-position",   no_argument,       0, '0'},	/* ignored as of v1.4 */
@@ -100,6 +109,7 @@ main (const int argc, const char** argv)
 		{"voltage",                 required_argument, 0, 'V'}, /* APRS 1.2 */
 		{0, 0, 0, 0}
 	};
+#endif
 
 #ifdef DEBUG
 	puts("Compiled with debugging output.\n");
@@ -123,7 +133,11 @@ main (const int argc, const char** argv)
 		strcpy(packet.windSpeed, "...");
 	}
 
+#ifdef _DOS
+	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q")) != -1)
+#else
 	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q", long_options, &option_index)) != -1)
+#endif
 	{
 		double x = 0.0;	 /* scratch space */
 
@@ -144,6 +158,7 @@ main (const int argc, const char** argv)
 
 			/* Complete help (-H | --help) */
 			case 'H':
+			case '?':
 				help();
 				return EXIT_SUCCESS;
 
@@ -569,95 +584,4 @@ main (const int argc, const char** argv)
 #endif
 	
 	return EXIT_SUCCESS;
-}
-
-/**
- * usage() -- show version information.
- *
- * @author Colin Cogle
- * @since  0.1
- */
-inline void
-version (void)
-{
-	printf("%s, version %s", PACKAGE, VERSION);
-#ifdef DEBUG
-	fputs(", compiled with debugging output", stdout);
-#endif
-#ifndef HAVE_APRSIS_SUPPORT
-	fputs(", compiled without APRS-IS support", stdout);
-#endif
-	puts(".\n\
-Copyright (c) 2019-2022 Colin Cogle.\n\
-This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n\
-are welcome to redistribute it under certain conditions.  See the GNU Affero\n\
-General Public License (version 3.0) for more details.");
-	return;
-}
-
-/**
- * usage() -- show some help.
- *
- * @author Colin Cogle
- * @since  0.1
- */
-inline void
-usage(void)
-{
-	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER PARAMETERS]\n", PACKAGE);
-	return;
-}
-
-/**
- * help() -- show even more help.
- *
- * @author Colin Cogle
- * @since  0.1
- */
-inline void
-help (void)
-{
-	version();
-	puts("");
-	usage();
-	puts("\n\
-Special parameters:\n\
-	-H, --help                 Show this help and exit.\n\
-	-v, --version              Show version and licensing information, and exit.\n\
-	-C, --compressed-position  Create a packet with the compressed position format.\n\
-	-Q, --no-comment           Don't include this app's name and version in the comment field.\n\
-\n\
-Required parameters:\n\
-	-k, --callsign      Your callsign, with SSID if desired.\n\
-	-e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n\
-	-n, --latitude      The latitude of your weather station, in degrees north of the equator.\n");
-#ifdef HAVE_APRSIS_SUPPORT
-	puts("APRS-IS IGate parameters:\n\
-	-I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
-	-o, --port          Port that the APRS-IS IGate service is listening on.\n\
-	-u, --username      Authenticate to the server with this username.\n\
-	-d, --password      Authenticate to the server with this password.\n");
-#endif
-	puts("Optional parameters:\n\
-	-A, --altitude                 The altitude of your weather station (in feet above mean sea level).\n\
-	-b, --pressure                 Barometric pressure (millibars or hectopascals).\n\
-	-c, --wind-direction           Direction that the wind is blowing (degrees).\n\
-	-F, --water-level-above-stage  Water level above flood stage or mean tide (feet).\n\
-	-g, --gust                     Peak wind speed in the last five minutes (miles per hour).\n\
-	-h, --humidity                 Relative humidity (percentage).\n\
-	-L, --luminosity               Luminosity (watts per square meter).\n\
-	-M, --comment                  Add a custom comment to the packet.\n\
-	-p, --rainfall-last-24-hours   Total rainfall in the past 24 hours (inches).\n\
-	-P, --rainfall-since-midnight  Total rainfall since midnight local time (inches).\n\
-	-r, --rainfall-last-hour       Total rainfall in the past hour (inches).\n\
-	-s, --snowfall-last-24-hours   Total snowfall in the past 24 hours (inches).\n\
-	-S, --wind-speed               Sustained wind speed in the past minute (miles per hour).\n\
-	-t, --temperature              Temperature (degrees Fahrenheit).\n\
-	-T, --temperature-celsius      Temperature (degrees Celsius).\n\
-	-V, --voltage                  Battery voltage of your weather station.\n\
-	-X, --radiation                Radiation levels (nanosieverts per hour).\n\
-\n\
-Find this project online at https://github.com/rhymeswithmogul/aprs-weather-submit\n\
-");
-	return;
 }

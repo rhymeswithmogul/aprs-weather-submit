@@ -2,7 +2,7 @@
  aprs-weather-submit
  Copyright (c) 2019-2022 Colin Cogle <colin@colincogle.name>
  
- This file, main.h, is part of aprs-weather-submit.
+ This file, help.h, is part of aprs-weather-submit.
  <https://github.com/rhymeswithmogul/aprs-weather-submit>
 
 This program is free software: you can redistribute it and/or modify it under
@@ -18,27 +18,6 @@ details.
 You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 */
-
-#ifndef main_h
-#define main_h
-
-/* Program constants that should be set by ./configure. */
-#ifndef PACKAGE
-#define PACKAGE "aprs-weather-submit"
-#endif
-
-#ifndef VERSION
-#define VERSION "1.6-git"
-#endif
-
-/* We don't support networking on DOS at this time.
-   On the off-chance the Makefile didn't unset this, this will.
-   (If you know how to get TCP/IP working on DOS, feel free to submit a
-   patch request!)
-*/
-#ifdef _DOS
-#undef HAVE_APRSIS_SUPPORT
-#endif
 
 /* As we begin our function definitions, you'll notice that "extern" is inside
    an #ifndef statement everywhere it occurs. This is because OpenWatcom's POSIX
@@ -81,19 +60,3 @@ extern
 #endif
 void
 version (void);
-
-/*
-	A decent buffer size (plus one) for use in various places around this app.
-	When compiling without APRS-IS support, we will be using the buffer for user
-	and intermediate inputs;  as such, we can make this much smaller.  This is
-	required to prevent a stack overflow on FreeDOS.
-*/
-#ifndef	BUFSIZE
-	#ifdef HAVE_APRSIS_SUPPORT
-		#define BUFSIZE 1025
-	#else
-		#define BUFSIZE 257
-	#endif
-#endif
-
-#endif /* main_h */

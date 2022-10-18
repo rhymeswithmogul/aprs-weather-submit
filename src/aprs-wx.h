@@ -51,6 +51,12 @@ typedef struct APRSPacket
 #define UNCOMPRESSED_PACKET 0
 #define COMPRESSED_PACKET   1
 
+/* As we begin our function definitions, you'll notice that "extern" is inside
+   an #ifndef statement everywhere it occurs. This is because OpenWatcom's POSIX
+   linker doesn't recognize these functions when they're marked as extern.  So,
+   if this is a DOS build, the user is likely using OpenWatcom, so we'll ignore
+   these externs and the inlines in aprs-wx.c.	*/
+
 /**
  * packetConstructor() -- put some default values into an APRSPacket
  *
@@ -69,7 +75,10 @@ packetConstructor (APRSPacket* const p);
  * @param precip  A constant representing how much precipitation precipitated.
  * @since         0.2
  */
-extern void
+#ifndef _DOS
+extern
+#endif
+void
 rain (char* const pResult, const double precip);
 
 /**
@@ -84,28 +93,31 @@ rain (char* const pResult, const double precip);
  * @return    0 if this value is unspecified/not meaningful; !0 otherwise.
  * @since     0.2
  */
-extern int
+#ifndef _DOS
+extern
+#endif
+int
 notNull (const char* const val);
 
 /**
  * printAPRSPacket() -- create a textual representation of an APRS weather packet.
  *
  * @author                  Colin Cogle
- * @param p                 A pointer to an APRS packet of type (struct APRSPacket).
+ * @param p                 A pointer to an APRS packet (struct APRSPacket).
  * @param ret               A pointer to a string that will hold the return value.
  * @param compressedPacket  The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
- * @param suppressUserAgent If !=0, don't put the app name and version in the comment field.
+ * @param suppressUserAgent If !=0, don't put the app name/version in the comment field.
  */
 void
 printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
-                 char compressedPacket, char suppressUserAgent);
+                 char compressedPacket, const char suppressUserAgent);
 
 /**
  * compressedPosition() -- return an APRS-compressed latitude or longitude value.
  *
  * @author             Colin Cogle
  * @param pResult      A constant pointer to the return value.
- * @param decimal      The latitude or longitude value, in decimal-formatted degrees.
+ * @param decimal      The latitude or longitude, in decimal-formatted degrees.
  * @param isLongitude  The constant IS_LATITUDE or IS_LONGITUDE.
  * @since              0.2
  */
@@ -121,9 +133,13 @@ compressedPosition (char* const pResult, const double decimal,
  * @author          Colin Cogle
  * @param direction The direction in which the wind is blowing, in degrees from
  *                  true north.
+ * @return char     A single character representing the wind direction.
  * @since           0.2
  */
-extern char
+#ifndef _DOS
+extern
+#endif
+char
 compressedWindDirection (const unsigned short direction);
 
 /**
@@ -133,9 +149,13 @@ compressedWindDirection (const unsigned short direction);
  *
  * @author       Colin Cogle
  * @param speed  The wind speed, in miles per hour.
+ * @return char  A single character representing the wind speed.
  * @since        0.2
  */
-extern char
+#ifndef _DOS
+extern
+#endif
+char
 compressedWindSpeed (const unsigned short speed);
 
 /**
@@ -144,7 +164,7 @@ compressedWindSpeed (const unsigned short speed);
  *
  * @author            Colin Cogle
  * @param pResult     A constant pointer to the return value.
- * @param decimal     The latitude or longitude value, in decimal-formatted degrees.
+ * @param decimal     The latitude or longitude, in decimal-formatted degrees.
  * @param isLongitude The constant IS_LATITUDE or IS_LONGITUDE.
  * @since             0.2
  */
