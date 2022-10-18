@@ -534,10 +534,8 @@ main (const int argc, const char** argv)
 			/* -M | --comment: Add comment to packet. */
 			case 'M':
 				formatTruncationCheck = snprintf(packet.comment, strlen(optarg)+1, "%s", optarg);
-				if (formatTruncationCheck > 0)
-				{
-					fprintf(stderr, "Your comment was truncated by %d characters.", formatTruncationCheck);
-				}
+				assert(formatTruncationCheck >= 0);
+				
 				if (strlen(packet.comment) > 43)
 				{
 					fprintf(stderr, "Your comment was %lu characters long.  APRS allows 43 characters.  Your comment may be truncated.", strlen(packet.comment));
