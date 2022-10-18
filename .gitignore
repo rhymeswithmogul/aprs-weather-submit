@@ -84,3 +84,7 @@ missing
 .vscode/configurationCache.log
 .vscode/dryrun.log
 .vscode/targets.log
+
+# Things I can't distribute:
+src/getoptfd.c
+src/getoptfd.h
