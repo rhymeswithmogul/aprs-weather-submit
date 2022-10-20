@@ -15,7 +15,10 @@
  * @author Colin Cogle
  * @since  0.1
  */
-inline void
+#ifndef _DOS
+inline
+#endif
+void
 version (void)
 {
 	printf("%s, version %s", PACKAGE, VERSION);
@@ -50,7 +53,10 @@ General Public License (version 3.0) for more details.");
  * @author Colin Cogle
  * @since  0.1
  */
-inline void
+#ifndef _DOS
+inline
+#endif
+void
 usage(void)
 {
 #ifdef _DOS
@@ -67,7 +73,10 @@ usage(void)
  * @author Colin Cogle
  * @since  0.1
  */
-inline void
+#ifndef _DOS
+inline
+#endif
+void
 help (void)
 {
 	version();

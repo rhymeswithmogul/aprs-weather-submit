@@ -22,6 +22,10 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #ifndef aprs_wx_h
 #define aprs_wx_h
 
+/* The maximum comment for some packet types is 43 characters,
+   according to APRS 1.01.  */
+#define MAX_COMMENT_LENGTH 43
+
 typedef struct APRSPacket
 {
 	char callsign[10]; /* callsign (strlen <= 6), dash, SSID (strlen <= 2) */
@@ -42,7 +46,7 @@ typedef struct APRSPacket
 	char radiation[4];
 	char waterLevel[5];
 	char voltage[4];
-	char comment[43];	/* Max length (see APRS 1.01) for some packet types. */
+	char comment[MAX_COMMENT_LENGTH + 1];	
 } APRSPacket;
 
 #define IS_LATITUDE  0
