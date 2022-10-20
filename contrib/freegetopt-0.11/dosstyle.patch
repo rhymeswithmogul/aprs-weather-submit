@@ -1,0 +1,54 @@
+--- getopt-orig.c	2022-10-18 09:17:43.878030466 -0400
++++ getopt.c	2022-10-18 09:23:13.670835636 -0400
+@@ -34,6 +34,12 @@
+ * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+ * DAMAGE.
+ */
++
++/*	Patched by Colin Cogle for aprs-weather-submit, 2022.
++ *	This patched version is modified to recognize DOS-style arguments,
++ *	instead of POSIX ones;  that is, "/?" instead of "-?".
++ */
++
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+@@ -62,7 +68,7 @@
+ 	/* Move onto the next option */
+ 	if(argv_index < argv_index2)
+ 	{
+-		while(prev_argv[++argv_index] && prev_argv[argv_index][0] != '-'
++		while(prev_argv[++argv_index] && prev_argv[argv_index][0] != '/'
+ 				&& argv_index < argv_index2+1);
+ 	}
+ 	else argv_index++;
+@@ -130,10 +136,10 @@
+ 		c = -1;
+ 	}
+ 	/* Are we looking at a string? Single dash is also a string */
+-	else if(dashdash || argv[argv_index][0] != '-' || !strcmp(argv[argv_index], "-"))
++	else if(dashdash || argv[argv_index][0] != '/' || !strcmp(argv[argv_index], "/"))
+ 	{
+ 		/* If we want a string... */
+-		if(optstr[0] == '-')
++		if(optstr[0] == '/')
+ 		{
+ 			c = 1;
+ 			optarg = argv[argv_index];
+@@ -163,14 +169,14 @@
+ 		c = argv[argv_index][opt_offset++];
+ 
+ 		/* Is the option in the optstr? */
+-		if(optstr[0] == '-') opt_ptr = strchr(optstr+1, c);
++		if(optstr[0] == '/') opt_ptr = strchr(optstr+1, c);
+ 		else opt_ptr = strchr(optstr, c);
+ 		/* Invalid argument */
+ 		if(!opt_ptr)
+ 		{
+ 			if(opterr)
+ 			{
+-				fprintf(stderr, "%s: invalid option -- %c\n", argv[0], c);
++				fprintf(stderr, "%s: invalid option -- /%c\n", argv[0], c);
+ 			}
+ 
+ 			optopt = c;

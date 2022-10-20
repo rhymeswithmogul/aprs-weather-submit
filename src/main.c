@@ -26,7 +26,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <stdint.h>         /* uint16_t */
 
 #if defined(_DOS)
-#include "getoptfd.h"       /* getopt() */
+#include "getopt.h"         /* getopt(), in ./contrib/freegetopt-0.11/ */
 #elif defined(_WIN32)
 #include "getopt-windows.h" /* getopt_long() */
 #else /* POSIX */
@@ -34,6 +34,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #endif
 
 #include "main.h"
+#include "help.h"
 #include "aprs-wx.h"
 
 #ifdef HAVE_APRSIS_SUPPORT
@@ -53,9 +54,7 @@ main (const int argc, const char** argv)
 	char         suppressUserAgent = 0;
 	signed char  c = '\0';          /* for getopt */
 
-#ifdef __OW_GETOPT_H /* we're using "getoptfd.h" */
-	extern int   optopt;
-#else
+#ifndef _DOS
 	int          option_index = 0;  /* for getopt_long() */
 #endif
 	int          i = 0;
@@ -132,9 +131,9 @@ main (const int argc, const char** argv)
 	}
 
 #ifdef _DOS
-	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q")) != -1)
+	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q:M:")) != -1)
 #else
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q:M:", long_options, &option_index)) != -1)
 #endif
 	{
 		double x = 0.0;	 /* scratch space */
@@ -575,15 +574,20 @@ main (const int argc, const char** argv)
 				suppressUserAgent = 1;
 				break;
 			
-			/* -M | --comment: Add comment to packet. */
+			/* -M | --comment: Add comment to packet.
+				The macro MAX_COMMENT_LENGTH is defined in "aprs-wx.h".
+			*/
 			case 'M':
 				snprintf_verify(
-					snprintf(packet.comment, strlen(optarg)+1, "%s", optarg)
+					snprintf(packet.comment, MAX_COMMENT_LENGTH, "%s", optarg)
 				);
-				
-				if (strlen(packet.comment) > 43)
+
+				/* This comparison might not be Unicode-safe.  However, I don't
+				   believe I've seen any APRS-IS packets with emoji, so we might
+				   be able to get away with this. */
+				if (strlen(optarg) > MAX_COMMENT_LENGTH)
 				{
-					fprintf(stderr, "Your comment was %lu characters long.  APRS allows 43 characters.  Your comment may be truncated.", strlen(packet.comment));
+					fprintf(stderr, "Your comment was %lu characters long, but APRS allows %u characters.  Your comment was truncated.\n", strlen(optarg), MAX_COMMENT_LENGTH);
 				}
 				break;
 				
