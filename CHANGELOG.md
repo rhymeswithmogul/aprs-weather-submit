@@ -2,8 +2,9 @@
 *   Support for compiling with OpenWatcom (with `-D_DOS`).  This will allow us to target 16-bit targets and retro machines, all the way back to MS-DOS and the 8086 (without APRS-IS support, unless we figure out [mTCP](https://www.brutman.com/mTCP/)).  I've only tested it on FreeDos and an emulated 486 thus far.
 *   Custom comments can be added to packets!  Use `--comment` to add your own notes to a packet.
 *   When not using custom comments, the "X" in the comment field is removed.  APRS packets rarely, if ever, use the operating system identifier these days, so there is no need to prefix the user agent with it.
+*   Fix a bug ([#9](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/9)) where minute values less than ten would result in invalud uncompressed positions.  Thank you, [ploeffler](https://github.com/ploeffler)!
+*   Fix a bug where the `--altitude` parameter was not being detected in its short form (`-A`).
 *   Replace calls to `strncat()` with calls to `strcat()`.  This eliminates on-by-default warnings in GCC 8.1.  [Thank you](https://github.com/rhymeswithmogul/aprs-weather-submit/pull/4), [KR4DIO](https://github.com/KR4DIO)!
-*   The `--altitude` parameter was not being detected in its short form (`-A`).  This has been corrected.
 *   Removed dependency on `<assert.h>`.
 
 ## Version 1.5.2
