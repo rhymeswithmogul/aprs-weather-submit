@@ -10,8 +10,8 @@
 	<stabilize-allarches/>
 	<upstream>
 		<bugs-to>https://github.com/rhymeswithmogul/aprs-weather-submit/issues</bugs-to>
-		<changelog>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/e31dbcc356a2adf596b0200394ce8bbcb83b604c/CHANGELOG.md</changelog>
-		<doc>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/e31dbcc356a2adf596b0200394ce8bbcb83b604c/README.md</doc>
+		<changelog>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/master/CHANGELOG.md</changelog>
+		<doc>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/master/README.md</doc>
 		<remote-id type="github">aprs-weather-submit</remote-id>
 	</upstream>
 	<use>

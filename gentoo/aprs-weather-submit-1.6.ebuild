@@ -7,7 +7,7 @@ HOMEPAGE="https://github.com/rhymeswithmogul/${PN}"
 SRC_URI="https://github.com/rhymeswithmogul/${PN}/archive/v${PV}.tar.gz" -> "${PF}.tar.gz"
 LICENSE="AGPL-3 AGPL-3+"
 SLOT="0"
-KEYWORDS="amd64 arm ~arm64 ~ppc ~ppc-macos ppc64 s390x x86"
+KEYWORDS="amd64 arm arm64 ppc ~ppc-macos ppc64 s390x x86"
 IUSE="+aprs-is debug"
 
 src_configure() {
