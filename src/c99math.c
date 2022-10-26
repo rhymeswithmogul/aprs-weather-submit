@@ -26,8 +26,8 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 	to make sure that we only re-define missing functions.
 */
 
-#ifndef __APRSWX_C99MATH_H
-#define __APRSWX_C99MATH_H
+#ifndef _APRSWX_C99MATH_H
+#define _APRSWX_C99MATH_H
 
 #ifdef  _DOS
 #include <math.h>	/* log() */
@@ -37,9 +37,9 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  * @brief	An implementation of C99's logf().
  * @param x	A number.
  * @return	float
- * @since	2.0
+ * @since	1.6
  */
-inline float
+float
 logf (const float x)
 {
 	return ((float) log((double) x));
@@ -52,9 +52,9 @@ logf (const float x)
  * @brief	An implementation of C99's log1p().
  * @param x	A number.
  * @return	double
- * @since	2.0
+ * @since	1.6
  */
-inline double
+double
 log1p (const double x)
 {
 	return log(1+x)-(((1+x)-1)-x)/(1+x);
@@ -67,12 +67,8 @@ log1p (const double x)
  * @brief	An implementation of C99's round().
  * @param x	A number to round up or down.
  * @return	int
- * @since	2.0
+ * @since	1.6
  */
-__weak
-#ifndef _DOS
-inline
-#endif
 int
 round (const double x)
 {
@@ -85,7 +81,7 @@ round (const double x)
 		return (int)(x + 0.5);
 	}
 }
-#endif
+#endif /* round */
 
-#endif
-#endif
+#endif /* _DOS */
+#endif /* _APRSWX_C99MATH_H */

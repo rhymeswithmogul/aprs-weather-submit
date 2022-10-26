@@ -25,10 +25,8 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <math.h>           /* round(), floor() */
 #include <stdint.h>         /* uint16_t */
 
-#if defined(_DOS)
+#ifdef _DOS
 #include "getopt.h"         /* getopt(), in ./contrib/freegetopt-0.11/ */
-#elif defined(_WIN32)
-#include "getopt-windows.h" /* getopt_long() */
 #else /* POSIX */
 #include <getopt.h>         /* getopt_long() */
 #endif
@@ -131,9 +129,9 @@ main (const int argc, const char** argv)
 	}
 
 #ifdef _DOS
-	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q:M:")) != -1)
+	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:")) != -1)
 #else
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:Q:M:", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:", long_options, &option_index)) != -1)
 #endif
 	{
 		double x = 0.0;	 /* scratch space */

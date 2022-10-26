@@ -32,7 +32,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  * @brief	An implementation of C99's logf().
  * @param x	A number.
  * @return	float
- * @since	1.7
+ * @since	1.6
  */
 float
 logf (const float x);
@@ -43,7 +43,7 @@ logf (const float x);
  * @brief	An implementation of C99's log1p().
  * @param x	A number.
  * @return	double
- * @since	1.7
+ * @since	1.6
  */
 double
 log1p (const double x);
@@ -54,9 +54,10 @@ log1p (const double x);
  * @brief	An implementation of C99's round().
  * @param x	A number to round up or down.
  * @return	int
- * @since	1.7
+ * @since	1.6
  */
 int
 round (const double x);
 #endif
+
 #endif

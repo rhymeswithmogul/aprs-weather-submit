@@ -201,7 +201,7 @@ int getopt(int argc, char** argv, char* optstr)
 			{
 				/* One of those "you're not expected to understand this" moment */
 				if(argv_index2 < argv_index) argv_index2 = argv_index;
-				while(argv[++argv_index2] && argv[argv_index2][0] == '-');
+				while(argv[++argv_index2] && argv[argv_index2][0] == '/');
 				optarg = argv[argv_index2];
 
 				/* Don't cross into the non-option argument list */
