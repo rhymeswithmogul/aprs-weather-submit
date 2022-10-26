@@ -192,14 +192,14 @@ uncompressedPosition (char* const pResult, const double decimal,
 	if (isLongitude == IS_LATITUDE)
 	{
 		snprintf_verify(snprintf(
-			pResult, 9, "%02hi%.2f%c",
+			pResult, 9, "%02hi%05.2f%c",
 			degrees, minutes, (decimal < 0 ? 'S' : 'N')
 		));
 	}
 	else
 	{
 		snprintf_verify(snprintf(
-			pResult, 10, "%03hi%.2f%c",
+			pResult, 10, "%03hi%05.2f%c",
 			degrees, minutes, (decimal < 0 ? 'W' : 'E')
 		));
 	}
