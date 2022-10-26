@@ -9,4 +9,4 @@ export DEB_CFLAGS_MAINT_APPEND = -g
 	dh $@
 
 override_dh_installchangelogs:
-	dh_installchangelogs CHANGELOG.md
+	dh_installchangelogs CHANGELOG.md NEWS.md

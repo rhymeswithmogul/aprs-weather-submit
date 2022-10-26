@@ -1,5 +1,23 @@
-aprs-weather-submit (1.5.2-1) unstable; urgency=medium
+aprs-weather-submit (1.6-1) unstable; urgency=medium
 
-  * First release for Debian.
+  * Support for compiling with OpenWatcom (with -D_DOS). This will allow us to
+  target 16-bit targets and retro machines, all the way back to MS-DOS and the
+  8086 (without APRS-IS support, unless we figure out mTCP).  I've only tested
+  it on FreeDos and an emulated 486 thus far.
 
- -- Colin Cogle <colin@colincogle.name>  Thu, 04 Aug 2022 00:57:51 -0400
+  * Custom comments can be added to packets!  Use --comment to add your own
+  notes to a packet.
+  * When not using custom comments, the "X" in the comment field is removed.
+  APRS packets rarely, if ever, use the operating system identifier these
+  days, so there is no need to prefix the user agent with it.
+  
+  * Fix a bug (#9) where minute values less than ten would result in invalid
+  uncompressed positions.  Thank you, ploeffler!
+  * Fix a bug where the --altitude parameter was not being detected in its
+  short form (-A).
+  * Replace calls to strncat() with calls to strcat().  This eliminates on-
+  by-default warnings in GCC 8.1.  Thank you, KR4DIO!
+  
+  * Removed dependency on <assert.h>.
+
+ -- Colin Cogle <colin@colincogle.name>  Tue, 25 Oct 2022 21:43:45 -0400

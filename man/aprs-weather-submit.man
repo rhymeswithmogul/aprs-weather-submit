@@ -4,21 +4,21 @@
 .\" This file, aprs-weather-submit.1, is part of aprs-weather-submit.
 .\" 
 .\" aprs-weather-submit is free software: you can redistribute it and/or
-.\" modify it under the terms of the GNU General Public License as published
-.\" by the Free Software Foundation, either version 3 of the License, or
-.\" (at your option) any later version.
+.\" modify it under the terms of the GNU Affero General Public License as
+.\" published by the Free Software Foundation, either version 3 of the
+.\" License, or (at your option) any later version.
 .\"
 .\" aprs-weather-submit is distributed in the hope that it will be useful,
 .\" but WITHOUT ANY WARRANTY; without even the implied warranty of
 .\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 .\" GNU General Public License for more details.
 .\"
-.\" You should have received a copy of the GNU General Public License
+.\" You should have received a copy of the GNU Affero General Public License
 .\" along with aprs-weather-submit. If not, see <https://www.gnu.org/licenses/>.
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "aprs-weather-submit" "Unreleased" "Version 1.5"
+.TH aprs\-weather\-submit 1 "2022-10-26" "Version 1.6" "aprs-weather-submit General Help"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -93,7 +93,10 @@ It is recommended to use compressed positions;  however, it is not the default o
 Do not include the APRS software type character ('X') nor the app's name and version in the comment field of the APRS packet.
 .TP
 .BR \-M ", " \-\-comment =\fICOMMENT\fP
-Replace the comment field (by default, the aprs-weather-submit user agent).  This option will override the \-Q (\-\-no\-comment) option.
+Replace the comment field (by default, the aprs-weather-submit user agent).
+The APRS specification allows for a comment of up to 43 characters in length;
+anything longer will be truncated with a warning printed to stderr.
+This option will override the \-Q (\-\-no\-comment) option.
 
 .SS CALLSIGN AND LOCATION OPTIONS
 The APRS specification requires all packets to have a callsign, and strongly encourages all weather reports to have position information.
@@ -289,7 +292,7 @@ APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 1.5"
+.BR aprs\-weather\-submit ", version 1.6"
 .br
 Copyright (c) 2019-2022 Colin Cogle.
 .br
@@ -297,13 +300,13 @@ This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it under certain conditions.
 See the
 .UR https://\:www.gnu.org/\:licenses/
-GNU General Public License (version\ 3.0)
+GNU Affero General Public License (version\ 3.0)
 .UE
 for more details.
 .PP
-Bug reports and contributions should be made on this project's GitHub page:
+Bug reports and contributions should be made on
 .UR https://\:github.com/\:rhymeswithmogul/\:aprs-weather-submit
-.I https://\:github.com/\:rhymeswithmogul/\:aprs-weather-submit
+this project's GitHub page.
 .UE
 .PP
 QRT. 73 de KC1HBK
