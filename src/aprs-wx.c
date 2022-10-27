@@ -274,19 +274,19 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		 */
 		snprintf_verify(snprintf(
 			result, 48,
-		/*	 header_________ timestamp____ pos_wc_s_Tt__*/
-			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cCt%s",
+		/*	 header_________ timestamp____ pos_wc_s_T*/
+			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cC",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
-			p->longitude, p->windDirection[0], p->windSpeed[0], p->temperature
+			p->longitude, p->windDirection[0], p->windSpeed[0]
 		));
 	}
 	else {
 		snprintf_verify(snprintf(
 			result, 61,
-		/*	 header_________ timestamp____pos__wc_ s_t__*/
-			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%st%s",
+		/*	 header_________ timestamp____pos__wc_ s_*/
+			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
-			p->longitude, p->windDirection, p->windSpeed, p->temperature
+			p->longitude, p->windDirection, p->windSpeed
 		));
 	}
 
@@ -296,6 +296,10 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strcat(result, p->gust);
 	}
 
+	/* The temperature field is mandatory. */
+	strcat(result, "t");
+	strcat(result, p->temperature);
+	
 	if (notNull(p->rainfallLastHour))
 	{
 		strcat(result, "r");

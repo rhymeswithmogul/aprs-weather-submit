@@ -1,10 +1,12 @@
 ## Version 1.6
-*   Support for compiling with OpenWatcom (with `-D_DOS`).  This will allow us to target 16-bit targets and retro machines, all the way back to MS-DOS and the 8086 (without APRS-IS support, unless we figure out [mTCP](https://www.brutman.com/mTCP/)).  I've only tested it on FreeDos and an emulated 486 thus far.
+<time datetime="2022-10-26T22:53:17-04:00">October 26, 2022</time>
+*   This app now runs on DOS systems!  Added support for compiling with OpenWatcom, to target 16-bit targets and retro machines, all the way back to MS-DOS and the 8086 (without APRS-IS support).  I've only tested it on FreeDOS 1.3 and an emulated 486 thus far.
 *   Custom comments can be added to packets!  Use `--comment` to add your own notes to a packet.
-*   When not using custom comments, the "X" in the comment field is removed.  APRS packets rarely, if ever, use the operating system identifier these days, so there is no need to prefix the user agent with it.
-*   Fix a bug ([#9](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/9)) where minute values less than ten would result in invalud uncompressed positions.  Thank you, [ploeffler](https://github.com/ploeffler)!
-*   Fix a bug where the `--altitude` parameter was not being detected in its short form (`-A`).
-*   Replace calls to `strncat()` with calls to `strcat()`.  This eliminates on-by-default warnings in GCC 8.1.  [Thank you](https://github.com/rhymeswithmogul/aprs-weather-submit/pull/4), [KR4DIO](https://github.com/KR4DIO)!
+*   When not using custom comments, the "X" in the comment field is removed.  APRS packets rarely, if ever, use the operating system identifier these days, so there is no need to prefix the user agent or comment with it.
+*   Fixed a bug where [minute values less than ten would result in invalid uncompressed positions](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/9).  Thank you, [ploeffler](https://github.com/ploeffler)!
+*   Fixed a bug where the `--altitude` parameter was not being detected in its short form (`-A`).
+*   Worked around a bug with [APRS.fi](https://APRS.fi), where [their site would reject packets with the temperature listed before the wind gust speeds](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/6).  This was not a bug in this app.  Thank you, [Menno](https://github.com/pd9mwo).
+*   [Replace calls to `strncat()` with calls to `strcat()`.](https://github.com/rhymeswithmogul/aprs-weather-submit/pull/4)  This eliminates on-by-default warnings in GCC 8.1., [KR4DIO](https://github.com/KR4DIO)!
 *   Removed dependency on `<assert.h>`.
 
 ## Version 1.5.2
@@ -19,7 +21,6 @@
 
 *   Completely rewrite the build script to have a standard `autogen`, `configure`, and `make`.
 *   Eliminate compiler errors when using `-Wextra`.
-*   Fix a bug where [APRS.fi](https://APRS.fi) would not accept wind gust speeds if it was placed before the temperature.  This is a bug on their end, but it's a painless change over here.  (Thank you, [Menno](https://github.com/pd9mwo)!)
 
 ## Version 1.5
 <time datetime="2020-09-26T13:19:22-05:00">September 26, 2020</time>
