@@ -1,4 +1,4 @@
-aprs-weather-submit (1.6-1) unstable; urgency=medium
+aprs-weather-submit (1.6-2) unstable; urgency=medium
 
   * Support for compiling with OpenWatcom (with -D_DOS). This will allow us to
   target 16-bit targets and retro machines, all the way back to MS-DOS and the
@@ -20,4 +20,7 @@ aprs-weather-submit (1.6-1) unstable; urgency=medium
   
   * Removed dependency on <assert.h>.
 
- -- Colin Cogle <colin@colincogle.name>  Tue, 25 Oct 2022 21:43:45 -0400
+  * 1.6-2 fixes some packaging errors for Debian.  The app itself is unchanged
+  from 1.6-1, and 1.6 upstream.
+
+ -- Colin Cogle <colin@colincogle.name>  Wed, 26 Oct 2022 20:15:33 -0400

@@ -5,8 +5,8 @@ Maintainer: Colin Cogle <colin@colincogle.name>
 Build-Depends: debhelper-compat (= 13)
 Standards-Version: 4.6.0
 Homepage: https://github.com/rhymeswithmogul/aprs-weather-submit
-#Vcs-Browser: https://salsa.debian.org/debian/aprs-weather-submit
-#Vcs-Git: https://salsa.debian.org/debian/aprs-weather-submit.git
+Vcs-Browser: https://github.com/rhymeswithmogul/aprs-weather-submit
+Vcs-Git: https://github.com/rhymeswithmogul/aprs-weather-submit.git
 Rules-Requires-Root: no
 
 Package: aprs-weather-submit
@@ -17,3 +17,4 @@ Description: Manually submits weather station information to the APRS-IS network
  Maybe you are like me, and have an old-school thermometer and CoCoRaHS-approved
  rain gauge. This command-line app can compile on most Linux toolchains and will
  manually submit APRS 1.2.1-compliant information via APRS-IS.
+Installed-Size: 63291
