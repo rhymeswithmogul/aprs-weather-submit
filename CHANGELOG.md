@@ -1,3 +1,7 @@
+## Version 1.7
+Not yet released.
+*   The icon can now be changed from the default (WX) icon using the new `--icon` option.
+
 ## Version 1.6
 <time datetime="2022-10-26T22:53:17-04:00">October 26, 2022</time>
 *   This app now runs on DOS systems!  Added support for compiling with OpenWatcom, to target 16-bit targets and retro machines, all the way back to MS-DOS and the 8086 (without APRS-IS support).  I've only tested it on FreeDOS 1.3 and an emulated 486 thus far.

@@ -64,6 +64,7 @@ packetConstructor (APRSPacket* const p)
 	strcpy(p->voltage, "...");
 	strcpy(p->snowfallLast24Hours, "...");
 	strcpy(p->comment, "");
+	strcpy(p->icon, "/_");	/* the default icon, (WX) */
 	return;
 }
 
@@ -256,16 +257,21 @@ notNull (const char* const val)
  * @param compressedPacket  The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
  * @param suppressUserAgent If !=0, don't put the Linux flag ('X') nor the app
  *                          name and version in the comment field.
+ * @param icon              The symbol table identifier and code.  Default: /w
  * @since 0.1
  */
 void
 printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
-                 char compressPacket, const char suppressUserAgent)
+                 char compressPacket, const char suppressUserAgent,
+                 const char* const icon = "/w")
 {
 	char       result[BUFSIZE] = "\0";
 	time_t     t               = time(NULL);
 	struct tm* now             = gmtime(&t); /* APRS uses GMT */
 
+	const char symbolTableID = icon[0];
+	const char symbolCode    = icon[1];
+	
 	if (compressPacket == COMPRESSED_PACKET)
 	{
 		/* Compression type byte ("T"):
@@ -274,19 +280,19 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		 */
 		snprintf_verify(snprintf(
 			result, 48,
-		/*	 header_________ timestamp____ pos_wc_s_T*/
-			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz/%s%s_%c%cC",
-			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
-			p->longitude, p->windDirection[0], p->windSpeed[0]
+		/*	 header_________ timestamp____siLNLEscWDWST*/
+			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%c%s%s%c%c%cC",
+			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->icon[0],
+			p->latitude, p->longitude, p->icon[1], p->windDirection[0], p->windSpeed[0]
 		));
 	}
 	else {
 		snprintf_verify(snprintf(
 			result, 61,
-		/*	 header_________ timestamp____pos__wc_ s_*/
-			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s/%s_%s/%s",
+		/*	 header_________ timestamp____LNsiLEscWD/WS*/
+			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s%c%s%c%s/%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
-			p->longitude, p->windDirection, p->windSpeed
+			p->icon[0], p->longitude, p->icon[1], p->windDirection, p->windSpeed
 		));
 	}
 

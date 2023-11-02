@@ -108,6 +108,7 @@ Required parameters:\n\
 	-F, --water-level-above-stage  Water level above flood stage or mean tide (feet).\n\
 	-g, --gust                     Peak wind speed in the last five minutes (miles per hour).\n\
 	-h, --humidity                 Relative humidity (percentage).\n\
+	-i, --icon                     Override the default symbol table code and identifier (/_).\n\
 	-L, --luminosity               Luminosity (watts per square meter).\n\
 	-M, --comment                  Add a custom comment to the packet.\n\
 	-p, --rainfall-last-24-hours   Total rainfall in the past 24 hours (inches).\n\
@@ -140,6 +141,7 @@ Optional parameters (each requires an argument):\n\
 	/F\tWater level above flood stage or mean tide (feet).\n\
 	/g\tPeak wind speed in the last five minutes (miles per hour).\n\
 	/h\tRelative humidity (percentage).\n\
+	/i\tOverride the default symbol table code and identifier (/_).\n\
 	/L\tLuminosity (watts per square meter).\n\
 	/M\tAdd a custom comment to the packet.\n\
 	/p\tTotal rainfall in the past 24 hours (inches).\n\

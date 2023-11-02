@@ -102,6 +102,7 @@ main (const int argc, const char** argv)
 		{"radiation",               required_argument, 0, 'X'},
 		{"water-level-above-stage", required_argument, 0, 'F'}, /* APRS 1.2 */
 		{"voltage",                 required_argument, 0, 'V'}, /* APRS 1.2 */
+		{"icon",                    required_argument, 0, 'i'}
 		{0, 0, 0, 0}
 	};
 #endif
@@ -129,9 +130,9 @@ main (const int argc, const char** argv)
 	}
 
 #ifdef _DOS
-	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:")) != -1)
+	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:")) != -1)
 #else
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:", long_options, &option_index)) != -1)
 #endif
 	{
 		double x = 0.0;	 /* scratch space */
@@ -587,6 +588,31 @@ main (const int argc, const char** argv)
 				{
 					fprintf(stderr, "Your comment was %lu characters long, but APRS allows %u characters.  Your comment was truncated.\n", strlen(optarg), MAX_COMMENT_LENGTH);
 				}
+				break;
+			
+			/* -i | --icon: the icon to use on the map.
+				This value must map to something on the APRS symbol table.
+			*/
+			case 'i':
+				if (strlen(optarg) != 2)
+				{
+					fprintf(stderr, "%s: option '-%c' is not a valid icon.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				}
+				if (optarg[0] != '/' && optarg[0] != '\\')
+				{
+					fprintf(stderr, "%s: the symbol table identifier '%c' is not valid.\n", argv[0], optarg);
+					return EXIT_FAILURE;
+				}
+				if (optarg[1] < 33 || optarg[1] > 126)
+				{
+					fprintf(stderr, "%s: the symbol code '%c' is not in the APRS symbol table.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				}
+
+				snprintf_verify(
+					snprintf(packet.icon, 2, "%s", optarg)
+				)
 				break;
 				
 			/* Unknown argument handler (quick help). */
