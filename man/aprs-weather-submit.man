@@ -1,5 +1,5 @@
 .\" aprs-weather-submit
-.\" Copyright (c) 2019-2022 Colin Cogle
+.\" Copyright (c) 2019-2023 Colin Cogle
 .\"
 .\" This file, aprs-weather-submit.1, is part of aprs-weather-submit.
 .\" 
@@ -294,7 +294,7 @@ APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .SH AUTHOR AND COPYRIGHT
 .BR aprs\-weather\-submit ", version 1.6"
 .br
-Copyright (c) 2019-2022 Colin Cogle.
+Copyright (c) 2019-2023 Colin Cogle.
 .br
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it under certain conditions.
