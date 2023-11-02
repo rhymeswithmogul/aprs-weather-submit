@@ -659,12 +659,13 @@ main (const int argc, const char** argv)
 
 /**
  * snprintf_verify(x) -- verify that a call to snprintf() worked.
- *     If x >= 0, then that means snprintf() was able to put all of its
- *     data into the string.  Otherwise, we just overflowed a buffer and
- *     should terminate execution.
+ *     If x >= 0, then that means snprintf() was able to put all of its data
+ *     into the string. If x <= BUFSIZE, that means our buffer was large enough
+ *     to hold all our data.  If either check fails, we just overflowed a buffer
+ *     and should terminate execution.
  * 
  * @author Colin Cogle
- * @brief  Verify that the call to snprintf() returned a positive value.
+ * @brief  Verify that the call to snprintf() returned a value between 0 and BUFSIZE.
  * @param  x  Return value of snprintf().
  * @since  1.6
  */
@@ -674,7 +675,7 @@ inline
 void
 snprintf_verify (const int x)
 {
-	if (x < 0)
+	if (x < 0 || x > BUFSIZE)
 	{
 		exit(EXIT_FAILURE);
 	}
