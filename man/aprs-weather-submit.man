@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "2022-10-26" "Version 1.6" "aprs-weather-submit General Help"
+.TH aprs\-weather\-submit 1 "2023-11-29" "Version 1.7" "aprs-weather-submit General Help"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -46,6 +46,8 @@ This command-line app will manually submit APRS 1.2.1-compliant weather informat
 .IR SPEED " ]\:"
 .RB [ " \-h "
 .IR PERCENTAGE " ]\:"
+.RB [ " \-i "
+.IR ICON " ]\:"
 .RB [ " \-L "
 .IR WATTS_PER_SQUARE_METER " ]\:"
 .RB [ " \-p "
@@ -97,6 +99,10 @@ Replace the comment field (by default, the aprs-weather-submit user agent).
 The APRS specification allows for a comment of up to 43 characters in length;
 anything longer will be truncated with a warning printed to stderr.
 This option will override the \-Q (\-\-no\-comment) option.
+.TP
+.BR \-i ", " \-\-icon =\fIICON\fP
+Instead of using the default APRS weather icon, you may specify a custom one.
+Note that this app does not check to make sure you're using a valid icon, as implementations vary wildly.
 
 .SS CALLSIGN AND LOCATION OPTIONS
 The APRS specification requires all packets to have a callsign, and strongly encourages all weather reports to have position information.

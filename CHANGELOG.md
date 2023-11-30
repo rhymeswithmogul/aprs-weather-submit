@@ -1,7 +1,8 @@
 ## Version 1.7
-Not yet released.
+<time datetime="2023-11-29T23:02:00-05:00">November 29, 2023</time>
 *   The icon can now be changed from the default (WX) icon using the new `--icon` option.
 *   Output of `snprintf()` is now better checked to make sure we haven't overflowed our buffer.
+*   Fixed a compile-time error on armhf platforms.
 
 ## Version 1.6
 <time datetime="2022-10-26T22:53:17-04:00">October 26, 2022</time>

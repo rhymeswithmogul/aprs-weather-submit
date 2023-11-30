@@ -47,7 +47,7 @@ typedef struct APRSPacket
 	char waterLevel[5];
 	char voltage[4];
 	char comment[MAX_COMMENT_LENGTH + 1];
-	char icon[2];
+	char icon[3];
 } APRSPacket;
 
 #define IS_LATITUDE  0
@@ -113,17 +113,13 @@ notNull (const char* const val);
  * @param compressedPacket  The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
  * @param suppressUserAgent If !=0, don't put the app name/version in the comment
  *                          field.
- * @param icon              The icon to use on the map.  The first character is
- *                          the symbol table identifier, and the second is the
- *                          symbol code.
  */
 void
 printAPRSPacket (
 	APRSPacket* restrict const p,
 	char* restrict const ret,
 	char compressedPacket,
-	const char suppressUserAgent,
-	const char* const icon
+	const char suppressUserAgent
 );
 
 /**

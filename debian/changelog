@@ -1,20 +1,9 @@
-aprs-weather-submit (1.6-4) unstable; urgency=medium
+aprs-weather-submit (1.7-2) jammy; urgency=medium
 
-  * Custom comments can be added to packets!  Use --comment` to add your own
-  notes to a packet.
-  * When not using custom comments, the "X" in the comment field is removed.
-  APRS packets rarely, if ever, use the operating system identifier these days,
-  so there is no need to prefix the user agent or comment with it.
-  * Fixed GitHub issue #9:  minute values less than ten would result in invalid
-  uncompressed positions.  (Thank you, ploeffler!)
-  * Fixed a bug where the --altitude parameter was not being detected in its
-  short form (-A).
-  * Fixed GitHub issue #6 (for real this time): Worked around a bug with APRS.fi
-  where their site would reject packets with the temperature listed before the
-  wind gust speeds.  This was not a bug in this app.  Thank you, PD9MWO!
-  * Fixed GitHub issue #4 where GCC 8.1 would emit spurious warnings.  This was
-  fixed by replacing calls to strncat() with strcat().  Thank you for the report
-  and the pull request, KR4DIO!
-  * Removed dependency on <assert.h>.
+  * The icon can now be changed from the default (WX) icon using the new
+    `--icon` option.
+  * Output of `snprintf()` is now better checked to make sure we haven't
+    overflowed our buffer.
+  * Fixed a compile-time error on armhf platforms.
 
- -- Colin Cogle <colin@colincogle.name>  Wed, 26 Oct 2022 22:53:17 -0400
+ -- Colin Cogle <colin@colincogle.name>  Thu, 30 Nov 2023 00:32:00 -0500

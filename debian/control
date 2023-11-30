@@ -17,4 +17,4 @@ Description: Manually submits weather station information to the APRS-IS network
  Maybe you are like me, and have an old-school thermometer and CoCoRaHS-approved
  rain gauge. This command-line app can compile on most Linux toolchains and will
  manually submit APRS 1.2.1-compliant information via APRS-IS.
-Installed-Size: 63291
+Installed-Size: 56041

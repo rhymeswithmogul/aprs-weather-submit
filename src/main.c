@@ -102,7 +102,7 @@ main (const int argc, const char** argv)
 		{"radiation",               required_argument, 0, 'X'},
 		{"water-level-above-stage", required_argument, 0, 'F'}, /* APRS 1.2 */
 		{"voltage",                 required_argument, 0, 'V'}, /* APRS 1.2 */
-		{"icon",                    required_argument, 0, 'i'}
+		{"icon",                    required_argument, 0, 'i'},
 		{0, 0, 0, 0}
 	};
 #endif
@@ -586,7 +586,7 @@ main (const int argc, const char** argv)
 				   be able to get away with this. */
 				if (strlen(optarg) > MAX_COMMENT_LENGTH)
 				{
-					fprintf(stderr, "Your comment was %lu characters long, but APRS allows %u characters.  Your comment was truncated.\n", strlen(optarg), MAX_COMMENT_LENGTH);
+					fprintf(stderr, "Your comment was %zu characters long, but APRS allows %u characters.  Your comment was truncated.\n", strlen(optarg), MAX_COMMENT_LENGTH);
 				}
 				break;
 			
@@ -601,18 +601,20 @@ main (const int argc, const char** argv)
 				}
 				if (optarg[0] != '/' && optarg[0] != '\\')
 				{
-					fprintf(stderr, "%s: the symbol table identifier '%c' is not valid.\n", argv[0], optarg);
+					fprintf(stderr, "%s: the symbol table identifier '%c' is not valid.\n", argv[0], optarg[0]);
 					return EXIT_FAILURE;
 				}
 				if (optarg[1] < 33 || optarg[1] > 126)
 				{
-					fprintf(stderr, "%s: the symbol code '%c' is not in the APRS symbol table.\n", argv[0], optopt);
+					fprintf(stderr, "%s: the symbol code '%c' is not in the APRS symbol table.\n", argv[0], optarg[1]);
 					return EXIT_FAILURE;
 				}
 
-				snprintf_verify(
+				/*snprintf_verify(
 					snprintf(packet.icon, 2, "%s", optarg)
-				)
+				);*/
+				packet.icon[0] = optarg[0];
+				packet.icon[1] = optarg[1];
 				break;
 				
 			/* Unknown argument handler (quick help). */

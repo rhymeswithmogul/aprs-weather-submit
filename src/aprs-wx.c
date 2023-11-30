@@ -257,20 +257,15 @@ notNull (const char* const val)
  * @param compressedPacket  The constant COMPRESSED_PACKET or UNCOMPRESSED_PACKET.
  * @param suppressUserAgent If !=0, don't put the Linux flag ('X') nor the app
  *                          name and version in the comment field.
- * @param icon              The symbol table identifier and code.  Default: /w
  * @since 0.1
  */
 void
 printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
-                 char compressPacket, const char suppressUserAgent,
-                 const char* const icon = "/w")
+                 char compressPacket, const char suppressUserAgent)
 {
 	char       result[BUFSIZE] = "\0";
 	time_t     t               = time(NULL);
 	struct tm* now             = gmtime(&t); /* APRS uses GMT */
-
-	const char symbolTableID = icon[0];
-	const char symbolCode    = icon[1];
 	
 	if (compressPacket == COMPRESSED_PACKET)
 	{
