@@ -1,3 +1,7 @@
+## Version 1.7.1
+<time datetime="2023-11-30T00:54:00-05:00">November 30, 2023</time>
+This patch fixes a compile-time bug on armhf platforms.  The format identifer `%zu` is used to get around an error about the size of `size_t`.
+
 ## Version 1.7
 <time datetime="2023-11-29T23:02:00-05:00">November 29, 2023</time>
 *   The icon can now be changed from the default (WX) icon using the new `--icon` option.

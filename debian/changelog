@@ -1,9 +1,5 @@
-aprs-weather-submit (1.7-2) jammy; urgency=medium
+aprs-weather-submit (1.7.1-1) unstable; urgency=medium
 
-  * The icon can now be changed from the default (WX) icon using the new
-    `--icon` option.
-  * Output of `snprintf()` is now better checked to make sure we haven't
-    overflowed our buffer.
   * Fixed a compile-time error on armhf platforms.
 
- -- Colin Cogle <colin@colincogle.name>  Thu, 30 Nov 2023 00:32:00 -0500
+ -- Colin Cogle <colin@colincogle.name>  Thu, 30 Nov 2023 01:32:00 -0500
