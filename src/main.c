@@ -578,7 +578,7 @@ main (const int argc, const char** argv)
 			*/
 			case 'M':
 				snprintf_verify(
-					snprintf(packet.comment, MAX_COMMENT_LENGTH, "%s", optarg)
+					snprintf(packet.comment, (size_t)MAX_COMMENT_LENGTH, "%s", optarg)
 				);
 
 				/* This comparison might not be Unicode-safe.  However, I don't
@@ -586,7 +586,7 @@ main (const int argc, const char** argv)
 				   be able to get away with this. */
 				if (strlen(optarg) > MAX_COMMENT_LENGTH)
 				{
-					fprintf(stderr, "Your comment was %zu characters long, but APRS allows %u characters.  Your comment was truncated.\n", strlen(optarg), MAX_COMMENT_LENGTH);
+					fprintf(stderr, "Your comment was %zu characters long, but APRS allows %zu characters.  Your comment was truncated.\n", strlen(optarg), (size_t)MAX_COMMENT_LENGTH);
 				}
 				break;
 			
