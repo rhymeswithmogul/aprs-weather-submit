@@ -49,7 +49,22 @@ This app supports all of the weather data parameters defined in APRS versions up
 *   Wind speed, sustained over the last minute (`-S`, `--wind-speed`)
 
 ## Installing
-This finally has a standard `configure` script.  See INSTALL.md for more information.
+
+### Ubuntu Linux and Debian-based distributions
+If your distribution supports <abbr title="Personal Package Archive">PPA</abbr>s, [I just learned how to make a PPA!](https://launchpad.net/~signofzeta/+archive/ubuntu/aprs-weather-submit)  You can install this with APT:
+
+```bash
+sudo add-apt-repository ppa:signofzeta/aprs-weather-submit
+sudo apt update
+sudo apt install aprs-weather-submit
+```
+
+If not, follow the instructions in `INSTALL.md` to configure it normally:
+```bash
+./autogen.sh
+./configure
+make
+```
 
 ## Legal Notices
 

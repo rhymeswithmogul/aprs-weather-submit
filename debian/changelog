@@ -1,4 +1,4 @@
-aprs-weather-submit (1.7.1-1) unstable; urgency=medium
+aprs-weather-submit (1.7.1-1$BRANCH) $BRANCH; urgency=medium
 
   * Fixed a compile-time error on armhf platforms.
 
