@@ -35,11 +35,11 @@ version (void)
 	/* Per the FreeDOS standards, we should emit one line with license
 	 * information. */
 	puts(".\n\
-Copyright (c) 2019-2023 Colin Cogle.\n\
+Copyright (c) 2019-2024 Colin Cogle.\n\
 This program is free software (GNU Affero General Public License v3).");
 #else
 	puts(".\n\
-Copyright (c) 2019-2023 Colin Cogle.\n\
+Copyright (c) 2019-2024 Colin Cogle.\n\
 This program comes with ABSOLUTELY NO WARRANTY. This is free software, and you\n\
 are welcome to redistribute it under certain conditions.  See the GNU Affero\n\
 General Public License (version 3.0) for more details.");

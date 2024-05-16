@@ -1,3 +1,6 @@
+## Not yet released
+*  Preliminary support for compiling and running against the Win32 API.
+
 ## Version 1.7.1
 <time datetime="2023-11-30T00:54:00-05:00">November 30, 2023</time>
 This patch fixes a compile-time bug on armhf platforms.  The format identifer `%zu` is used to get around an error about the size of `size_t`.

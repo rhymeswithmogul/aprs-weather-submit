@@ -1,6 +1,6 @@
 /*
  aprs-weather-submit
- Copyright (c) 2019-2023 Colin Cogle <colin@colincogle.name>
+ Copyright (c) 2019-2024 Colin Cogle <colin@colincogle.name>
  
  This file, aprs-is.h, is part of aprs-weather-submit.
  <https://github.com/rhymeswithmogul/aprs-weather-submit>
