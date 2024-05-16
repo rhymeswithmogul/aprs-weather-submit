@@ -32,12 +32,12 @@ W1AW-13>APRS,TCPIP*:@090247z4142.88N/07243.71W_.../...t068aprs-weather-submit/1.
 This app supports all of the weather data parameters defined in APRS versions up to and including version 1.2.1:
 
 *   Altitude (`-A`, `--altitude`)
-*   Barometric pressure (`-b`, `--pressure`)
+*   Barometric pressure (`-b`, `--pressure`) in mbar/hPa
 *   Luminosity (`-L`, `--luminosity`)
 *   Radiation (`-X`, `--radiation`)
-*   Rainfall in the past 24 hours (`-p`, `--rainfall-last-24-hours`)
-*   Rainfall since midnight (`-P`, `--rainfall-since-midnight`)
-*   Rainfall in the past hour (`-r`, `--rainfall-last-hour`)
+*   Rainfall in the past 24 hours (`-p`, `--rainfall-last-24-hours`) in inches
+*   Rainfall since midnight (`-P`, `--rainfall-since-midnight`) in inches
+*   Rainfall in the past hour (`-r`, `--rainfall-last-hour`) in inches
 *   Relative humidity (`-h`,`  --humidity `)
 *   Snowfall in the past 24 hours (`-s`, `--snowfall-last-24-hours`)
 *   Temperature (°F) (`-t`, `--temperature`)
@@ -45,8 +45,8 @@ This app supports all of the weather data parameters defined in APRS versions up
 *   Water level above flood stage or mean tide (`-F`, `--water-level-above-stage`)
 *   Weather station battery voltage (`-V`, `--voltage`)
 *   Wind direction (`-c`, `--wind-direction`)
-*   Wind speed, peak in the last five minutes (`-g`, `--gust`)
-*   Wind speed, sustained over the last minute (`-S`, `--wind-speed`)
+*   Wind speed, peak in the last five minutes (`-g`, `--gust`) in mph
+*   Wind speed, sustained over the last minute (`-S`, `--wind-speed`) in mph
 
 ## Installing
 
