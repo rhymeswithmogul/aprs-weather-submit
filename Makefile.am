@@ -21,4 +21,7 @@ AUTOMAKE_OPTIONS = foreign
 bin_PROGRAMS = aprs-weather-submit
 aprs_weather_submit_SOURCES = src/main.c src/aprs-wx.c src/aprs-is.c src/help.c src/c99math.c
 man1_MANS = man/aprs-weather-submit.man
+
+# When compiling for Windows on MinGW, we also need to link with -lws2_32.
+# I'm not sure how to do that conditionally just yet.
 LDADD = -lm

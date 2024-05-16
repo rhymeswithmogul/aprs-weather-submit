@@ -35,8 +35,8 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <netdb.h>      /* getaddrinfo(), gai_strerror() */
 #include <unistd.h>     /* EAI_SYSTEM */
 #else  /* _WIN32 */
-#include <WinSock2.h>   /* all that socket stuff on Windows */
-#include <WS2tcpip.h>   /* inet_pton(), only available on Windows Vista and up */
+#include <winsock2.h>   /* all that socket stuff on Windows */
+#include <ws2tcpip.h>   /* inet_pton(), only available on Windows Vista and up */
 #endif /* _WIN32 */
 
 /**
@@ -66,7 +66,7 @@ sendPacket (const char* const restrict server,
 	char             verificationMessage[BUFSIZE];
 	char*            buffer = malloc(BUFSIZE);
 #ifndef _WIN32
-	int              socket_desc = -1;
+	signed int       socket_desc = -1;
 #else
 	SOCKET           socket_desc = INVALID_SOCKET;
 	int              wsaResult;
@@ -102,7 +102,11 @@ sendPacket (const char* const restrict server,
 		struct sockaddr* const addressinfo = result->ai_addr;
 
 		socket_desc = socket(addressinfo->sa_family, SOCK_STREAM, IPPROTO_TCP);
+#ifndef _WIN32
 		if (socket_desc < 0)
+#else
+		if (socket_desc == INVALID_SOCKET)
+#endif
 		{
 			perror("error in socket()");
 			continue; /* for loop */

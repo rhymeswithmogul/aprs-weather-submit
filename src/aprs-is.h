@@ -51,6 +51,13 @@ sendPacket (const char* const restrict server, const unsigned short port,
 #define EAI_SYSTEM -11
 #endif
 
+/* When compiling for Windows, we need to target Vista and later
+   because WinSock2 contains the inet_ntop() function. */
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#undef  _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
+#endif /* _WIN32 */
 
 #endif /* aprs_is_h */
 

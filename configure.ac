@@ -72,6 +72,17 @@ dnl  Check for getopt.
 AC_CHECK_HEADER(getopt.h,    [], AC_MSG_ERROR([getopt.h is required to build this package.]))
 AC_CHECK_FUNC([getopt_long], [], AC_MSG_ERROR([getopt_long() is required to build this package but was not found in getopt.h.]))
 
+dnl  Check for Windows support.
+AC_ARG_ENABLE([windows],
+    [AS_HELP_STRING([--enable-windows], [build for Windows (Vista and newer)])],
+    [enable_windows="yes"],
+    [enable_windows="no"]
+)
+AS_IF([test "x$enable_windows" != "xno"], [
+    AC_MSG_RESULT([checking for --enable-windows flag... yes])
+    AC_DEFINE([_WIN32], 1, [Build for Microsoft Windows])
+])
+
 dnl  Check for our math functions.
 AC_CHECK_HEADERS(math.h, [], AC_MSG_ERROR([math.h is required to build this package.]))
 dnl For some reason, the following checks are failing.
@@ -104,31 +115,11 @@ AC_ARG_ENABLE([aprs-is],
     [enable_aprs_is="yes"]
 )
 AS_IF([test "$enable_aprs_is" != "xno"], [
-    dnl need: [gai_strerror getaddrinfo inet_ntop ntohs perror recv send shutdown socket]
-    AC_CHECK_HEADERS(
-        [arpa/inet.h],
-        [],
-        AC_MSG_ERROR([Cannot compile with APRS-IS support because <arpa/inet.h> is missing.])
-    )
+dnl need: [gai_strerror getaddrinfo inet_ntop ntohs perror recv send shutdown socket]
     AC_CHECK_HEADERS(
         [errno.h],
         [],
         AC_MSG_ERROR([Cannot compile with APRS-IS support because <errno.h> is missing.])
-    )
-    AC_CHECK_HEADERS(
-        [netdb.h],
-        [],
-        AC_MSG_ERROR([Cannot compile with APRS-IS support because <netdb.h> is missing.])
-    )
-    AC_CHECK_HEADERS(
-        [netinet/in.h],
-        [],
-        AC_MSG_ERROR([Cannot compile with APRS-IS support because <netinet/in.h> is missing.])
-    )
-    AC_CHECK_HEADERS(
-        [sys/socket.h],
-        [],
-        AC_MSG_ERROR([Cannot compile with APRS-IS support because <sys/socket.h> is missing.])
     )
     AC_CHECK_HEADERS(
         [sys/types.h],
@@ -140,6 +131,41 @@ AS_IF([test "$enable_aprs_is" != "xno"], [
         [],
         AC_MSG_ERROR([Cannot compile with APRS-IS support because <unistd.h> is missing.])
     )
+    AS_IF([test "x$enable_windows" != "xyes"], [
+        AC_CHECK_HEADERS(
+            [arpa/inet.h],
+            [],
+            AC_MSG_ERROR([Cannot compile with APRS-IS support because <arpa/inet.h> is missing.])
+        )
+        AC_CHECK_HEADERS(
+            [netdb.h],
+            [],
+            AC_MSG_ERROR([Cannot compile with APRS-IS support because <netdb.h> is missing.])
+        )
+        AC_CHECK_HEADERS(
+            [netinet/in.h],
+            [],
+            AC_MSG_ERROR([Cannot compile with APRS-IS support because <netinet/in.h> is missing.])
+        )
+        AC_CHECK_HEADERS(
+            [sys/socket.h],
+            [],
+            AC_MSG_ERROR([Cannot compile with APRS-IS support because <sys/socket.h> is missing.])
+        )
+    ], [
+        AC_CHECK_HEADERS(
+            [winsock2.h],
+            [],
+            AC_MSG_ERROR([Cannot compile for Windows with APRS-IS support because <winsock2.h> is missing.])
+        )
+        AC_CHECK_HEADERS(
+            [ws2tcpip.h],
+            [],
+            AC_MSG_ERROR([Cannot compile for Windows with APRS-IS support because <wstcpip2.h> is missing.])
+        )
+        AM_LDFLAGS="-lm -lws2_32"
+        LDADD="-lm -lws2_32"
+    ])
     AC_DEFINE([HAVE_APRSIS_SUPPORT], [1], [Enable APRS-IS])
 ])
 
@@ -163,6 +189,8 @@ AC_MSG_RESULT([
 Run make to build this app.
 
 OPTIONS:
+  DOS support:      no (use MAKE.BAT instead)
+  Windows support:  $enable_windows
   APRS-IS support:  $enable_aprs_is
   Debugging output: $enable_debug
 ###########################
