@@ -2,8 +2,8 @@ Source: aprs-weather-submit
 Section: hamradio
 Priority: optional
 Maintainer: Colin Cogle <colin@colincogle.name>
-Build-Depends: debhelper-compat (= 11)
-Standards-Version: 4.6.0
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.0
 Homepage: https://github.com/rhymeswithmogul/aprs-weather-submit
 Vcs-Browser: https://github.com/rhymeswithmogul/aprs-weather-submit
 Vcs-Git: https://github.com/rhymeswithmogul/aprs-weather-submit.git
