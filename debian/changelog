@@ -1,5 +1,6 @@
-aprs-weather-submit (1.7.1-2) UNRELEASED; urgency=medium
+aprs-weather-submit (1.7.2-1) UNRELEASED; urgency=medium
 
-  * Fixed a compile-time error on armhf platforms.
+  * Fixed a bug that prevented creating APRS packets with 100% relative
+    humidity.  (Thanks to Jeff, N9CQS, for the report.)
 
- -- Colin Cogle <colin@colincogle.name>  Thu, 30 Nov 2023 01:32:00 -0500
+ -- Colin Cogle <colin@colincogle.name>  Mon, 23 Sep 2024 09:09:09 -0400

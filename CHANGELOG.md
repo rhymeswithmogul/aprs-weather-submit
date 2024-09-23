@@ -1,5 +1,9 @@
-## Not yet released
-*  Preliminary support for compiling and running against the Win32 API.
+# Change Log for `aprs-weather-submit`
+
+## Version 1.7.2
+<time datetime="2024-09-23T09:09:09-04:00">September 23, 2024</time>
+*   Fixed a bug that would prevent users from creating APRS packets with 100% relative humidity.  Thanks to Jeff (N9CQS) for the bug report!
+*   Minor packaging improvements for Debian repositories.
 
 ## Version 1.7.1
 <time datetime="2023-11-30T00:54:00-05:00">November 30, 2023</time>

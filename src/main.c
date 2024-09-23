@@ -458,7 +458,7 @@ main (const int argc, const char** argv)
 			/* Humidity, in the range from 1 to 100% (-h | --humidity) */
 			case 'h':
 				x = atoi(optarg);
-				if (x < 0 || x > 99)
+				if (x < 0 || x > 100)
 				{
 					fprintf(stderr, "%s: option `-%c' must be between 0%% and 100%%.\n", argv[0], optopt);
 					return EXIT_FAILURE;
