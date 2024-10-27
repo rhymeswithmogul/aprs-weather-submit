@@ -214,3 +214,9 @@ sendPacket (const char* const restrict server,
 }
 
 #endif /* HAVE_APRSIS_SUPPORT */
+
+/* The following line does nothing. It is present so that ISO-compliant
+   compilers will not complain about this file being empty (which they
+   will if we are not compiling with APRS-IS support. */
+typedef int make_iso_compilers_happy;
+

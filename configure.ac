@@ -17,7 +17,7 @@ dnl
 dnl  You should have received a copy of the GNU Affero General Public License
 dnl  along with this program. If not, see <http://gnu.org/licenses/agpl-3.0.html>.
 
-AC_INIT([aprs-weather-submit], [1.7.2], [https://github.com/rhymeswithmogul/aprs-weather-submit/])
+AC_INIT([aprs-weather-submit], [1.7.2-git], [https://github.com/rhymeswithmogul/aprs-weather-submit/])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
 AC_PREREQ
 AC_PROG_INSTALL
@@ -38,13 +38,14 @@ AC_TYPE_SIZE_T
 AC_TYPE_UINT16_T
 
 dnl  C compiler flags:
-dnl    -std=gnu99    Compile C99, with GNU extensions (for getaddrinfo,
-dnl                  gai_strerror, freeaddrinfo, struct addrinfo)
-dnl    -Wall         Complain heavily.
-dnl    -Wextra       Complain very heavily.
-dnl    -Werror       Make all warnings errors.
-dnl    -O2           Optimize (unless we're debugging)
-AM_CFLAGS="-std=gnu99 -Wall -Wextra -Werror -O2"
+dnl    -O2              Optimize (unless we're debugging)
+dnl    -std=gnu99       Compile C99, with GNU extensions (for getaddrinfo,
+dnl                     gai_strerror, freeaddrinfo, struct addrinfo)
+dnl    -Wall            Complain heavily.
+dnl    -Wextra          Complain very heavily.
+dnl    -Werror          Make all warnings errors.
+dnl    -pedantic-errors Make sure we're writing compliant C code.
+AM_CFLAGS="-O2 -std=gnu99 -Wall -Wextra -Werror -pedantic-errors"
 AM_LDFLAGS="-lm"
 AC_SUBST([AM_CFLAGS])
 AC_SUBST([AM_LDFLAGS])

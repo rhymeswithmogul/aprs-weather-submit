@@ -1,5 +1,8 @@
 # Change Log for `aprs-weather-submit`
 
+## Latest changes
+*   Added support for ISO-compliant compilers (e.g., `gcc -pedantic`).
+
 ## Version 1.7.2
 <time datetime="2024-09-23T09:09:09-04:00">September 23, 2024</time>
 *   Fixed a bug that would prevent users from creating APRS packets with 100% relative humidity.  Thanks to Jeff (N9CQS) for the bug report!

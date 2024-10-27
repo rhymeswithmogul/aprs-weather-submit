@@ -84,4 +84,10 @@ round (const double x)
 #endif /* round */
 
 #endif /* _DOS */
+
+/* The following line does nothing. It is present so that ISO-compliant
+   compilers will not complain about this file being empty (which they
+   will if _DOS is not defined at compile time. */
+typedef int make_iso_compilers_happy;
+
 #endif /* _APRSWX_C99MATH_H */
