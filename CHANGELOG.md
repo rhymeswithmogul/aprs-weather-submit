@@ -2,6 +2,7 @@
 
 ## Latest changes
 *   Added support for ISO-compliant compilers (e.g., `gcc -pedantic`).
+*   Fixed a bug where `./configure --disable-aprs-is` was not honored.
 
 ## Version 1.7.2
 <time datetime="2024-09-23T09:09:09-04:00">September 23, 2024</time>

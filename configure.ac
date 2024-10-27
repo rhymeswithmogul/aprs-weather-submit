@@ -112,10 +112,10 @@ dnl  asked us not to.  If --disable-aprs-is was *not* specified and we cannot
 dnl  compile with APRS-IS support for whatever reason, fail.
 AC_ARG_ENABLE([aprs-is], 
     [AS_HELP_STRING([--disable-aprs-is], [disable APRS-IS support])],
-    [],
+    [enable_aprs_is="no"],
     [enable_aprs_is="yes"]
 )
-AS_IF([test "$enable_aprs_is" != "xno"], [
+AS_IF([test "x$enable_aprs_is" != "xno"], [
 dnl need: [gai_strerror getaddrinfo inet_ntop ntohs perror recv send shutdown socket]
     AC_CHECK_HEADERS(
         [errno.h],
