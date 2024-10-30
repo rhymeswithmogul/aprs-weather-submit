@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "2023-11-30" "Version 1.7.1" "aprs-weather-submit General Help"
+.TH aprs\-weather\-submit 1 "2024-10-29" "Version 1.7.2-git" "aprs-weather-submit General Help"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -34,6 +34,8 @@ This command-line app will manually submit APRS 1.2.1-compliant weather informat
 [
 .BI "\-I " SERVER_NAME " \-o " PORT_NUMBER " \-u " USERNAME " \-d " PASSWORD
 ]
+.RB [ " \-m "
+.IR SECONDS " ]\:"
 .RB [ " \-A "
 .IR FEET " ]\:"
 .RB [ " \-b "
@@ -144,6 +146,16 @@ Authenticate to the server with this username.
 Authenticate to the server with this password.
 Note that this will be sent in cleartext!
 (See the BUGS AND ERRATA section.)
+
+.SS OPTIONAL APRS-IS OPTIONS
+By default, the app will wait 15 seconds for the IGate server to respond before giving up.
+.TP
+.BR \-m ", " \-\-timeout =\fISECONDS\fP
+Wait this many seconds before aborting the connection.
+The default is 15 seconds, but you may want to use a longer value over a slow Internet connection.
+.TP
+To wait forever and block until the server responds (or your operating system terminates the connection), specify a value of 0 seconds.
+This was the behavior in previous versions of the app.
 
 .SS WEATHER OPTIONS
 You may add zero or more weather measurements to your report.
@@ -298,7 +310,7 @@ APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 1.6"
+.BR aprs\-weather\-submit ", version 1.7.2-git"
 .br
 Copyright (c) 2019-2024 Colin Cogle.
 .br

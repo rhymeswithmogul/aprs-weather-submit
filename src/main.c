@@ -61,6 +61,7 @@ main (const int argc, const char** argv)
 	char         username[BUFSIZE] = "";
 	char         password[BUFSIZE] = "";
 	char         server[NI_MAXHOST] = "";
+	time_t       timeout = DEFAULT_TIMEOUT;
 	uint16_t     port = 0;
 #endif
 
@@ -75,6 +76,7 @@ main (const int argc, const char** argv)
 #ifdef HAVE_APRSIS_SUPPORT
 		{"server",                  required_argument, 0, 'I'},
 		{"port",                    required_argument, 0, 'o'},
+		{"timeout",                 required_argument, 0, 'm'},
 		{"username",                required_argument, 0, 'u'},
 		{"password",                required_argument, 0, 'd'},
 #endif
@@ -131,8 +133,10 @@ main (const int argc, const char** argv)
 
 #ifdef _DOS
 	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:")) != -1)
+#elif HAVE_APRSIS_SUPPORT
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:m:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:", long_options, &option_index)) != -1)
 #else
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvk:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:", long_options, &option_index)) != -1)
 #endif
 	{
 		double x = 0.0;	 /* scratch space */
@@ -180,6 +184,11 @@ main (const int argc, const char** argv)
 					return EXIT_FAILURE;
 				}
 				port = (unsigned short)x;
+				break;
+
+			/* IGate server timeout (-m | --timeout) */
+			case 'm':
+				timeout = (time_t)atol(optarg);
 				break;
 
 			/* IGate server username (-u | --username) */
@@ -646,7 +655,7 @@ main (const int argc, const char** argv)
 	 */
 	if (strlen(server) && strlen(username) && strlen(password) && port != 0)
 	{
-		sendPacket(server, port, username, password, packetToSend);
+		sendPacket(server, port, timeout, username, password, packetToSend);
 	}
 	else
 	{

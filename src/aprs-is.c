@@ -26,11 +26,13 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <string.h>     /* strcat() */
 #include "main.h"       /* PACKAGE, VERSION */
 #include "aprs-is.h"
+#include <errno.h>	/* errno */
 
 #ifndef _WIN32
 #include <sys/types.h>  /* size_t */
 #include <sys/socket.h> /* socket(), connect(), shutdown(), recv(), send() */
 #include <netinet/in.h> /* sockaddr, sockaddr_in, sockaddr_in6 */
+#include <netinet/tcp.h>/* TCP_USER_TIMEOUT */
 #include <arpa/inet.h>  /* inet_pton() */
 #include <netdb.h>      /* getaddrinfo(), gai_strerror() */
 #include <unistd.h>     /* EAI_SYSTEM */
@@ -45,6 +47,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  * @author         Colin Cogle
  * @param server   The DNS hostname of the server.
  * @param port     The listening port on the server.
+ * @param timeout  How long to wait before ending the connection.
  * @param username The username with which to authenticate to the server.
  * @param password The password with which to authenticate to the server.
  * @param toSend   The APRS-IS packet, as a string.
@@ -53,6 +56,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 void
 sendPacket (const char* const restrict server,
             const unsigned short port,
+            const time_t timeout,
             const char* const restrict username,
             const char* const restrict password,
             const char* const restrict toSend)
@@ -124,6 +128,14 @@ sendPacket (const char* const restrict server,
 		}
 
 		/* Connect */
+		char* timeoutText = malloc(BUFSIZE);
+		sprintf(timeoutText, " (timeout %ld seconds)", timeout);
+
+		if (timeout <= 0)
+		{
+			strncpy(timeoutText, " (no timeout)", BUFSIZE);
+		}
+
 		switch (addressinfo->sa_family)
 		{
 			case AF_INET:
@@ -133,10 +145,14 @@ sendPacket (const char* const restrict server,
 					buffer,
 					INET_ADDRSTRLEN);
 #ifdef DEBUG
-				printf("Connecting to %s:%d...\n", buffer,
-				       ntohs(((struct sockaddr_in*)addressinfo)->sin_port));
+				printf("Connecting to %s:%d%s...\n",
+				       buffer,
+				       ntohs(((struct sockaddr_in*)addressinfo)->sin_port),
+				       timeoutText
+				);
 #endif
 				break;
+
 			case AF_INET6:
 				inet_ntop(
 					AF_INET6,
@@ -144,10 +160,25 @@ sendPacket (const char* const restrict server,
 					buffer,
 					INET6_ADDRSTRLEN);
 #ifdef DEBUG
-				printf("Connecting to [%s]:%d...\n", buffer,
-				       ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port));
+				printf("Connecting to [%s]:%d%s...\n",
+				       buffer,
+				       ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port),
+				       timeoutText
+				);
 #endif
 				break;
+		}
+		free(timeoutText);
+
+		/* Code to handle timeouts, as long as the user doesn't
+		   want to wait forever (like v1.7.2 and older). */
+		if (timeout > 0)
+		{
+			struct timeval socket_timeout;
+			socket_timeout.tv_sec  = timeout;
+			socket_timeout.tv_usec = 0;
+			setsockopt(socket_desc, SOL_SOCKET, SO_SNDTIMEO, &socket_timeout, sizeof(socket_timeout));
+			setsockopt(socket_desc, SOL_SOCKET, SO_RCVTIMEO, &socket_timeout, sizeof(socket_timeout));
 		}
 
 		if (connect(socket_desc, addressinfo, (size_t)(result->ai_addrlen)) >= 0)
@@ -157,6 +188,14 @@ sendPacket (const char* const restrict server,
 		}
 		else
 		{
+			/* The error message for a timeout is misleading.
+			   It says the connection is in progress, but we
+			   are going to kill it, so this next statement
+			   replaces that error with something clearer. */
+			if (errno == EINPROGRESS)
+			{
+				errno = ETIMEDOUT;
+			}
 			perror("error in connect()");
 			shutdown(socket_desc, 2);
 		}
@@ -207,7 +246,7 @@ sendPacket (const char* const restrict server,
 	printf("> %s", toSend);
 #endif
 	send(socket_desc, toSend, (size_t)strlen(toSend), 0);
-	
+
 	/* Done! */
 	shutdown(socket_desc, 2);
 	return;
