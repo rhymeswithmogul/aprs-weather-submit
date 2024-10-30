@@ -266,7 +266,7 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 	char       result[BUFSIZE] = "\0";
 	time_t     t               = time(NULL);
 	struct tm* now             = gmtime(&t); /* APRS uses GMT */
-	
+
 	if (compressPacket == COMPRESSED_PACKET)
 	{
 		/* Compression type byte ("T"):
@@ -300,7 +300,7 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 	/* The temperature field is mandatory. */
 	strcat(result, "t");
 	strcat(result, p->temperature);
-	
+
 	if (notNull(p->rainfallLastHour))
 	{
 		strcat(result, "r");
@@ -371,7 +371,7 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strcat(result, "/A=");
 		strcat(result, p->altitude);
 	}
-	
+
 	/* If the user provided a comment, we will use that.  Otherwise, we
 	 * will check and see if --no-comment was specified, and _not_ emit
 	 * the user agent then.
@@ -379,7 +379,6 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 	if (strlen(p->comment))
 	{
 		strcat(result, p->comment);
-		
 	}
 	else if (suppressUserAgent != 1)
 	{

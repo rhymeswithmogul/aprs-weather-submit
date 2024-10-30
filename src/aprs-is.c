@@ -4,7 +4,7 @@
 
  This file, aprs-is.c, is part of aprs-weather-submit.
  <https://github.com/rhymeswithmogul/aprs-weather-submit>
- 
+
 This program is free software: you can redistribute it and/or modify it under
 the terms of the GNU Affero General Public License as published by the Free
 Software Foundation, either version 3 of the License, or (at your option) any
@@ -207,7 +207,7 @@ sendPacket (const char* const restrict server,
 	printf("> %s", toSend);
 #endif
 	send(socket_desc, toSend, (size_t)strlen(toSend), 0);
-	
+
 	/* Done! */
 	shutdown(socket_desc, 2);
 	return;

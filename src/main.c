@@ -1,7 +1,7 @@
 /*
  aprs-weather-submit
  Copyright (c) 2019-2024 Colin Cogle <colin@colincogle.name>
- 
+
  This file, main.c, is part of aprs-weather-submit.
  <https://github.com/rhymeswithmogul/aprs-weather-submit>
 
@@ -399,7 +399,7 @@ main (const int argc, const char** argv)
 					rain(packet.rainfallLast24Hours, x * 100);
 				}
 				break;
-				
+
 			/* Rainfall since midnight, in inches (-P | --rainfall-since-midnight) */
 			case 'P':
 				x = atof(optarg);
@@ -572,9 +572,9 @@ main (const int argc, const char** argv)
 			case 'Q':
 				suppressUserAgent = 1;
 				break;
-			
+
 			/* -M | --comment: Add comment to packet.
-				The macro MAX_COMMENT_LENGTH is defined in "aprs-wx.h".
+			   The macro MAX_COMMENT_LENGTH is defined in "aprs-wx.h".
 			*/
 			case 'M':
 				snprintf_verify(
@@ -589,7 +589,7 @@ main (const int argc, const char** argv)
 					fprintf(stderr, "Your comment was %zu characters long, but APRS allows %zu characters.  Your comment was truncated.\n", strlen(optarg), (size_t)MAX_COMMENT_LENGTH);
 				}
 				break;
-			
+
 			/* -i | --icon: the icon to use on the map.
 				This value must map to something on the APRS symbol table.
 			*/
@@ -616,7 +616,7 @@ main (const int argc, const char** argv)
 				packet.icon[0] = optarg[0];
 				packet.icon[1] = optarg[1];
 				break;
-				
+
 			/* Unknown argument handler (quick help). */
 			default:
 				usage();
@@ -655,7 +655,7 @@ main (const int argc, const char** argv)
 #ifdef HAVE_APRSIS_SUPPORT
 	}
 #endif
-	
+
 	return EXIT_SUCCESS;
 }
 
