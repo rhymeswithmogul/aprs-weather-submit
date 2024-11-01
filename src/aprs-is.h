@@ -30,16 +30,25 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  * @author         Colin Cogle
  * @param server   The DNS hostname of the server.
  * @param port     The listening port on the server.
+ * @param timeout  How long to wait before timing out.
  * @param username The username with which to authenticate to the server.
  * @param password The password with which to authenticate to the server.
  * @param toSend   The APRS-IS packet, as a string.
  * @since 0.3
  */
 void
-sendPacket (const char* const restrict server, const unsigned short port,
+sendPacket (const char* const restrict server,
+            const unsigned short port,
+            const time_t timeout,
             const char* const restrict username,
             const char* const restrict password,
             const char* const restrict toSend);
+
+/* How long to wait before timing out when the user doesn't specify.
+   Fifteen seconds seems reasonable. */
+#ifndef DEFAULT_TIMEOUT
+#define DEFAULT_TIMEOUT 15
+#endif
 
 /* This should be defined by the operating system, but just in case... */
 #ifndef NI_MAXHOST

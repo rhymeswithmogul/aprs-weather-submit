@@ -132,6 +132,11 @@ dnl need: [gai_strerror getaddrinfo inet_ntop ntohs perror recv send shutdown so
         [],
         AC_MSG_ERROR([Cannot compile with APRS-IS support because <unistd.h> is missing.])
     )
+    AC_CHECK_FUNC(
+        [atol],
+        [],
+        AC_MSG_ERROR([atol() is required to build this package but was not found in stdlib.h.])
+    )
     AS_IF([test "x$enable_windows" != "xyes"], [
         AC_CHECK_HEADERS(
             [arpa/inet.h],

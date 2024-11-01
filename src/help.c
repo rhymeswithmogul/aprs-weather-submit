@@ -98,6 +98,7 @@ Required parameters:\n\
 	puts("APRS-IS IGate parameters:\n\
 	-I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
 	-o, --port          Port that the APRS-IS IGate service is listening on.\n\
+	-m, --timeout       How many seconds to wait for a connection.\n\
 	-u, --username      Authenticate to the server with this username.\n\
 	-d, --password      Authenticate to the server with this password.\n");
 #endif /* HAVE_APRSIS_SUPPORT */
