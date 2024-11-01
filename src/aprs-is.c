@@ -129,11 +129,13 @@ sendPacket (const char* const restrict server,
 
 		/* Connect */
 		char* timeoutText = malloc(BUFSIZE);
-		sprintf(timeoutText, " (timeout %ld seconds)", timeout);
-
-		if (timeout <= 0)
+		if (timeout > 0)
 		{
-			strncpy(timeoutText, " (no timeout)", BUFSIZE);
+			snprintf(timeoutText, BUFSIZE - 1, " (timeout %ld seconds)", timeout);
+		}
+		else
+		{
+			snprintf(timeoutText, 14, " (no timeout)");
 		}
 
 		switch (addressinfo->sa_family)
