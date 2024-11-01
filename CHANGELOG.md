@@ -1,10 +1,12 @@
 # Change Log for `aprs-weather-submit`
 
-## Latest changes
-*   Converted the APRS-IS socket from blocking to non-blocking, with a default timeout of 15 seconds before the connection is aborted.
+## Version 1.8
+<time datetime="2024-10-31T22:35:00-04:00">October 31, 2024</time>
+*   Converted the APRS-IS socket from blocking to non-blocking, with a default timeout of 15 seconds before the connection is aborted.  Thanks to [DL9SEC](https://www.dl9sec.de) for pointing this out.
 *   Added a new parameter, `--timeout`, to set how long the app will wait for the remote server before giving up.
 *   Added support for ISO-compliant compilers (e.g., `gcc -pedantic`).
 *   Fixed a bug where `./configure --disable-aprs-is` was not honored.
+*   Minor code cleanup.
 
 ## Version 1.7.2
 <time datetime="2024-09-23T09:09:09-04:00">September 23, 2024</time>

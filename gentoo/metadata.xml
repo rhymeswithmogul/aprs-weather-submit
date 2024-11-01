@@ -10,11 +10,12 @@
 	<stabilize-allarches/>
 	<upstream>
 		<bugs-to>https://github.com/rhymeswithmogul/aprs-weather-submit/issues</bugs-to>
-		<changelog>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/master/CHANGELOG.md</changelog>
-		<doc>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/master/README.md</doc>
+		<changelog>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/main/CHANGELOG.md</changelog>
+		<doc>https://github.com/rhymeswithmogul/aprs-weather-submit/blob/main/README.md</doc>
 		<remote-id type="github">aprs-weather-submit</remote-id>
 	</upstream>
 	<use>
 		<flag name="aprs-is">Compile this app with APRS-IS support.  If disabled, this app will only output the raw packet to stdout.</flag>
+		<flag name="debug">Compile with debugging output.</flag>
 	</use>
 </pkgmetadata>

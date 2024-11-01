@@ -1,6 +1,13 @@
-aprs-weather-submit (1.7.2-1) UNRELEASED; urgency=medium
+aprs-weather-submit (1.8-1) UNRELEASED; urgency=medium
 
-  * Fixed a bug that prevented creating APRS packets with 100% relative
-    humidity.  (Thanks to Jeff, N9CQS, for the report.)
+  * Converted all I/O to non-blocking in case of network issues or APRS
+    server outages.  (Thanks to DL9SEC for pointing this out.)
+  * Thus, there is a new parameter, `--timeout`, which will let you set
+    a custom timeout value of your choice.  (Use `--timeout 0` for the
+    old blocking behavior.)
+  * Fixed a bug where `./configure --disable-aprs-is` was not honored by
+    the configure script.
+  * Added support for ISO-compliant compilers such as `gcc --pedantic`.
+  * Code cleanup.
 
- -- Colin Cogle <colin@colincogle.name>  Mon, 23 Sep 2024 09:09:09 -0400
+ -- Colin Cogle <colin@colincogle.name>  Thu, 31 Oct 2024 22:45:00 -0400
