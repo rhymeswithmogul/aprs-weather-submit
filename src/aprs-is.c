@@ -131,7 +131,7 @@ sendPacket (const char* const restrict server,
 		char* timeoutText = malloc(BUFSIZE);
 		if (timeout > 0)
 		{
-			snprintf(timeoutText, BUFSIZE - 1, " (timeout %ld seconds)", timeout);
+			snprintf(timeoutText, BUFSIZE - 1, " (timeout %jd seconds)", (intmax_t)timeout);
 		}
 		else
 		{
