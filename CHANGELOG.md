@@ -1,6 +1,7 @@
 # Change Log for `aprs-weather-submit`
 
 ## Version 1.8.1
+<time datetime="2024-11-03">November 3, 2024</time>
 Fixed a bug where compilation would fail on `armhf` platforms due to an improper cast when `printf()`-ing a `time_t`.  It's a `long long int` on that platform, while `printf()` was expecting a `long int` instead.
 
 ## Version 1.8
