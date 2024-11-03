@@ -1,5 +1,9 @@
 # Change Log for `aprs-weather-submit`
 
+## Version 1.8.1
+<time datetime="2024-11-03">November 3, 2024</time>
+Fixed a bug where compilation would fail on `armhf` platforms due to an improper cast when `printf()`-ing a `time_t`.  It's a `long long int` on that platform, while `printf()` was expecting a `long int` instead.
+
 ## Version 1.8
 <time datetime="2024-10-31T22:35:00-04:00">October 31, 2024</time>
 *   Converted the APRS-IS socket from blocking to non-blocking, with a default timeout of 15 seconds before the connection is aborted.  Thanks to [DL9SEC](https://www.dl9sec.de) for pointing this out.
