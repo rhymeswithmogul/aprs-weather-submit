@@ -1,5 +1,8 @@
 # Change Log for `aprs-weather-submit`
 
+## Next version
+- Fixed a bug where v1.8.1 would not handle timeouts correctly using the Win32 API.  The changes are queued for the next version, though I've already included them in the released binaries.
+
 ## Version 1.8.1
 <time datetime="2024-11-03">November 3, 2024</time>
 Fixed a bug where compilation would fail on `armhf` platforms due to an improper cast when `printf()`-ing a `time_t`.  It's a `long long int` on that platform, while `printf()` was expecting a `long int` instead.

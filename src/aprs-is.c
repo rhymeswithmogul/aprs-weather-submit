@@ -39,6 +39,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #else  /* _WIN32 */
 #include <winsock2.h>   /* all that socket stuff on Windows */
 #include <ws2tcpip.h>   /* inet_pton(), only available on Windows Vista and up */
+#include <stdint.h>     /* intmax_t */
 #endif /* _WIN32 */
 
 /**
@@ -176,11 +177,17 @@ sendPacket (const char* const restrict server,
 		   want to wait forever (like v1.7.2 and older). */
 		if (timeout > 0)
 		{
+#ifndef _WIN32
 			struct timeval socket_timeout;
 			socket_timeout.tv_sec  = timeout;
 			socket_timeout.tv_usec = 0;
 			setsockopt(socket_desc, SOL_SOCKET, SO_SNDTIMEO, &socket_timeout, sizeof(socket_timeout));
 			setsockopt(socket_desc, SOL_SOCKET, SO_RCVTIMEO, &socket_timeout, sizeof(socket_timeout));
+#else
+			DWORD socket_timeout = timeout * 1000;
+			setsockopt(socket_desc, SOL_SOCKET, SO_SNDTIMEO, (const char*)&socket_timeout, sizeof(socket_timeout));
+			setsockopt(socket_desc, SOL_SOCKET, SO_RCVTIMEO, (const char*)&socket_timeout, sizeof(socket_timeout));
+#endif
 		}
 
 		if (connect(socket_desc, addressinfo, (size_t)(result->ai_addrlen)) >= 0)
