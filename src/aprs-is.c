@@ -217,7 +217,7 @@ sendPacket (const char* const restrict server,
 	}
 
 	/* Authenticate */
-	sprintf(buffer, "user %s pass %s vers %s/%s\n",
+	sprintf(buffer, "user %s pass %s vers %s %s\n",
 	        username, password, PACKAGE, VERSION);
 #ifdef DEBUG
 	printf("> %s", buffer);

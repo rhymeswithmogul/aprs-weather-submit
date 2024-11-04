@@ -2,6 +2,7 @@
 
 ## Next version
 - Fixed a bug where v1.8.1 would not handle timeouts correctly using the Win32 API.  The changes are queued for the next version, though I've already included them in the released binaries.
+- Fixed a bug in APRS server negotiation.  The `vers` field expects the app name and version, separated by a space;  however, I was separating it with a forward slash instead.
 
 ## Version 1.8.1
 <time datetime="2024-11-03">November 3, 2024</time>
