@@ -1,13 +1,10 @@
-aprs-weather-submit (1.8-1) UNRELEASED; urgency=medium
+aprs-weather-submit (1.8.2-1) UNRELEASED; urgency=medium
 
-  * Converted all I/O to non-blocking in case of network issues or APRS
-    server outages.  (Thanks to DL9SEC for pointing this out.)
-  * Thus, there is a new parameter, `--timeout`, which will let you set
-    a custom timeout value of your choice.  (Use `--timeout 0` for the
-    old blocking behavior.)
-  * Fixed a bug where `./configure --disable-aprs-is` was not honored by
-    the configure script.
-  * Added support for ISO-compliant compilers such as `gcc --pedantic`.
-  * Code cleanup.
+  * Fixed a bug where v1.8.1 would not handle timeouts correctly using
+    the Win32 API.  macOS and Linux users are not affected.
+  * Fixed incorrect behavior in APRS server negotiation.  The `vers`
+    field expects the app name and version, separated by a space;
+    however, I was separating it with a forward slash instead.  I don't
+    know if this matters or not, but it should still be fixed.
 
- -- Colin Cogle <colin@colincogle.name>  Thu, 31 Oct 2024 22:45:00 -0400
+ -- Colin Cogle <colin@colincogle.name>  Wed, 13 Nov 2024 20:35:00 -0500
