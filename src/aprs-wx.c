@@ -1,6 +1,6 @@
 /*
  aprs-weather-submit
- Copyright (c) 2019-2024 Colin Cogle <colin@colincogle.name>
+ Copyright (c) 2019-2025 Colin Cogle <colin@colincogle.name>
 
  This file, aprs-wx.c, is part of aprs-weather-submit.
  <https://github.com/rhymeswithmogul/aprs-weather-submit>
@@ -65,6 +65,7 @@ packetConstructor (APRSPacket* const p)
 	strcpy(p->snowfallLast24Hours, "...");
 	strcpy(p->comment, "");
 	strcpy(p->icon, "/_");	/* the default icon, (WX) */
+	strcpy(p->deviceType, "");
 	return;
 }
 
@@ -276,7 +277,7 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		snprintf_verify(snprintf(
 			result, 48,
 		/*	 header_________ timestamp____siLNLEscWDWST*/
-			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%c%s%s%c%c%cC",
+			"%s>APRSWX,TCPIP*:@%.2d%.2d%.2dz%c%s%s%c%c%cC",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->icon[0],
 			p->latitude, p->longitude, p->icon[1], p->windDirection[0], p->windSpeed[0]
 		));
@@ -285,7 +286,7 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		snprintf_verify(snprintf(
 			result, 61,
 		/*	 header_________ timestamp____LNsiLEscWD/WS*/
-			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s%c%s%c%s/%s",
+			"%s>APRSWX,TCPIP*:@%.2d%.2d%.2dz%s%c%s%c%s/%s",
 			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
 			p->icon[0], p->longitude, p->icon[1], p->windDirection, p->windSpeed
 		));
@@ -343,8 +344,8 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strcat(result, p->radiation);
 	}
 
-	/* F is required by APRS 1.2 if voltage is present  */
-	if (notNull(p->waterLevel) || notNull(p->voltage))
+	/* F is required by APRS 1.2.1 if voltage or device type are present  */
+	if (notNull(p->waterLevel) || notNull(p->voltage) || notNull(p->deviceType))
 	{
 		strcat(result, "F");
 		strcat(result, p->waterLevel);
@@ -354,6 +355,12 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 	{
 		strcat(result, "V");
 		strcat(result, p->voltage);
+	}
+
+	if (notNull(p->deviceType))
+	{
+		strcat(result, "Z");
+		strcat(result, p->deviceType);
 	}
 
 	if (notNull(p->snowfallLast24Hours))
