@@ -1,5 +1,7 @@
 # Change Log for `aprs-weather-submit`
 
+## Next version
+
 ## Version 1.8.2
 <time datetime="2024-11-13">November 13, 2024</time>
 - Fixed a bug where v1.8.1 would not handle timeouts correctly using the Win32 API.  macOS and Linux users are not affected.

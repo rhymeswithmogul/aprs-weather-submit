@@ -1,5 +1,5 @@
 dnl  aprs-weather-submit
-dnl  Copyright (c) 2019-2024 Colin Cogle <colin@colincogle.name>
+dnl  Copyright (c) 2019-2025 Colin Cogle <colin@colincogle.name>
 dnl
 dnl  This file, configure.ac, is part of aprs-weather-submit.
 dnl  <https://github.com/rhymeswithmogul/aprs-weather-submit>
@@ -17,7 +17,7 @@ dnl
 dnl  You should have received a copy of the GNU Affero General Public License
 dnl  along with this program. If not, see <http://gnu.org/licenses/agpl-3.0.html>.
 
-AC_INIT([aprs-weather-submit], [1.8.2], [https://github.com/rhymeswithmogul/aprs-weather-submit/])
+AC_INIT([aprs-weather-submit], [1.8.2-testingtocall], [https://github.com/rhymeswithmogul/aprs-weather-submit/])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
 AC_PREREQ
 AC_PROG_INSTALL

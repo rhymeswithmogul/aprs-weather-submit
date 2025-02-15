@@ -1,6 +1,6 @@
 /*
  aprs-weather-submit
- Copyright (c) 2019-2024 Colin Cogle <colin@colincogle.name>
+ Copyright (c) 2019-2025 Colin Cogle <colin@colincogle.name>
 
  This file, main.h, is part of aprs-weather-submit.
  <https://github.com/rhymeswithmogul/aprs-weather-submit>
@@ -28,7 +28,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #endif
 
 #ifndef VERSION
-#define VERSION "1.8.2"
+#define VERSION "1.8.2_testing-tocall"
 #endif
 
 /* We don't support networking on DOS at this time.
