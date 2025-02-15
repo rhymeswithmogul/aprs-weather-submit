@@ -224,7 +224,7 @@ main (const int argc, const char** argv)
 				x = atof(optarg);
 				if (x < -90 || x > 90)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between -90 and 90 degrees north.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between -90°N and 90°N.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -245,7 +245,7 @@ main (const int argc, const char** argv)
 				x = atof(optarg);
 				if (x < -180 || x > 180)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between -180 and 180 degrees east.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between -180°E and 180°E.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -282,7 +282,7 @@ main (const int argc, const char** argv)
 				x = atof(optarg);
 				if (x < 0 || x > 360)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between 0 and 360 degrees.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between 0° and 360°.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -359,7 +359,7 @@ main (const int argc, const char** argv)
 				x = atof(optarg);
 				if (x < -99 || x > 999)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between -99 and 999 degrees Fahrenheit.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between -99°F and 999°F.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -384,7 +384,7 @@ main (const int argc, const char** argv)
 
 				if (x < -99 || x > 999)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between -72 and 537 degrees Celsius.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between -72°C and 537°C.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
