@@ -344,8 +344,8 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strcat(result, p->radiation);
 	}
 
-	/* F is required by APRS 1.2 if voltage is present  */
-	if (notNull(p->waterLevel) || notNull(p->voltage))
+	/* F is required by APRS 1.2.1 if voltage or device type are present  */
+	if (notNull(p->waterLevel) || notNull(p->voltage) || notNull(p->deviceType))
 	{
 		strcat(result, "F");
 		strcat(result, p->waterLevel);
