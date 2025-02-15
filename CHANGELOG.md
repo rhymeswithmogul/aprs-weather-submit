@@ -3,6 +3,7 @@
 ## Next version
 Not yet released.
 - Added the `Z` device type field, as noted in [**APRS version 1.2.1 WEATHER UPDATES TO THE SPEC**](https://www.aprs.org/aprs12/weather-new.txt).
+- Fixed a low-severity [security bug involving the use of `gmtime()`](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/25).  This has the limited potential to be unsafe, so I replaced it with a call to `gmtime_r()`.
 
 ## Version 1.8.2
 <time datetime="2024-11-13">November 13, 2024</time>
