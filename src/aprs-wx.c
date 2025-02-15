@@ -22,7 +22,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <stdio.h>    /* fprintf(), printf(), snprintf(), fputs() */
 #include <string.h>   /* strcpy(), strcat(), strlen() */
 #include <math.h>     /* floor(), round(), pow(), fabs() */
-#include <time.h>     /* struct tm, time_t, time(), gmtime() */
+#include <time.h>     /* struct tm, time_t, time(), gmtime_r() */
 #include <stdint.h>   /* uint32_t */
 
 #include "main.h"     /* PACKAGE, VERSION, BUFSIZE, snprintf_verify() */
@@ -65,6 +65,7 @@ packetConstructor (APRSPacket* const p)
 	strcpy(p->snowfallLast24Hours, "...");
 	strcpy(p->comment, "");
 	strcpy(p->icon, "/_");	/* the default icon, (WX) */
+	strcpy(p->deviceType, "");
 	return;
 }
 
@@ -265,7 +266,8 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 {
 	char       result[BUFSIZE] = "\0";
 	time_t     t               = time(NULL);
-	struct tm* now             = gmtime(&t); /* APRS uses GMT */
+	struct tm  now;
+	gmtime_r(&t, &now); /* APRS uses GMT */
 
 	if (compressPacket == COMPRESSED_PACKET)
 	{
@@ -343,8 +345,8 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strcat(result, p->radiation);
 	}
 
-	/* F is required by APRS 1.2 if voltage is present  */
-	if (notNull(p->waterLevel) || notNull(p->voltage))
+	/* F is required by APRS 1.2.1 if voltage or device type are present  */
+	if (notNull(p->waterLevel) || notNull(p->voltage) || notNull(p->deviceType))
 	{
 		strcat(result, "F");
 		strcat(result, p->waterLevel);
@@ -354,6 +356,12 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 	{
 		strcat(result, "V");
 		strcat(result, p->voltage);
+	}
+
+	if (notNull(p->deviceType))
+	{
+		strcat(result, "Z");
+		strcat(result, p->deviceType);
 	}
 
 	if (notNull(p->snowfallLast24Hours))

@@ -104,6 +104,7 @@ main (const int argc, const char** argv)
 		{"radiation",               required_argument, 0, 'X'},
 		{"water-level-above-stage", required_argument, 0, 'F'}, /* APRS 1.2 */
 		{"voltage",                 required_argument, 0, 'V'}, /* APRS 1.2 */
+		{"device-type",             required_argument, 0, 'Z'}, /* APRS 1.2.1 addendum */
 		{"icon",                    required_argument, 0, 'i'},
 		{0, 0, 0, 0}
 	};
@@ -132,11 +133,11 @@ main (const int argc, const char** argv)
 	}
 
 #ifdef _DOS
-	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:")) != -1)
+	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:")) != -1)
 #elif HAVE_APRSIS_SUPPORT
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:m:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:m:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:", long_options, &option_index)) != -1)
 #else
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvk:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvk:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:", long_options, &option_index)) != -1)
 #endif
 	{
 		double x = 0.0;	 /* scratch space */
@@ -218,7 +219,7 @@ main (const int argc, const char** argv)
 				x = atof(optarg);
 				if (x < -90 || x > 90)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between -90 and 90 degrees north.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between -90°N and 90°N.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -239,7 +240,7 @@ main (const int argc, const char** argv)
 				x = atof(optarg);
 				if (x < -180 || x > 180)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between -180 and 180 degrees east.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between -180°E and 180°E.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -276,7 +277,7 @@ main (const int argc, const char** argv)
 				x = atof(optarg);
 				if (x < 0 || x > 360)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between 0 and 360 degrees.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between 0° and 360°.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -353,7 +354,7 @@ main (const int argc, const char** argv)
 				x = atof(optarg);
 				if (x < -99 || x > 999)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between -99 and 999 degrees Fahrenheit.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between -99°F and 999°F.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -370,7 +371,7 @@ main (const int argc, const char** argv)
 				x = x * 1.8 + 32;
 				if (x < -99 || x > 999)
 				{
-					fprintf(stderr, "%s: option `-%c' must be between -72 and 537 degrees Celsius.\n", argv[0], optopt);
+					fprintf(stderr, "%s: option `-%c' must be between -72°C and 537°C.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
 				else
@@ -575,6 +576,19 @@ main (const int argc, const char** argv)
 						snprintf(packet.voltage, 4, "%.3d", (short)x * 10)
 					);
 				}
+				break;
+
+			/* (APRS 1.2.1 addendum) Device type identifier (-Z | --device-type) */
+			case 'Z':
+				if (strlen(optarg) != 2)
+				{
+					fprintf(stderr, "%s: option '-%c' must be exactly two characters.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				}
+
+				snprintf_verify(
+					snprintf(packet.deviceType, 3, "%s", optarg)
+				);
 				break;
 
 			/* -Q | --no-comment: Suppress our user agent, if desired. */

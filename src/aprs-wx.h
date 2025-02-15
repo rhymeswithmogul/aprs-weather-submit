@@ -46,6 +46,7 @@ typedef struct APRSPacket
 	char radiation[4];
 	char waterLevel[5];
 	char voltage[4];
+	char deviceType[3];
 	char comment[MAX_COMMENT_LENGTH + 1];
 	char icon[3];
 } APRSPacket;

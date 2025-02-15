@@ -28,7 +28,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #endif
 
 #ifndef VERSION
-#define VERSION "1.8.2_testing-tocall"
+#define VERSION "1.9-dev"
 #endif
 
 /* If you customize this app so much that it becomes your own thing,
@@ -94,7 +94,7 @@ version (void);
  *     If x >= 0, then that means snprintf() was able to put all of its
  *     data into the string.  Otherwise, we just overflowed a buffer and
  *     should terminate execution.
- * 
+ *
  * @author Colin Cogle
  * @brief  Verify that the call to snprintf() returned a positive value.
  * @param  x  Return value of snprintf().
