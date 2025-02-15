@@ -585,8 +585,9 @@ main (const int argc, const char** argv)
 					fprintf(stderr, "%s: option '-%c' must be exactly two characters.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				}
+
 				snprintf_verify(
-					snprintf(packet.deviceType, strlen(optarg)+1, "%s", optarg)
+					snprintf(packet.deviceType, 3, "%s", optarg)
 				);
 				break;
 
