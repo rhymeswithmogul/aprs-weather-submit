@@ -1,6 +1,6 @@
 @ECHO OFF
 REM aprs-weather-submit
-REM Copyright (c) 2019-2024 Colin Cogle (colin@colincogle.name)
+REM Copyright (c) 2019-2025 Colin Cogle (colin@colincogle.name)
 REM
 REM This file, make-dos.bat, is part of aprs-weather-submit.
 REM (https://github.com/rhymeswithmogul/aprs-weather-submit)
