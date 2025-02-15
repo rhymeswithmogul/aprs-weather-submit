@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "2025-02-14" "Version 1.9-dev" "aprs-weather-submit General Help"
+.TH aprs\-weather\-submit 1 "2025-02-15" "Version 1.9-dev" "aprs-weather-submit General Help"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -170,8 +170,8 @@ You may report values up to 9999.9 millibars or hectopascals, with a resolution 
 (You don't need to specify the unit of measurement, as 1 mbar is equal to 1 hPa.)
 .TP
 .BR \-c ", " \-\-wind\-direction =\fIDEGREES\fP
-The direction in which the wind is blowing, as measured in degrees relative to north, from 0 to 360 degrees.
-If you specify a value outside of this range, it will be reduced (that is, a report of 361 degrees would be submitted as 1 degree).
+The direction in which the wind is blowing, as measured in degrees relative to north, from 0° to 360°.
+If you specify a value outside of this range, it will be reduced (that is, a report of 361° would be submitted as 1°).
 .TP
 .BR \-F ", " \-\-water\-level\-above\-stage =\fIFEET\fP
 (APRS 1.2)
@@ -215,11 +215,11 @@ You may report speeds up to 999 miles per hour.
 .TP
 .BR \-t ", " \-\-temperature =\fIDEGREES_F\fP
 The current temperature.
-You may report temperatures between \-99 and 999 degrees Fahrenheit.
+You may report temperatures between \-99°F and 999°F.
 .TP
 .BR \-T ", " \-\-temperature\-celsius =\fIDEGREES_C\fP
 The current temperature.
-You may report temperatures between approximately \-72 and 537 degrees Celsius, as your input must be converted to degrees Fahrenheit to be reported.
+You may report temperatures between approximately \-72°C and 537°C, as your input must be converted to degrees Fahrenheit to be reported.
 If both \fB-t\fP and \fB-T\fP are specified, the last option specified will be reported.
 .TP
 .BR \-V ", " \-\-voltage =\fIVOLTS\fP
@@ -242,14 +242,14 @@ The device types are not defined in the APRS specification and are implementatio
 Note that this data is technically part of the comment field and may not be parsed by all APRS decoders as weather data.
 .SH EXAMPLES
 .PP
-If you were operating the ARRL's (theoretical) weather station at their headquarters and wanted to submit a temperature of 68 degrees Fahrenheit, no rainfall, and a westerly wind at about five miles per hour, use this command:
+If you were operating the ARRL's (theoretical) weather station at their headquarters and wanted to submit a temperature of 68°F, no rainfall, and a westerly wind at about five miles per hour, use this command:
 .nf
 .RS
 .B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-I example-igate-server.foo \-o 12345 \-u hiram \-d percymaxim \-t 68 \-p 0 \-S 5 \-c 270
 .RE
 .fi
 .PP
-If you wanted to print an APRS packet showing the current barometric pressure of 990.1 mbar and a temperature of -1 degree Fahrenheit:
+If you wanted to print an APRS packet showing the current barometric pressure of 990.1 mbar and a temperature of -1°F:
 .nf
 .RS
 .B aprs\-weather\-submit \-k W1AW-13 \-n 41.714692 \-e -72.728514 \-b 990.1 \-t \-1 \-A 240
