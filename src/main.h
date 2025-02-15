@@ -28,7 +28,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #endif
 
 #ifndef VERSION
-#define VERSION "1.8.2_testing-tocall"
+#define VERSION "1.9-dev"
 #endif
 
 /* We don't support networking on DOS at this time.

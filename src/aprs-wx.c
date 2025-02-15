@@ -65,6 +65,7 @@ packetConstructor (APRSPacket* const p)
 	strcpy(p->snowfallLast24Hours, "...");
 	strcpy(p->comment, "");
 	strcpy(p->icon, "/_");	/* the default icon, (WX) */
+	strcpy(p->deviceType, "");
 	return;
 }
 
@@ -354,6 +355,12 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 	{
 		strcat(result, "V");
 		strcat(result, p->voltage);
+	}
+
+	if (notNull(p->deviceType))
+	{
+		strcat(result, "Z");
+		strcat(result, p->deviceType);
 	}
 
 	if (notNull(p->snowfallLast24Hours))

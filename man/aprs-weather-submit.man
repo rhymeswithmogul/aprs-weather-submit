@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "2024-10-31" "Version 1.8" "aprs-weather-submit General Help"
+.TH aprs\-weather\-submit 1 "2025-02-14" "Version 1.9-dev" "aprs-weather-submit General Help"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -70,6 +70,8 @@ This command-line app will manually submit APRS 1.2.1-compliant weather informat
 .IR VOLTS " ]\:"
 .RB [ " \-X "
 .IR NANOSIEVERTS " ]\:"
+.RB [ " \-Z "
+.IR DEVICE_TYPE " ]\:"
 .RB [ " \-Q "
 .RB | " \-M "
 .IR COMMENT " ]\:"
@@ -229,6 +231,11 @@ You may report voltages of up to 99.9 volts, with a resolution of one-tenth of a
 The current level of nuclear radiation.
 You may report readings of up to 99,000,000,000 nanosieverts per hour, though the resolution of the value put into your report varies based on orders of magnitude.
 Consult the APRS 1.2 specification for full details.
+.TP
+.BR \-Z ", " \-\-device\-type =\fIDEVICE-TYPE\fP
+(APRS 1.2.1)
+Exactly two characters to identify the type of device sending this information.
+The device types are not defined in the APRS specification and are implementation-specific.
 .SH EXAMPLES
 .PP
 If you were operating the ARRL's (theoretical) weather station at their headquarters and wanted to submit a temperature of 68 degrees Fahrenheit, no rainfall, and a westerly wind at about five miles per hour, use this command:
@@ -310,7 +317,7 @@ APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 1.8"
+.BR aprs\-weather\-submit ", version 1.9-dev"
 .br
 Copyright (c) 2019-2025 Colin Cogle.
 .br
@@ -327,4 +334,4 @@ Bug reports and contributions should be made on
 this project's GitHub page.
 .UE
 .PP
-QRT. 73 de KC1HBK
+QRT. 73 de W1DNS

@@ -120,7 +120,8 @@ Required parameters:\n\
 	-t, --temperature              Temperature (degrees Fahrenheit).\n\
 	-T, --temperature-celsius      Temperature (degrees Celsius).\n\
 	-V, --voltage                  Battery voltage of your weather station.\n\
-	-X, --radiation                Radiation levels (nanosieverts per hour).\n\n\
+	-X, --radiation                Radiation levels (nanosieverts per hour).\n\
+	-Z, --device-type              A two-character device type code.\n\n\
 Find this project online at https://github.com/rhymeswithmogul/aprs-weather-submit\n");
 #else /* DOS build -- son't forget to wrap lines at 80 characters */
 	puts("\n\
@@ -153,7 +154,8 @@ Optional parameters (each requires an argument):\n\
 	/t\tTemperature (degrees Fahrenheit).\n\
 	/T\tTemperature (degrees Celsius).\n\
 	/V\tBattery voltage of your weather station.\n\
-	/X\tRadiation levels (nanosieverts per hour).\n\n\
+	/X\tRadiation levels (nanosieverts per hour).\n\
+	/Z\tTwo-character device type identifier.\n\n\
 Find this online at https://github.com/rhymeswithmogul/aprs-weather-submit\n");
 #endif
 	return;

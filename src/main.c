@@ -104,6 +104,7 @@ main (const int argc, const char** argv)
 		{"radiation",               required_argument, 0, 'X'},
 		{"water-level-above-stage", required_argument, 0, 'F'}, /* APRS 1.2 */
 		{"voltage",                 required_argument, 0, 'V'}, /* APRS 1.2 */
+		{"device-type",             required_argument, 0, 'Z'}, /* APRS 1.2.1 addendum */
 		{"icon",                    required_argument, 0, 'i'},
 		{0, 0, 0, 0}
 	};
@@ -132,11 +133,11 @@ main (const int argc, const char** argv)
 	}
 
 #ifdef _DOS
-	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:")) != -1)
+	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:")) != -1)
 #elif HAVE_APRSIS_SUPPORT
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:m:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:m:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:", long_options, &option_index)) != -1)
 #else
-	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvk:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:", long_options, &option_index)) != -1)
+	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvk:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:", long_options, &option_index)) != -1)
 #endif
 	{
 		double x = 0.0;	 /* scratch space */
@@ -575,6 +576,18 @@ main (const int argc, const char** argv)
 						snprintf(packet.voltage, 4, "%.3d", (short)x * 10)
 					);
 				}
+				break;
+
+			/* (APRS 1.2.1 addendum) Device type identifier (-Z | --device-type) */
+			case 'Z':
+				if (strlen(optarg) != 2)
+				{
+					fprintf(stderr, "%s: option '-%c' must be exactly two characters.\n", argv[0], optopt);
+					return EXIT_FAILURE;
+				}
+				snprintf_verify(
+					snprintf(packet.deviceType, strlen(optarg)+1, "%s", optarg)
+				);
 				break;
 
 			/* -Q | --no-comment: Suppress our user agent, if desired. */
