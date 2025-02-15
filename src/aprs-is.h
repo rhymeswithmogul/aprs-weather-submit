@@ -27,13 +27,14 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 /**
  * sendPacket() -- sends a packet to an APRS-IS IGate server.
  *
- * @author         Colin Cogle
- * @param server   The DNS hostname of the server.
- * @param port     The listening port on the server.
- * @param timeout  How long to wait before timing out.
- * @param username The username with which to authenticate to the server.
- * @param password The password with which to authenticate to the server.
- * @param toSend   The APRS-IS packet, as a string.
+ * @author          Colin Cogle
+ * @param server    The DNS hostname of the server.
+ * @param port      The listening port on the server.
+ * @param timeout   How long to wait before timing out.
+ * @param username  The username with which to authenticate to the server.
+ * @param password  The password with which to authenticate to the server.
+ * @param toSend    The APRS-IS packet, as a string.
+ * @param debugFlag Set to !0 to enable debugging output.
  * @since 0.3
  */
 void
@@ -42,7 +43,8 @@ sendPacket (const char* const restrict server,
             const time_t timeout,
             const char* const restrict username,
             const char* const restrict password,
-            const char* const restrict toSend);
+            const char* const restrict toSend,
+            const int debugFlag);
 
 /* How long to wait before timing out when the user doesn't specify.
    Fifteen seconds seems reasonable. */

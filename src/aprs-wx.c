@@ -65,7 +65,7 @@ packetConstructor (APRSPacket* const p)
 	strcpy(p->snowfallLast24Hours, "...");
 	strcpy(p->comment, "");
 	strcpy(p->icon, "/_");	/* the default icon, (WX) */
-	strcpy(p->deviceType, "");
+	strcpy(p->deviceType, "..");
 	return;
 }
 

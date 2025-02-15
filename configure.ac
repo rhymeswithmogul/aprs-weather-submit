@@ -38,7 +38,7 @@ AC_TYPE_SIZE_T
 AC_TYPE_UINT16_T
 
 dnl  C compiler flags:
-dnl    -O2              Optimize (unless we're debugging)
+dnl    -O2              Optimize (unless we specify --disable-optimizations).
 dnl    -std=gnu99       Compile C99, with GNU extensions (for getaddrinfo,
 dnl                     gai_strerror, freeaddrinfo, struct addrinfo)
 dnl    -Wall            Complain heavily.
@@ -175,14 +175,13 @@ dnl need: [gai_strerror getaddrinfo inet_ntop ntohs perror recv send shutdown so
     AC_DEFINE([HAVE_APRSIS_SUPPORT], [1], [Enable APRS-IS])
 ])
 
-AC_ARG_ENABLE([debug], 
-    [AS_HELP_STRING([--enable-debug], [build with added debugging output])],
-    [enable_debug="yes"],
-    [enable_debug="no"]
+AC_ARG_ENABLE([debugging],
+    [AS_HELP_STRING([--disable-debugging], [build with no debugging capability (smallest binary)])],
+    [disable_debugging="yes"],
+    [disable_debugging="no"]
 )
-AS_IF([test "x$enable_debug" = "xyes"], [
-    AC_DEFINE([DEBUG], 1, [Build with symbols and debugging output.])
-    CFLAGS="$CFLAGS -O0 -g3"
+AS_IF([test "x$disable_debugging" != "xno"], [
+    AC_DEFINE([NO_DEBUGGING], 1, [Build without debugging capability.])
 ])
 
 dnl  Done!
@@ -195,9 +194,9 @@ AC_MSG_RESULT([
 Run make to build this app.
 
 OPTIONS:
-  DOS support:      no (use MAKE.BAT instead)
-  Windows support:  $enable_windows
-  APRS-IS support:  $enable_aprs_is
-  Debugging output: $enable_debug
+  DOS support:        no (use MAKE.BAT instead)
+  Windows support:    $enable_windows
+  APRS-IS support:    $enable_aprs_is
+  Debugging stripped: $disable_debugging
 ###########################
 ])

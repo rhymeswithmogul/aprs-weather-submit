@@ -45,13 +45,14 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 /**
  * sendPacket() -- sends a packet to an APRS-IS IGate server.
  *
- * @author         Colin Cogle
- * @param server   The DNS hostname of the server.
- * @param port     The listening port on the server.
- * @param timeout  How long to wait before ending the connection.
- * @param username The username with which to authenticate to the server.
- * @param password The password with which to authenticate to the server.
- * @param toSend   The APRS-IS packet, as a string.
+ * @author          Colin Cogle
+ * @param server    The DNS hostname of the server.
+ * @param port      The listening port on the server.
+ * @param timeout   How long to wait before ending the connection.
+ * @param username  The username with which to authenticate to the server.
+ * @param password  The password with which to authenticate to the server.
+ * @param toSend    The APRS-IS packet, as a string.
+ * @param debugFlag Set to !0 to enable debugging output.
  * @since 0.3
  */
 void
@@ -60,7 +61,9 @@ sendPacket (const char* const restrict server,
             const time_t timeout,
             const char* const restrict username,
             const char* const restrict password,
-            const char* const restrict toSend)
+            const char* const restrict toSend,
+            const int debugFlag
+)
 {
 	int              error = 0;
 	int              bytesRead = 0;
@@ -147,12 +150,15 @@ sendPacket (const char* const restrict server,
 					&((struct sockaddr_in*)addressinfo)->sin_addr,
 					buffer,
 					INET_ADDRSTRLEN);
-#ifdef DEBUG
-				printf("Connecting to %s:%d%s...\n",
-				       buffer,
-				       ntohs(((struct sockaddr_in*)addressinfo)->sin_port),
-				       timeoutText
-				);
+#ifndef NO_DEBUGGING
+				if (debugFlag != 0)
+				{
+					printf("Connecting to %s:%d%s...\n",
+					       buffer,
+					       ntohs(((struct sockaddr_in*)addressinfo)->sin_port),
+					       timeoutText
+					);
+				}
 #endif
 				break;
 
@@ -162,12 +168,15 @@ sendPacket (const char* const restrict server,
 					&((struct sockaddr_in6*)addressinfo)->sin6_addr,
 					buffer,
 					INET6_ADDRSTRLEN);
-#ifdef DEBUG
-				printf("Connecting to [%s]:%d%s...\n",
-				       buffer,
-				       ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port),
-				       timeoutText
-				);
+#ifndef NO_DEBUGGING
+				if (debugFlag != 0)
+				{
+					printf("Connecting to [%s]:%d%s...\n",
+					       buffer,
+					       ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port),
+					       timeoutText
+					);
+				}
 #endif
 				break;
 		}
@@ -219,8 +228,11 @@ sendPacket (const char* const restrict server,
 	/* Authenticate */
 	sprintf(buffer, "user %s pass %s vers %s %s\n",
 	        username, password, PACKAGE, VERSION);
-#ifdef DEBUG
-	printf("> %s", buffer);
+#ifndef NO_DEBUGGING
+	if (debugFlag != 0)
+	{
+		printf("> %s", buffer);
+	}
 #endif
 	send(socket_desc, buffer, (size_t)strlen(buffer), 0);
 
@@ -230,8 +242,11 @@ sendPacket (const char* const restrict server,
 	while (bytesRead > 0)
 	{
 		buffer[bytesRead] = '\0';
-#ifdef DEBUG
-		printf("< %s", buffer);
+#ifndef NO_DEBUGGING
+		if (debugFlag != 0)
+		{
+			printf("< %s", buffer);
+		}
 #endif
 		if (strstr(buffer, verificationMessage) != NULL)
 		{
@@ -246,13 +261,16 @@ sendPacket (const char* const restrict server,
 	free(buffer);
 	if (!authenticated)
 	{
-		fputs("Authentication failed!", stderr);
+		fputs("Authentication failed!\n", stderr);
 		exit(EXIT_FAILURE);
 	}
 
 	/* Send packet */
-#ifdef DEBUG
-	printf("> %s", toSend);
+#ifndef NO_DEBUGGING
+	if (debugFlag != 0)
+	{
+		printf("> %s", toSend);
+	}
 #endif
 	send(socket_desc, toSend, (size_t)strlen(toSend), 0);
 

@@ -31,6 +31,7 @@ This command-line app will manually submit APRS 1.2.1-compliant weather informat
 .PP
 .BI "aprs\-weather\-submit \-k " CALLSIGN[-SSID] " \-n " LATITUDE " \-e " LONGITUDE
 .RB " [" " \-q " "]"
+.RB " [" " \-\-debug " "]"
 [
 .BI "\-I " SERVER_NAME " \-o " PORT_NUMBER " \-u " USERNAME " \-d " PASSWORD
 ]
@@ -88,6 +89,12 @@ Show long help and exit.
 .TP
 .BR \-v ", " \-\-version
 Show version information and exit.
+.TP
+.BR \-\-debug
+Show additional output to help you debug problems.
+This option is not available in non-default builds using the
+.BR ./configure \-\-disable\-debugging
+compile-time option.
 .TP
 .BR \-C ", " \-\-compressed\-position
 Report using compressed position data.

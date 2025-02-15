@@ -55,7 +55,7 @@ typedef struct APRSPacket
 #define IS_LONGITUDE 1
 
 #define UNCOMPRESSED_PACKET 0
-#define COMPRESSED_PACKET   1
+#define COMPRESSED_PACKET 1
 
 /* As we begin our function definitions, you'll notice that "extern" is inside
    an #ifndef statement everywhere it occurs. This is because OpenWatcom's POSIX
