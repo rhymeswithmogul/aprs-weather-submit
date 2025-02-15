@@ -276,8 +276,8 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		snprintf_verify(snprintf(
 			result, 48,
 		/*	 header_________ timestamp____siLNLEscWDWST*/
-			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%c%s%s%c%c%cC",
-			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->icon[0],
+			"%s>%s,TCPIP*:@%.2d%.2d%.2dz%c%s%s%c%c%cC",
+			p->callsign, TOCALL, now->tm_mday, now->tm_hour, now->tm_min, p->icon[0],
 			p->latitude, p->longitude, p->icon[1], p->windDirection[0], p->windSpeed[0]
 		));
 	}
@@ -285,8 +285,8 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		snprintf_verify(snprintf(
 			result, 61,
 		/*	 header_________ timestamp____LNsiLEscWD/WS*/
-			"%s>APRS,TCPIP*:@%.2d%.2d%.2dz%s%c%s%c%s/%s",
-			p->callsign, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
+			"%s>%s,TCPIP*:@%.2d%.2d%.2dz%s%c%s%c%s/%s",
+			p->callsign, TOCALL, now->tm_mday, now->tm_hour, now->tm_min, p->latitude,
 			p->icon[0], p->longitude, p->icon[1], p->windDirection, p->windSpeed
 		));
 	}
