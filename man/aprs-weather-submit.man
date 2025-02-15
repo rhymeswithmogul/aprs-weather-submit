@@ -335,7 +335,11 @@ for more details.
 .PP
 Bug reports and contributions should be made on
 .UR https://\:github.com/\:rhymeswithmogul/\:aprs-weather-submit
-this project's GitHub page.
-.UE
+this project's GitHub page
+.UE .
+You may also thank me via email, a toot on Mastodon, or monetarily through
+.UR https://\:buymeacoffee.com/\:colincogle
+my Buy Me a Coffee page
+.UE .
 .PP
 QRT. 73 de W1DNS
