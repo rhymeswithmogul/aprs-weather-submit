@@ -1,7 +1,10 @@
 # Change Log for `aprs-weather-submit`
 
-## Next version
+## Version 1.9-dev
 Not yet released.
+- The command-line option `--debug` has been added to toggle debugging output at runtime.  [Thanks for the suggestion, DL9SEC!](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/18)
+  - As a result, the `--enable-debug` compile-time option (that sets `-DDEBUG`) is removed.
+  - However, if you *really* need the smallest-possible binary, there is a new `--disable-debugging` that will remove all debugging capability.
 - Added the `Z` device type field, as noted in [**APRS version 1.2.1 WEATHER UPDATES TO THE SPEC**](https://www.aprs.org/aprs12/weather-new.txt).
 
 ## Version 1.8.2
