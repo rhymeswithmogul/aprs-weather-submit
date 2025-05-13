@@ -2,9 +2,10 @@
 
 ## Version 1.9
 Not yet released.
+* [We have our own TOCALL destination!](https://github.com/aprsorg/aprs-deviceid/issues/192)  This app can now identify itself using the `APWXS?` destination, so that the various APRS tracking sites can identify this app without the user agent.
+- In addition to the above, anyone who forks this project can now easily pick their own TOCALL at compile-time by editing the `TOCALL` macro in `main.h` or supplying `-DTOCALL=APZxxx` in `$CFLAGS`.
 - Added the `Z` device type field, as noted in [**APRS version 1.2.1 WEATHER UPDATES TO THE SPEC**](https://www.aprs.org/aprs12/weather-new.txt).
 - Fixed a low-severity [security bug involving the use of `gmtime()`](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/25).  This has the limited potential to be unsafe, so I replaced it with a call to `gmtime_r()`.
-- Anyone who forks this project can now easily pick their own TOCALL at compile-time by editing the `TOCALL` macro in `main.h` or supplying `-DTOCALL=APZxxx` in `$CFLAGS`.
 
 ## Version 1.8.2
 <time datetime="2024-11-13">November 13, 2024</time>
