@@ -31,11 +31,16 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #define VERSION "1.9-dev"
 #endif
 
-/* If you customize this app so much that it becomes your own thing,
+/* Official builds of aprs-weather-submit may use the assigned TOCALL
+   destination of "APWXS?" (where the question mark may be used for a
+   version number, which I currently do not use).
+
+   If you customize this app so much that it becomes your own thing,
    I ask that you change the TOCALL to something else.  APZxxx (where
-   "xxx" is anything) is reserved for experimentation. */
+   "xxx" is anything) is reserved for experimentation.
+*/
 #ifndef TOCALL
-#define TOCALL "APRS"
+#define TOCALL "APWXS"
 #endif
 
 /* We don't support networking on DOS at this time.
