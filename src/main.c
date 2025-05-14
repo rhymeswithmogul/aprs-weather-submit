@@ -43,15 +43,14 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #define MAX(a,b) ((a) < (b) ? (a) : (b))
 #endif
 
-
 int
 main (const int argc, const char** argv)
 {
 	char         packetToSend[BUFSIZE] = "";
-	char         packetFormat = UNCOMPRESSED_PACKET;
+	int          packetFormat = UNCOMPRESSED_PACKET;
 	char         suppressUserAgent = 0;
+	int          debugFlag = 0;
 	signed char  c = '\0';          /* for getopt */
-
 #ifndef _DOS
 	int          option_index = 0;  /* for getopt_long() */
 #endif
@@ -66,13 +65,16 @@ main (const int argc, const char** argv)
 #endif
 
 #ifndef _DOS
-	static const struct option long_options[] = {
+	const struct option long_options[] = {
 		{"compressed-position",     no_argument,       0, 'C'},
 		{"uncompressed-position",   no_argument,       0, '0'},	/* ignored as of v1.4 */
 		{"no-comment",              no_argument,       0, 'Q'},
-		{"comment",	                required_argument, 0, 'M'},
+		{"comment",	            required_argument, 0, 'M'},
 		{"help",                    no_argument,       0, 'H'},
 		{"version",                 no_argument,       0, 'v'},
+#ifndef NO_DEBUGGING
+		{"debug",                   no_argument,       &debugFlag, 42},
+#endif
 #ifdef HAVE_APRSIS_SUPPORT
 		{"server",                  required_argument, 0, 'I'},
 		{"port",                    required_argument, 0, 'o'},
@@ -109,10 +111,6 @@ main (const int argc, const char** argv)
 		{0, 0, 0, 0}
 	};
 #endif
-
-#ifdef DEBUG
-	puts("Compiled with debugging output.\n");
-#endif
 	packetConstructor(&packet);
 
 	/* Check for --compressed-position early. */
@@ -133,7 +131,8 @@ main (const int argc, const char** argv)
 	}
 
 #ifdef _DOS
-	while ((c = (char) getopt(argc, (char**)argv, "CH?vI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:")) != -1)
+	/* the "D" on the next line is for --debug;  DOS getopt doesn't support long options. */
+	while ((c = (char) getopt(argc, (char**)argv, "CH?DvI:o:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:")) != -1)
 #elif HAVE_APRSIS_SUPPORT
 	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvI:o:m:u:d:k:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:", long_options, &option_index)) != -1)
 #else
@@ -144,6 +143,12 @@ main (const int argc, const char** argv)
 
 		switch (c)
 		{
+#ifndef NO_DEBUGGING
+			/* Handler for --debug.  getopt_long() set it for us. */
+			case 0:
+				fputs("Debugging output enabled.\n", stderr);
+				break;
+#endif
 			/* Use compressed position (-C | --compressed-position). */
 			case 'C':
 				/* We handled this before the while loop. */
@@ -369,6 +374,14 @@ main (const int argc, const char** argv)
 			case 'T':
 				x = atof(optarg);
 				x = x * 1.8 + 32;
+
+#ifndef NO_DEBUGGING
+				if (debugFlag != 0)
+				{
+					printf("%f°C converted to %f°F.\n", atof(optarg), x);
+				}
+#endif
+
 				if (x < -99 || x > 999)
 				{
 					fprintf(stderr, "%s: option `-%c' must be between -72°C and 537°C.\n", argv[0], optopt);
@@ -669,7 +682,7 @@ main (const int argc, const char** argv)
 	 */
 	if (strlen(server) && strlen(username) && strlen(password) && port != 0)
 	{
-		sendPacket(server, port, timeout, username, password, packetToSend);
+		sendPacket(server, port, timeout, username, password, packetToSend, debugFlag);
 	}
 	else
 	{

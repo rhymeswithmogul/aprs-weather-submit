@@ -22,8 +22,8 @@ void
 version (void)
 {
 	printf("%s, version %s", PACKAGE, VERSION);
-#ifdef DEBUG
-	fputs(", compiled with debugging output", stdout);
+#ifdef NO_DEBUGGING
+	fputs(", compiled without debugging support", stdout);
 #endif
 #if defined(_DOS)
 	fputs(", compiled for DOS without APRS-IS support", stdout);
@@ -83,9 +83,11 @@ help (void)
 	puts("");
 	usage();
 #ifndef _DOS
-	puts("\n\
-Special parameters:\n\
-	-H, --help                 Show this help and exit.\n\
+	puts("\nSpecial parameters:");
+#ifndef NO_DEBUGGING
+	puts("\t--debug                    Show debugging output.");
+#endif
+	puts("\t-H, --help                 Show this help and exit.\n\
 	-v, --version              Show version and licensing information, and exit.\n\
 	-C, --compressed-position  Create a packet with the compressed position format.\n\
 	-Q, --no-comment           Don't include this app's name and version in the comment field.\n\
@@ -127,8 +129,11 @@ Find this project online at https://github.com/rhymeswithmogul/aprs-weather-subm
 	puts("\n\
 Special parameters:\n\
 	/?\tShow this help and exit.\n\
-	/v\tShow version and licensing information, and exit.\n\
-	/C\tCreate a packet with the compressed position format.\n\
+	/v\tShow version and licensing information, and exit.\n");
+#ifndef NO_DEBUGGING
+	puts("\t/D\tShow debugging output.");
+#endif
+	puts("\t/C\tCreate a packet with the compressed position format.\n\
 	/Q\tDon't include this app's name and version in the comment field.\n\
 \n\
 Required parameters (each requires an argument):\n\
