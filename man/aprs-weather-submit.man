@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "2025-02-15" "Version 1.9-dev" "aprs-weather-submit General Help"
+.TH aprs\-weather\-submit 1 "2025-05-15" "Version 2.0" "aprs-weather-submit General Help"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -92,7 +92,7 @@ Show version information and exit.
 .TP
 .BR \-\-debug
 Show additional output to help you debug problems.
-This option is not available in non-default builds using the
+This option is not available in non-default builds that used the
 .BR ./configure \-\-disable\-debugging
 compile-time option.
 .TP
@@ -307,7 +307,7 @@ This app does not use TLS to secure the data in transit, nor is the developer aw
 Uncompressed positions were made the default option again as of version 1.4.  For backwards compatibility with older versions of this app, the undocumented \fB-0\fR and \fB--uncompressed-position\fR switches are still accepted (but they do nothing).
 
 .SH NOTES
-Some older apps and devices may unintentionally display the new APRS 1.2 measurements (radiation, water level, and voltage) as a comment rather than a measurement.
+Some apps, devices, and websites devices may unintentionally display the new APRS 1.2 measurements (radiation, water level, voltage, device type, and altitude) as a comment rather than a measurement.
 This is compliant with the APRS specification and not a bug in this app.
 
 .SH STANDARDS CONFORMING TO
@@ -328,7 +328,7 @@ APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 1.9-dev"
+.BR aprs\-weather\-submit ", version 2.0"
 .br
 Copyright (c) 2019-2025 Colin Cogle.
 .br
