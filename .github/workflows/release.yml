@@ -9,100 +9,63 @@ on:
       - 'v*'
 
 jobs:
-  Create_Packages:
-    name: Create Packages
+  build-deb:
+    strategy:
+      matrix:
+        codename:
+          - bookworm
+        platform:
+          - amd64
+          - arm64
+          - arm/v7
+          - ppc64le
+          - 386
+
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          path: "REPO"
+    - uses: actions/checkout@v4
 
-      - name: Calculate some variables
-        run: |
-          (
-            echo "GITHUB_REPO_NAME=$(echo "${GITHUB_REPOSITORY}" | cut -d/ -f2)"
-            echo "VERSION=$(echo "${GITHUB_REF_NAME}" | sed -e 's/^v//')"
-            echo "DESCRIPTION=Manually submits weather station information to the APRS-IS network."
-            echo "DEB_ARCHITECTURE=${ARCHITECTURE:-all}"
-            echo "RPM_ARCHITECTURE=${ARCHITECTURE:-noarch}"
-            echo "RELEASE=1"
-            cd REPO
-            echo "FIRST_YEAR=$(git log $(git rev-list --max-parents=0 HEAD) --date="format:%Y" --format="format:%ad")"
-            echo "THIS_COMMIT_YEAR=$(git log HEAD -n1 --date="format:%Y" --format="format:%ad")"
-            echo "THIS_COMMIT_DATE=$(git log HEAD -n1 --format="format:%as")"
-            if [ "$FIRST_YEAR" = "$THIS_COMMIT_YEAR" ]
-            then
-              echo "YEAR_RANGE=$FIRST_YEAR"
-            else
-              echo "YEAR_RANGE=${FIRST_YEAR}-${THIS_COMMIT_YEAR}"
-            fi
-            cd ..
-          ) >> $GITHUB_ENV
+#    - name: Copy debian directory
+#      run: cp -a packaging/debian .
 
-      - name: Make Directory Structure
-        run: mkdir -p "SOURCES/${GITHUB_REPO_NAME}" SPECS release
+    - name: Import PGP key
+      run: |
+        echo -n "${{ secrets.PGP_SIGNING_KEY_PRIVATE }}" | gpg --import
+        echo -n "${{ vars.PGP_SIGNING_KEY_PUBLIC }}" | gpg --import
 
-      - name: Copy script files into SOURCES
-        run: |
-          cp -Rf REPO/[a-z]* "SOURCES/${GITHUB_REPO_NAME}"
-          cp REPO/LICENSE REPO/README.md "SOURCES/${GITHUB_REPO_NAME}/usr/share/doc/${GITHUB_REPO_NAME}/"
-          if grep -lr '#TAG#' SOURCES
-          then
-            sed -i -e "s/#TAG#/${VERSION}/" $(grep -lr '#TAG#' SOURCES)
-          fi
-          if grep -lr '#TAG_DATE#' SOURCES
-          then
-            sed -i -e "s/#TAG_DATE#/${THIS_COMMIT_YEAR}/" $(grep -lr '#TAG_DATE#' SOURCES)
-          fi
-          if grep -lr '#DATE_RANGE#' SOURCES
-          then
-            sed -i -e "s/#DATE_RANGE#/${YEAR_RANGE}/" $(grep -lr '#DATE_RANGE#' SOURCES)
-          fi
-          if grep -lr '#MAINTAINER#' SOURCES
-          then
-            sed -i -e "s/#MAINTAINER#/${MAINTAINER:-Jon Spriggs <jon@sprig.gs>}/" $(grep -lr '#MAINTAINER#' SOURCES)
-          fi
+    - uses: andy5995/gh-action-build-deb@v1
+      with:
+        args: |
+          --compression=xz
+        codename: ${{ matrix.codename }}
+        platform: ${{ matrix.platform }}
 
-      - name: Create Spec File
-        run: PATH="REPO/.github/scripts:${PATH}" create_spec_file.sh
+    - name: Create sha256sum
+      run: |
+        DEB_FILENAME=$(basename `find output/aprs-weather-submit_*deb`)
+        echo "DEB_FILENAME=$DEB_FILENAME" >> $GITHUB_ENV
+        cd output
+        sha256sum "$DEB_FILENAME" > "../$DEB_FILENAME.sha256sum"
 
-      - name: Build DEB Package
-        run: dpkg-deb --build SOURCES/${GITHUB_REPO_NAME} "${{ env.GITHUB_REPO_NAME }}_${{ env.VERSION }}_${{ env.DEB_ARCHITECTURE }}.deb"
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.DEB_FILENAME }}
+        path: |
+          output/*.deb
+          *deb.sha256sum
+        if-no-files-found: error
 
-      - name: Sign DEB package
-        run: |
-          apt install -y dpkg-sig gpg
-          echo -n "$PGP_KEY" | base64 --decode | gpg --import
-          dpkg-sig --sign builder -k B8AB401015D97DA4 --sign-changes full "${{ env.GITHUB_REPO_NAME }}_${{ env.VERSION }}_${{ env.DEB_ARCHITECTURE }}.deb"
-        env:
-          PGP_KEY: ${{ secrets.PGP_SIGNING_KEY_PRIVATE }}
-
-      - name: Build RPM Package
-        run: |
-          echo -n "$PGP_KEY_PUBLIC" > release-signing-key.asc
-          rpm --import release-signing-key.asc
-          echo "%_signature gpg" >> ~/.rpmmacros
-          echo "%_gpg_name Colin Cogle" >> ~/.rpmmacros
-          echo "%_gpgbin /usr/bin/gpg2" >> ~/.rpmmacros
-          sudo rpmbuild --define "_topdir $(pwd)" -bb SPECS/${GITHUB_REPO_NAME}.spec
-          rpm --addsign *.rpm
-        env:
-          PGP_KEY_PUBLIC: ${{ vars.PGP_SIGNING_KEY_PUBLIC }}
-
-      - name: Confirm builds complete
-        run: sudo install -m 644 -o runner -g runner $(find . -type f -name *.deb && find . -type f -name *.rpm) release/
-
-      - name: Publish to PPA
-        uses: yuezk/publish-ppa-package@v2
-        with:
-          repository: "rhymeswithmogul/aprs-weather-submit"
-          gpg_private_key: ${{ secrets.PGP_SIGNING_KEY_PRIVATE }}
-          tarball: rhymeswithmogul/aprs-weather-submit-*/.build/tarball/*.tar.gz
-          deb_email: "colin@colincogle.name"
-          deb_fullname: "Colin Cogle"
-          keep_changelog: "yes"
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: release/*
+  publish-to-ppa:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Publish to PPA
+      uses: yuezk/publish-ppa-package@v2
+      with:
+        repository: "rhymeswithmogul/aprs-weather-submit"
+        gpg_private_key: ${{ secrets.PGP_SIGNING_KEY_PRIVATE }}
+        gpg_passphrase: "foo"
+        tarball: rhymeswithmogul/aprs-weather-submit-*/.build/tarball/*.tar.gz
+        deb_email: "colin@colincogle.name"
+        deb_fullname: "Colin Cogle"
+#        keep_changelog: "yes"
