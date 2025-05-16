@@ -1,12 +1,12 @@
 # Change Log for `aprs-weather-submit`
 
-## Version 1.9
-Not yet released.
+## Version 2.0
+<time datetime="2025-05-15">May 15, 2025</time>
+- [We have our own TOCALL destination!](https://github.com/aprsorg/aprs-deviceid/issues/192)  This app can now identify itself using the `APWXS?` destination, so that the various APRS tracking sites can identify this app without the user agent.  I felt that was worthy of a major version bump!
+- In addition to the above, anyone who forks this project can now easily pick their own TOCALL at compile-time by editing the `TOCALL` macro in `main.h` or supplying `-DTOCALL=APZxxx` in `$CFLAGS`.
 - The command-line option `--debug` has been added to toggle debugging output at runtime.  [Thanks for the suggestion, DL9SEC!](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/18)
   - As a result, the `--enable-debug` compile-time option (that sets `-DDEBUG`) is removed.
   - However, if you *really* need the smallest-possible binary, there is a new `--disable-debugging` that will remove all debugging capability.
-- [We have our own TOCALL destination!](https://github.com/aprsorg/aprs-deviceid/issues/192)  This app can now identify itself using the `APWXS?` destination, so that the various APRS tracking sites can identify this app without the user agent.
-- In addition to the above, anyone who forks this project can now easily pick their own TOCALL at compile-time by editing the `TOCALL` macro in `main.h` or supplying `-DTOCALL=APZxxx` in `$CFLAGS`.
 - Added the `Z` device type field, as noted in [**APRS version 1.2.1 WEATHER UPDATES TO THE SPEC**](https://www.aprs.org/aprs12/weather-new.txt).
 - Fixed a low-severity [security bug involving the use of `gmtime()`](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/25).  This has the limited potential to be unsafe, so I replaced it with a call to `gmtime_r()`.
 

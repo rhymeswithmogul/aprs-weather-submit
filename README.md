@@ -29,10 +29,12 @@ $ ./aprs-weather-submit -k W1AW-13 -n 41.714692 -e -72.728514 -t 68
 W1AW-13>APRS,TCPIP*:@090247z4142.88N/07243.71W_.../...t068aprs-weather-submit/1.5.2
 ```
 
-This app supports all of the weather data parameters defined in APRS versions up to and including version 1.2.1:
+This app supports all of the parameters defined in APRS versions up to and including version 1.2.1:
 
 *   Altitude (`-A`, `--altitude`)
 *   Barometric pressure (`-b`, `--pressure`) in mbar/hPa
+*   Device type identifier (`-Z`, `--device-type`)
+*   Icon (`-i`, `--icon`)
 *   Luminosity (`-L`, `--luminosity`)
 *   Radiation (`-X`, `--radiation`)
 *   Rainfall in the past 24 hours (`-p`, `--rainfall-last-24-hours`) in inches
@@ -48,6 +50,7 @@ This app supports all of the weather data parameters defined in APRS versions up
 *   Wind speed, peak in the last five minutes (`-g`, `--gust`) in mph
 *   Wind speed, sustained over the last minute (`-S`, `--wind-speed`) in mph
 
+
 ## Installing
 
 ### Ubuntu Linux and Debian-based distributions
@@ -62,9 +65,17 @@ sudo apt install aprs-weather-submit
 If not, follow the instructions in `INSTALL.md` to configure it normally:
 ```bash
 ./autogen.sh
-./configure
+./configure [--enable-windows] [--disable-aprs-is] [--disable-debugging]
 make
+sudo make install
 ```
+
+## MS-DOS and compatibles
+Yeah, why not?  Install OpenWatcom and run `MAKE.BAT`.
+
+## Windows
+This app can be compiled using MinGW.  If other compilers work, please open an issue to let me know!
+
 
 ## Legal Notices
 
@@ -77,4 +88,4 @@ To use this app, you *must* be either:
 
 Like it says in the license:  this app is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the [GNU Affero General Public License 3.0](https://www.gnu.org/licenses/agpl-3.0.html) for more details.  As such, you and you alone are solely responsible for using this app to submit complete and correct weather and/or location data.  Please do not use this app for evil.  Don't make me regret writing this app.
 
-QTH. 73, W1DNS (formerly KC1HBK)
+QTH. 73, W1DNS

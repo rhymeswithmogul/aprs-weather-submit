@@ -19,7 +19,7 @@ While this app is designed to run on any system, I've been able to test it on th
 *   64-bit Intel (`x86_64` or `amd64`)
 *   32-bit PowerPC (`ppc`)
 *   64-bit PowerPC (`ppc64` and `ppc64el`)
-*   ARM/AArch64 (`arm64` and `armhf` -- I assume Apple Silicon works, too)
+*   ARM/AArch64 (`armhf`, `arm64`, and Apple's `arm64e`)
 *   IBM i/System 390 (`s390x`)
 *   RISC-V (`riscv64`)
 
@@ -37,7 +37,7 @@ To build and install `aprs-weather-submit`, do this:
 
 ```console
 ./autogen.sh
-./configure [--disable-aprs-is] [--enable-debug]
+./configure [--help to see all the options]
 make
 sudo make install
 ```
