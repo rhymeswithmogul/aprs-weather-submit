@@ -46,6 +46,7 @@ jobs:
       - name: Copy script files into SOURCES
         run: |
           cp -Rf REPO/[a-z]* "SOURCES/${GITHUB_REPO_NAME}"
+          mkdir -p "SOURCES/${GITHUB_REPO_NAME}/usr/share/doc/${GITHUB_REPO_NAME}/"
           cp REPO/LICENSE REPO/README.md "SOURCES/${GITHUB_REPO_NAME}/usr/share/doc/${GITHUB_REPO_NAME}/"
           if grep -lr '#TAG#' SOURCES
           then
