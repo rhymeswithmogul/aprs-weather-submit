@@ -4,12 +4,12 @@ permissions:
   contents: write
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
-
 jobs:
-  build-deb:
+  deb-bookworm:
     strategy:
       matrix:
         codename:
@@ -25,13 +25,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-#    - name: Copy debian directory
-#      run: cp -a packaging/debian .
-
     - name: Import PGP key
       run: |
         echo -n "${{ secrets.PGP_SIGNING_KEY_PRIVATE }}" | gpg --import
         echo -n "${{ vars.PGP_SIGNING_KEY_PUBLIC }}" | gpg --import
+        echo "DE1A7DCE673576CD6F086957B8AB401015D97DA4:6:" | gpg --import-ownertrust
+        # We need to import it for root as well, because debsign won't run as a regular
+        # user.  That might be something I'm doing wrong.
+        echo -n "${{ secrets.PGP_SIGNING_KEY_PRIVATE }}" | sudo gpg --import
+        echo -n "${{ vars.PGP_SIGNING_KEY_PUBLIC }}" | sudo gpg --import
+        echo "DE1A7DCE673576CD6F086957B8AB401015D97DA4:6:" | sudo gpg --import-ownertrust
 
     - uses: andy5995/gh-action-build-deb@v1
       with:
@@ -42,8 +45,8 @@ jobs:
 
     - name: debsign the debs
       run: |
-        apt install -y debsigs
-        find . -name '*.deb' -exec debsigs --sign=origin {} \;
+        sudo apt install -y debsigs
+        find output -name '*.deb' -exec sudo debsigs --sign=origin --default-key=B8AB401015D97DA4 {} \;
 
     - name: Create sha256sum
       run: |
@@ -61,16 +64,72 @@ jobs:
           *deb.sha256sum
         if-no-files-found: error
 
-  publish-to-ppa:
-    runs-on: ubuntu-latest
+  ppa:
+    runs-on: ubuntu-latest-breakme
+    strategy:
+      matrix:
+        # Edit this list as time goes on, and remove anything
+        # that is no longer accepting new packages.
+        distribution:
+          - questing
+          - plucky
+          - oracular
+          - noble
+          - jammy
+          - focal
+          - bionic
+          - xenial
+          - trusty
+    env:
+      distribution: ${{ matrix.distribution }}
     steps:
-    - name: Publish to PPA
-      uses: yuezk/publish-ppa-package@v2
-      with:
-        repository: "rhymeswithmogul/aprs-weather-submit"
-        gpg_private_key: ${{ secrets.PGP_SIGNING_KEY_PRIVATE }}
-        gpg_passphrase: "foo"
-        tarball: rhymeswithmogul/aprs-weather-submit-*/.build/tarball/*.tar.gz
-        deb_email: "colin@colincogle.name"
-        deb_fullname: "Colin Cogle"
-#        keep_changelog: "yes"
+      - uses: actions/checkout@v2
+
+      - name: Install prerequisites
+        run: sudo apt install -y devscripts debhelper-compat dput gpg build-essential automake wget
+
+      - name: Import PGP key
+        run: |
+          echo -n "${{ secrets.PGP_SIGNING_KEY_PRIVATE }}" | gpg --import
+          echo -n "${{ vars.PGP_SIGNING_KEY_PUBLIC }}" | gpg --import
+          echo "DE1A7DCE673576CD6F086957B8AB401015D97DA4:6:" | gpg --import-ownertrust
+          export "DEBEMAIL=aprs-weather-submit@users.noreply.github.com" >> $GITHUB_ENV
+          export "DEBUILD_SIGNING_USERNAME=aprs-weather-submit@users.noreply.github.com" >> $GITHUB_ENV
+
+      # TODO: figure out how to extract the version number from the
+      # git tag name.  This is untenable, but doable.
+      - name: Create Debian and Ubuntu tarballs
+        run: |
+          # Download the first tarball I uploaded from Launchpad.
+          # Normally, we'd download something from Debian, but that doesn't exist.
+          # Next time, I'll link to the GitHub tarballs instead.
+          wget https://launchpadlibrarian.net/793714836/aprs-weather-submit_2.0.orig.tar.xz
+          mv aprs-weather-submit_2.0.orig.tar.xz ..
+          mv debian ..
+          rm -rf .git .github .gitignore release-signing-key.asc gentoo/
+          tar cfv ../aprs-weather-submit_2.0-0${distribution}1.orig.tar .
+          xz -9 ../aprs-weather-submit_2.0-0${distribution}1.orig.tar
+          mv ../debian .
+
+      - name: Modify Debian files as needed
+        run: |
+          sed -i -e "s/native/quilt/" debian/source/format
+          sed -i -e "s/(2.0) UNRELEASED/(2.0-0${distribution}1) $distribution/" debian/changelog
+          sed -i -e "s/colin@colincogle.name/aprs-weather-submit@users.noreply.github.com/" debian/changelog
+          if [ "$distribution" = "focal" ]; then
+            sed -i -e "s/debhelper-compat (= 13)/debhelper-compat (= 12)/" debian/control
+          elif [ "$distribution" = "bionic" ]; then
+            sed -i -e "s/debhelper-compat (= 13)/debhelper-compat (= 11)/" debian/control
+          elif [ "$distribution" = "xenial" ]; then
+            sed -i -e "s/debhelper-compat (= 13)/debhelper (>= 9.0)/" debian/control
+            echo -n 9 > debian/compat
+          elif [ "$distribution" = "trusty" ]; then
+            sed -i -e "s/debhelper-compat (= 13)/debhelper (>= 9.0)/" debian/control
+            echo -n 9 > debian/compat
+          fi
+
+      - name: Build source package
+        run: debuild -S -sa
+
+      - name: Push to Launchpad
+        run: dput ppa:signofzeta/aprs-weather-submit ../aprs-weather-submit_*_source.changes
