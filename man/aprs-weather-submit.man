@@ -18,7 +18,7 @@
 .\"
 .\" (This page is best viewed with the command: groff -man)
 .\"
-.TH aprs\-weather\-submit 1 "2025-05-15" "Version 2.0" "aprs-weather-submit General Help"
+.TH aprs\-weather\-submit 1 "2025-05-17" "Version 2.0.1-dev" "aprs-weather-submit General Help"
 .SH NAME
 aprs\-weather\-submit \- manually submit weather station data to the APRS-IS network
 .SH DESCRIPTION
@@ -329,7 +329,7 @@ APRS Version 1.2.1, "Weather Updates to the Spec" (24 Mar 2011)
 .UE
 
 .SH AUTHOR AND COPYRIGHT
-.BR aprs\-weather\-submit ", version 2.0"
+.BR aprs\-weather\-submit ", version 2.0.1-dev"
 .br
 Copyright (c) 2019-2025 Colin Cogle.
 .br
