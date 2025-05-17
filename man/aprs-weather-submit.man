@@ -113,6 +113,7 @@ This option will override the \-Q (\-\-no\-comment) option.
 .TP
 .BR \-i ", " \-\-icon =\fIICON\fP
 Instead of using the default APRS weather icon, you may specify a custom one.
+Changing the icon is not supported when you are sending any weather data except for wind direction and speed;  with a custom icon, all non-wind weather data is ignored and treated as a comment!
 Note that this app does not check to make sure you're using a valid icon, as implementations vary wildly.
 
 .SS CALLSIGN AND LOCATION OPTIONS

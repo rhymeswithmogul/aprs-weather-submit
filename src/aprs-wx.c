@@ -303,9 +303,19 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 		strcat(result, p->gust);
 	}
 
-	/* The temperature field is mandatory. */
-	strcat(result, "t");
-	strcat(result, p->temperature);
+	/* The temperature field is supposed to be mandatory.
+	   However, many APRS viewing sites don't require it.
+	   Thus, I'm putting the "mandatory-ness" behind an
+	   optional compile-time flag, at least for testing. */
+	#ifdef _STRICT_APRS_COMPLIANCE
+	if (notNull(p->temperature))
+	{
+	#endif
+		strcat(result, "t");
+		strcat(result, p->temperature);
+	#ifdef _STRICT_APRS_COMPLIANCE
+	}
+	#endif
 
 	if (notNull(p->rainfallLastHour))
 	{
