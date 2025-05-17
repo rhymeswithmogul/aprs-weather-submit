@@ -103,18 +103,18 @@ jobs:
           # Download the first tarball I uploaded from Launchpad.
           # Normally, we'd download something from Debian, but that doesn't exist.
           # Next time, I'll link to the GitHub tarballs instead.
-          wget https://launchpadlibrarian.net/793714836/aprs-weather-submit_2.0.orig.tar.xz
-          mv aprs-weather-submit_2.0.orig.tar.xz ..
+          #wget https://launchpadlibrarian.net/793714836/aprs-weather-submit_2.0.orig.tar.xz
+          mv aprs-weather-submit_2.0.1-dev.orig.tar.xz ..
           mv debian ..
           rm -rf .git .github .gitignore release-signing-key.asc gentoo/
-          tar cfv ../aprs-weather-submit_2.0-0${distribution}1.orig.tar .
-          xz -9 ../aprs-weather-submit_2.0-0${distribution}1.orig.tar
+          tar cfv ../aprs-weather-submit_2.0.1-dev-1${distribution}1.orig.tar .
+          xz -9 ../aprs-weather-submit_2.0.1-dev-1${distribution}1.orig.tar
           mv ../debian .
 
       - name: Modify Debian files as needed
         run: |
           sed -i -e "s/native/quilt/" debian/source/format
-          sed -i -e "s/(2.0) UNRELEASED/(2.0-0${distribution}1) $distribution/" debian/changelog
+          sed -i -e "s/(2.0.1-dev) UNRELEASED/(2.0.1-dev-1${distribution}1) $distribution/" debian/changelog
           sed -i -e "s/colin@colincogle.name/aprs-weather-submit@users.noreply.github.com/" debian/changelog
           if [ "$distribution" = "focal" ]; then
             sed -i -e "s/debhelper-compat (= 13)/debhelper-compat (= 12)/" debian/control

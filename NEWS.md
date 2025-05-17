@@ -18,6 +18,10 @@ As a result, I've removed the `--enable-debug` compile-time option that set the 
 
 However, if you *really* need the smallest-possible binary for whatever reason, there is a `--disable-debugging` compile-time option that will strip all debugging code from the executable.
 
+## This app supports changing the icon, but you probably shouldn't.
+
+Upon careful reading of the APRS specification, SQ9RHX and I found out that you're not allowed to change the APRS icon if you're including any weather data *except for* wind speed and direction.  Now, the app's documentation will suggest you _not_ use the `--icon` switch, as it will cause other weather data (such as temperature) to be interpreted as a comment.
+
 
 ## Device type identifier.
 
