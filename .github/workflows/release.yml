@@ -40,6 +40,11 @@ jobs:
         codename: ${{ matrix.codename }}
         platform: ${{ matrix.platform }}
 
+    - name: debsign the debs
+      run: |
+        apt install -y debsigs
+        find . -name '*.deb' -exec debsigs --sign=origin {} \;
+
     - name: Create sha256sum
       run: |
         DEB_FILENAME=$(basename `find output/aprs-weather-submit_*deb`)
