@@ -22,7 +22,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #include <stdio.h>    /* fprintf(), printf(), snprintf(), fputs() */
 #include <string.h>   /* strcpy(), strcat(), strlen() */
 #include <math.h>     /* floor(), round(), pow(), fabs() */
-#include <time.h>     /* struct tm, time_t, time(), gmtime_r() */
+#include <time.h>     /* struct tm, time_t, time(), gmtime(), gmtime_r() */
 #include <stdint.h>   /* uint32_t */
 
 #include "main.h"     /* PACKAGE, VERSION, BUFSIZE, snprintf_verify() */
@@ -266,8 +266,12 @@ printAPRSPacket (APRSPacket* restrict const p, char* restrict const ret,
 {
 	char       result[BUFSIZE] = "\0";
 	time_t     t               = time(NULL);
+	#ifndef _DOS
 	struct tm  now;
 	gmtime_r(&t, &now); /* APRS uses GMT */
+	#else
+	struct tm* now = gmtime(&t);
+	#endif
 
 	if (compressPacket == COMPRESSED_PACKET)
 	{
