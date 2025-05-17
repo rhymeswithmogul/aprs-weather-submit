@@ -1,5 +1,9 @@
 # Change Log for `aprs-weather-submit`
 
+## Version 2.0.1
+Not yet released
+- A security change in version 2.0 would not compile on DOS because `gmtime_r()` isn't part of the C99 standard.  Now, for DOS platforms, [we revert to using `gmtime()`](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/36).
+
 ## Version 2.0
 <time datetime="2025-05-15">May 15, 2025</time>
 - [We have our own TOCALL destination!](https://github.com/aprsorg/aprs-deviceid/issues/192)  This app can now identify itself using the `APWXS?` destination, so that the various APRS tracking sites can identify this app without the user agent.  I felt that was worthy of a major version bump!
