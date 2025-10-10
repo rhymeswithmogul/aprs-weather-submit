@@ -34,6 +34,8 @@ The `Z` device type identifier is now supported by using the `-Z`/`--device-type
 This code is fully compatible with Apple Silicon's `arm64` and `arm64e` architectures.  Translation: it just works!
 
 
-## Flooding values are now reported correctly.
+## Flooding values and battery voltage are now reported correctly.
 
-Before version 2.1, the APRS 1.2 statistic for flooding (water level above or below stage) would parse the value with one less order of magnitude (example 1 foot instead of 10 feet).  This was corrected.
+Before version 2.1, the APRS 1.2 statistic for flooding (water level above or below stage) would parse the value with one less order of magnitude (example 1 foot instead of 10 feet, or 1.2 volts instead of 12 volts).  This was corrected.
+
+In addition, battery voltage used to be reported without the decimal part (that is, 12.9 V would be 12.0 V).  Also corrected!

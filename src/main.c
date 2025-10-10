@@ -579,8 +579,10 @@ main (const int argc, const char** argv)
 
 			/* (APRS 1.2) Weather station battery voltage (-V | --voltage) */
 			case 'V':
-				temp_d = atof(optarg);
-				if (temp_d < 0 || temp_d > 99.9)
+				/* The unit in the APRS packet is tenths of a volt. */
+				temp_i = round(atof(optarg) * 10);
+
+				if (temp_i < 0 || temp_i > 999)
 				{
 					fprintf(stderr, "%s: option `-%c' must be between 0 and 99.9 volts.\n", argv[0], optopt);
 					return EXIT_FAILURE;
@@ -588,7 +590,7 @@ main (const int argc, const char** argv)
 				else
 				{
 					snprintf_verify(
-						snprintf(packet.voltage, 4, "%.3d", (unsigned short)temp_d * 10)
+						snprintf(packet.voltage, 4, "%.3d", temp_i)
 					);
 				}
 				break;
