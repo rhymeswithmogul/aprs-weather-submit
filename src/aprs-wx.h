@@ -85,7 +85,7 @@ packetConstructor (APRSPacket* const p);
 extern
 #endif
 void
-rain (char* const pResult, const double precip);
+rain (char* const pResult, const float precip);
 
 /**
  * notNull() -- return !0 if the user specified a meaningful value.

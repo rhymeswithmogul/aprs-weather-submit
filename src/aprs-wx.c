@@ -173,8 +173,8 @@ void
 uncompressedPosition (char* const pResult, const double decimal,
                       const char isLongitude)
 {
-	short degrees;
-	float minutes = 0;
+	unsigned char degrees;
+	float         minutes = 0;
 
 	if (!isLongitude && (decimal > 90 || decimal < -90))
 	{
@@ -220,7 +220,7 @@ uncompressedPosition (char* const pResult, const double decimal,
 inline
 #endif
 void
-rain (char* const pResult, const double precip)
+rain (char* const pResult, const float precip)
 {
 	snprintf_verify( snprintf(pResult, 4, "%03d", (unsigned short)precip) );
 	return;

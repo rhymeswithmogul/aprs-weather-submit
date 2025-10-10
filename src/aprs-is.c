@@ -62,7 +62,7 @@ sendPacket (const char* const restrict server,
             const char* const restrict username,
             const char* const restrict password,
             const char* const restrict toSend,
-            const int debugFlag
+            const char debugFlag
 )
 {
 	int              error = 0;

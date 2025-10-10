@@ -44,7 +44,7 @@ sendPacket (const char* const restrict server,
             const char* const restrict username,
             const char* const restrict password,
             const char* const restrict toSend,
-            const int debugFlag);
+            const char debugFlag);
 
 /* How long to wait before timing out when the user doesn't specify.
    Fifteen seconds seems reasonable. */
