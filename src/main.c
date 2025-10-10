@@ -565,14 +565,14 @@ main (const int argc, const char** argv)
 			/* (APRS 1.2) Flooding (-F | --water-level-above-stage) */
 			case 'F':
 				/* The unit in the APRS packet is tenths of a foot (1.2 inches). */
-				temp_d = atof(optarg);
+				temp_i = round(atof(optarg) * 10);
 
-				if (temp_d < -99.9 || temp_d > 99.9) {
+				if (temp_i < -999 || temp_i > 999) {
 					fprintf(stderr, "%s: option `-%c' must be between -99.9 and 99.9 feet.\n", argv[0], optopt);
 					return EXIT_FAILURE;
 				} else {
 					snprintf_verify(
-						snprintf(packet.waterLevel, 4, "%03d", (int)(round(temp_d)) )
+						snprintf(packet.waterLevel, 5, "%+04d", (signed short)temp_i )
 					);
 				}
 				break;
