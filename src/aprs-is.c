@@ -22,8 +22,8 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #ifdef HAVE_APRSIS_SUPPORT
 
 #include <stdio.h>      /* fprintf(), printf(), fputs() */
-#include <stdlib.h>     /* malloc(), free(), exit() and constants */
-#include <string.h>     /* strcat() */
+#include <stdlib.h>     /* exit() and constants */
+#include <string.h>     /* strcat(), strchr()  */
 #include "main.h"       /* PACKAGE, VERSION */
 #include "aprs-is.h"
 #include <errno.h>	/* errno */
@@ -57,7 +57,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  */
 void
 sendPacket (const char* const restrict server,
-            const unsigned short port,
+            const socklen_t port,
             const time_t timeout,
             const char* const restrict username,
             const char* const restrict password,
@@ -71,8 +71,8 @@ sendPacket (const char* const restrict server,
 	char             foundValidServerIP = 0;
 	struct addrinfo* result = NULL;
 	struct addrinfo* results;
-	char             verificationMessage[BUFSIZE];
-	char*            buffer = malloc(BUFSIZE);
+	static char      verificationMessage[BUFSIZE];
+	static char      buffer[BUFSIZE];
 #ifndef _WIN32
 	signed int       socket_desc = -1;
 #else
@@ -108,6 +108,8 @@ sendPacket (const char* const restrict server,
 	{
 		/* For readability later: */
 		struct sockaddr* const addressinfo = result->ai_addr;
+		static char timeoutText[BUFSIZE];
+		char* address = NULL;
 
 		socket_desc = socket(addressinfo->sa_family, SOCK_STREAM, IPPROTO_TCP);
 #ifndef _WIN32
@@ -121,18 +123,21 @@ sendPacket (const char* const restrict server,
 		}
 
 		/* Assign the port number. */
-		switch (addressinfo->sa_family)
+		if (addressinfo->sa_family == AF_INET6)
 		{
-			case AF_INET:
-				((struct sockaddr_in*)addressinfo)->sin_port   = htons(port);
-				break;
-			case AF_INET6:
-				((struct sockaddr_in6*)addressinfo)->sin6_port = htons(port);
-				break;
+			((struct sockaddr_in6*)addressinfo)->sin6_port = htons(port);
+		}
+		else if (addressinfo->sa_family == AF_INET)
+		{
+			((struct sockaddr_in*)addressinfo)->sin_port = htons(port);
+		}
+		else /* I dunno, IPv5? */
+		{
+			fprintf(stderr, "Unknown address family %i, exiting.\n", addressinfo->sa_family);
+			exit(EXIT_FAILURE);
 		}
 
 		/* Connect */
-		char* timeoutText = malloc(BUFSIZE);
 		if (timeout > 0)
 		{
 			snprintf(timeoutText, BUFSIZE - 1, " (timeout %jd seconds)", (intmax_t)timeout);
@@ -142,46 +147,32 @@ sendPacket (const char* const restrict server,
 			snprintf(timeoutText, 14, " (no timeout)");
 		}
 
-		switch (addressinfo->sa_family)
+		/* Depending on whether we got an IPv6 or IPv4 address back,
+		   connect to the server. */
+		if (addressinfo->sa_family == AF_INET6)
 		{
-			case AF_INET:
-				inet_ntop(
-					AF_INET,
-					&((struct sockaddr_in*)addressinfo)->sin_addr,
-					buffer,
-					INET_ADDRSTRLEN);
-#ifndef NO_DEBUGGING
-				if (debugFlag != 0)
-				{
-					printf("Connecting to %s:%d%s...\n",
-					       buffer,
-					       ntohs(((struct sockaddr_in*)addressinfo)->sin_port),
-					       timeoutText
-					);
-				}
-#endif
-				break;
-
-			case AF_INET6:
-				inet_ntop(
-					AF_INET6,
-					&((struct sockaddr_in6*)addressinfo)->sin6_addr,
-					buffer,
-					INET6_ADDRSTRLEN);
-#ifndef NO_DEBUGGING
-				if (debugFlag != 0)
-				{
-					printf("Connecting to [%s]:%d%s...\n",
-					       buffer,
-					       ntohs(((struct sockaddr_in6*)addressinfo)->sin6_port),
-					       timeoutText
-					);
-				}
-#endif
-				break;
+			address = (char*)(&((struct sockaddr_in6*)addressinfo)->sin6_addr);
+			inet_ntop(AF_INET6, address, buffer, INET6_ADDRSTRLEN);
 		}
-		free(timeoutText);
+		else /* AF_INET; error checking was done when we assigned a port number. */
+		{
+			address = (char*)&((struct sockaddr_in*)addressinfo)->sin_addr;
+			inet_ntop(AF_INET, address, buffer, INET_ADDRSTRLEN);
+		}
 
+#ifndef NO_DEBUGGING
+		if (debugFlag != 0)
+		{
+			const char* const isIPv6 = strchr(buffer, ':');
+			printf("Connecting to %c%s%c:%d%s...\n",
+				(isIPv6 != NULL ? '[' : '\0'),
+				buffer,
+				(isIPv6 != NULL ? ']' : '\0'),
+				port,
+				timeoutText
+			);
+		}
+#endif
 		/* Code to handle timeouts, as long as the user doesn't
 		   want to wait forever (like v1.7.2 and older). */
 		if (timeout > 0)
@@ -192,7 +183,7 @@ sendPacket (const char* const restrict server,
 			socket_timeout.tv_usec = 0;
 			setsockopt(socket_desc, SOL_SOCKET, SO_SNDTIMEO, &socket_timeout, sizeof(socket_timeout));
 			setsockopt(socket_desc, SOL_SOCKET, SO_RCVTIMEO, &socket_timeout, sizeof(socket_timeout));
-#else
+#else /* Windows */
 			DWORD socket_timeout = timeout * 1000;
 			setsockopt(socket_desc, SOL_SOCKET, SO_SNDTIMEO, (const char*)&socket_timeout, sizeof(socket_timeout));
 			setsockopt(socket_desc, SOL_SOCKET, SO_RCVTIMEO, (const char*)&socket_timeout, sizeof(socket_timeout));
@@ -258,7 +249,7 @@ sendPacket (const char* const restrict server,
 			bytesRead = recv(socket_desc, buffer, BUFSIZE, 0);
 		}
 	}
-	free(buffer);
+
 	if (!authenticated)
 	{
 		fputs("Authentication failed!\n", stderr);

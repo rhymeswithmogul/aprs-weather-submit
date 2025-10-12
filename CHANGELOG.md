@@ -8,6 +8,7 @@ Not yet released
 - Fixed a bug where flooding information would be reported as an order of magnitude less than the intended value.
 - Fixed a bug where battery voltage would be reported without the decimal part.
 - Performance tweaks for systems without a floating-point unit or with a slow floating-point unit.
+- Code cleanup and minor performance improvements for APRS-IS.
 
 ## Version 2.0
 <time datetime="2025-05-15">May 15, 2025</time>

@@ -15,9 +15,6 @@
  * @author Colin Cogle
  * @since  0.1
  */
-#ifndef _DOS
-inline
-#endif
 void
 version (void)
 {
@@ -53,11 +50,8 @@ General Public License (version 3.0) for more details.");
  * @author Colin Cogle
  * @since  0.1
  */
-#ifndef _DOS
-inline
-#endif
 void
-usage(void)
+usage (void)
 {
 #ifdef _DOS
 	printf("Usage: %s /k CALL /e LAT /n LONG [OTHER PARAMETERS]\n", PACKAGE);
