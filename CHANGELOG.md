@@ -1,7 +1,7 @@
 # Change Log for `aprs-weather-submit`
 
 ## Version 2.1
-Not yet released
+<time datetime="2025-10-12">October 13, 2025</time>
 - Noted that APRS weather reports containing weather data (except for wind speed and direction) cannot have custom icons.  This is a limitation of the APRS protocol itself.  [Thanks to SQ9RHX for being patient while I investigated.](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/30)
 - The temperature field is no longer mandatory, as many APRS viewing implementations have gotten more lenient.  Thus, an empty `t...` is no longer included when temperatures are not specified.  To undo this, compile the app with `-D_STRICT_APRS_COMPLIANCE`.
 - A security change in version 2.0 would not compile on DOS because `gmtime_r()` isn't part of the C99 standard.  Now, for DOS platforms, [we revert to using `gmtime()`](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/36).

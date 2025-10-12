@@ -19,7 +19,7 @@ You should have received a copy of the GNU Affero General Public License along
 with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 */
 
-#include <stdio.h>          /* *printf(), *puts(), and friends */
+#include <stdio.h>          /* *printf(), fputs(), and friends */
 #include <stdlib.h>         /* atof(), EXIT_SUCCESS, EXIT_FAILURE */
 #include <string.h>         /* str*cpy() and friends */
 #include <math.h>           /* round(), floor() */
@@ -691,7 +691,7 @@ main (const int argc, const char** argv)
 	else
 	{
 #endif
-		fputs(packetToSend, stdout);
+		puts(packetToSend);
 #ifdef HAVE_APRSIS_SUPPORT
 	}
 #endif

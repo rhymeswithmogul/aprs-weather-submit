@@ -1,30 +1,28 @@
-aprs-weather-submit (2.0) UNRELEASED; urgency=medium
+aprs-weather-submit (2.1) UNRELEASED; urgency=medium
 
-  * We have our own TOCALL destination! This app can now identify itself
-    using the `APWXS?` destination, so that the various APRS tracking
-    sites can identify this app without the user agent.  (I thought this
-    was worthy of a major version bump!) (Closes: #19, #31, #33)
-  * In addition to the above, anyone who forks this project can now
-    easily pick their own TOCALL at compile-time by editing the TOCALL
-    macro in `src/main.h` or supplying `-DTOCALL=APZxxx` in `$CFLAGS`.
-    (Closes: #19)
-  
-  * The command-line option `--debug` has been added to toggle debugging
-    output at runtime. Thanks for the suggestion, DL9SEC! (Closes: #18)
-  * As a result, the `--enable-debug` compile-time option (that sets
-    `-DDEBUG`) has been removed. (Closes: #22)
-  * However, if you _really_ need the smallest-possible binary, there is
-    a new flag, `configure --disable-debugging`, that will remove all
-    debugging capability. This might be useful if you're compiling for a
-    microcontroller or other embedded system. (Closes: #22)
+  * Noted that APRS weather reports containing weather data (except for
+    wind speed and direction) cannot have custom icons.  This is a lim-
+    itation of the APRS protocol itself.  Thanks to SQ9RHX for being
+    patient while I investigated. (Closes: #30)
 
-  * Added the "Z" device type field, as noted in the document, "APRS
-    version 1.2.1 WEATHER UPDATES TO THE SPEC". (Closes: #20, 21)
+  * The temperature field is no longer mandatory, as many APRS viewing
+    implementations have gotten more lenient.  Thus, an empty `t...` is
+    no longer included when temperatures are not specified.  To undo
+    this, compile the app with `-D_STRICT_APRS_COMPLIANCE`.
 
-  * Fixed a low-severity security bug involving the use of `gmtime()`.
-    This has the limited potential to be unsafe, so I replaced it with
-    a call to `gmtime_r()`. (Closes: #25, #26) (Security: CWE-676)
+  * A security change in version 2.0 would not compile on DOS because
+    `gmtime_r()` isn't part of the C99 standard.  Now, for DOS plat-
+    forms, we revert to using `gmtime()`. (Closes: #36)
 
-  * Various little improvements. (Closes: #27, #28)
+  * Fixed a bug where flooding information would be reported as an
+    order of magnitude less than the intended value.
 
- -- Colin Cogle <colin@colincogle.name>  Thu, 15 May 2025 19:07:00 -0400
+  * Fixed a bug where battery voltage would be reported without the
+    decimal part.
+
+  * Performance tweaks for systems without a floating-point unit or
+    with a slow floating-point unit.
+
+  * Code cleanup and minor performance improvements for APRS-IS.
+
+ -- Colin Cogle <colin@colincogle.name>  Sun, 12 Oct 2025 19:09:00 -0400
