@@ -28,7 +28,7 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #endif
 
 #ifndef VERSION
-#define VERSION "2.0.1-dev"
+#define VERSION "2.1"
 #endif
 
 /* Official builds of aprs-weather-submit may use the assigned TOCALL

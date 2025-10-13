@@ -15,9 +15,6 @@
  * @author Colin Cogle
  * @since  0.1
  */
-#ifndef _DOS
-inline
-#endif
 void
 version (void)
 {
@@ -53,14 +50,11 @@ General Public License (version 3.0) for more details.");
  * @author Colin Cogle
  * @since  0.1
  */
-#ifndef _DOS
-inline
-#endif
 void
-usage(void)
+usage (void)
 {
 #ifdef _DOS
-	printf("Usage: %s /k CALL /e LAT /n LONG [OTHER PARAMETERS]\n", PACKAGE);
+	printf("Usage: %s /k CALL /n LAT /e LONG [OTHER PARAMETERS]\n", PACKAGE);
 #else
 	printf("Usage: %s --callsign [CALLSIGN[-SSID]] --latitude [LATITUDE] --longitude [LONGITUDE] [OTHER PARAMETERS]\n", PACKAGE);
 #endif
@@ -94,8 +88,8 @@ help (void)
 \n\
 Required parameters:\n\
 	-k, --callsign      Your callsign, with SSID if desired.\n\
-	-e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n\
-	-n, --latitude      The latitude of your weather station, in degrees north of the equator.\n");
+	-n, --latitude      The latitude of your weather station, in degrees north of the equator.\n\
+	-e, --longitude     The longitude of your weather station, in degrees east of the Prime Meridian.\n");
 #ifdef HAVE_APRSIS_SUPPORT
 	puts("APRS-IS IGate parameters:\n\
 	-I, --server        Name of the APRS-IS IGate server to submit the packet to.\n\
@@ -138,8 +132,8 @@ Special parameters:\n\
 \n\
 Required parameters (each requires an argument):\n\
 	/k\tYour callsign, with SSID if desired.\n\
-	/e\tLongitude, in degrees east of the Prime Meridian.\n\
 	/n\tLatitude, in degrees north of the equator.\n\
+	/e\tLongitude, in degrees east of the Prime Meridian.\n\
 \n\
 Optional parameters (each requires an argument):\n\
 	/A\tAltitude (in feet above mean sea level).\n\

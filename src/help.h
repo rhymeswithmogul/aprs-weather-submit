@@ -43,9 +43,6 @@ usage (void);
  * @author Colin Cogle
  * @since  0.1
  */
-#ifndef _DOS
-extern
-#endif
 void
 help (void);
 
@@ -55,8 +52,5 @@ help (void);
  * @author Colin Cogle
  * @since  0.1
  */
-#ifndef _DOS
-extern
-#endif
 void
 version (void);

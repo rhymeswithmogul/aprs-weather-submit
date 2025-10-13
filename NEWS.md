@@ -18,6 +18,7 @@ As a result, I've removed the `--enable-debug` compile-time option that set the 
 
 However, if you *really* need the smallest-possible binary for whatever reason, there is a `--disable-debugging` compile-time option that will strip all debugging code from the executable.
 
+
 ## This app supports changing the icon, but you probably shouldn't.
 
 Upon careful reading of the APRS specification, SQ9RHX and I found out that you're not allowed to change the APRS icon if you're including any weather data *except for* wind speed and direction.  Now, the app's documentation will suggest you _not_ use the `--icon` switch, as it will cause other weather data (such as temperature) to be interpreted as a comment.
@@ -31,3 +32,10 @@ The `Z` device type identifier is now supported by using the `-Z`/`--device-type
 ## Tested on Apple Silicon
 
 This code is fully compatible with Apple Silicon's `arm64` and `arm64e` architectures.  Translation: it just works!
+
+
+## Flooding values and battery voltage are now reported correctly (v2.1+).
+
+Before version 2.1, the APRS 1.2 statistic for flooding (water level above or below stage) would parse the value with one less order of magnitude (example 1 foot instead of 10 feet, or 1.2 volts instead of 12 volts).  This was corrected.
+
+In addition, battery voltage used to be reported without the decimal part (that is, 12.9 V would be 12.0 V).  Also corrected!

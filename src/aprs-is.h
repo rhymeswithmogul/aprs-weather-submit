@@ -24,6 +24,13 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
 #ifndef aprs_is_h
 #define aprs_is_h
 
+/* We need to include a definition for socklen_t. */
+#ifdef _WIN32
+#include <ws2tcpip.h>
+#else
+#include <sys/socket.h>
+#endif
+
 /**
  * sendPacket() -- sends a packet to an APRS-IS IGate server.
  *
@@ -39,12 +46,12 @@ with this program.  If not, see <https://www.gnu.org/licenses/agpl-3.0.html>.
  */
 void
 sendPacket (const char* const restrict server,
-            const unsigned short port,
+            const socklen_t port,
             const time_t timeout,
             const char* const restrict username,
             const char* const restrict password,
             const char* const restrict toSend,
-            const int debugFlag);
+            const char debugFlag);
 
 /* How long to wait before timing out when the user doesn't specify.
    Fifteen seconds seems reasonable. */
@@ -65,9 +72,9 @@ sendPacket (const char* const restrict server,
 /* When compiling for Windows, we need to target Vista and later
    because WinSock2 contains the inet_ntop() function. */
 #ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#undef  _WIN32_WINNT
-#define _WIN32_WINNT 0x0600
+  #define WIN32_LEAN_AND_MEAN
+  #undef  _WIN32_WINNT
+  #define _WIN32_WINNT 0x0600
 #endif /* _WIN32 */
 
 #endif /* aprs_is_h */

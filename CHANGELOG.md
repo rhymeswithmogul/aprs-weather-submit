@@ -1,10 +1,15 @@
 # Change Log for `aprs-weather-submit`
 
-## Version 2.0.1
-Not yet released
+## Version 2.1
+<time datetime="2025-10-12">October 13, 2025</time>
 - Noted that APRS weather reports containing weather data (except for wind speed and direction) cannot have custom icons.  This is a limitation of the APRS protocol itself.  [Thanks to SQ9RHX for being patient while I investigated.](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/30)
 - The temperature field is no longer mandatory, as many APRS viewing implementations have gotten more lenient.  Thus, an empty `t...` is no longer included when temperatures are not specified.  To undo this, compile the app with `-D_STRICT_APRS_COMPLIANCE`.
 - A security change in version 2.0 would not compile on DOS because `gmtime_r()` isn't part of the C99 standard.  Now, for DOS platforms, [we revert to using `gmtime()`](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/36).
+- Fixed a bug where flooding information would be reported as an order of magnitude less than the intended value.
+- Fixed a bug where battery voltage would be reported without the decimal part.
+- Performance tweaks for systems without a floating-point unit or with a slow floating-point unit.
+- Code cleanup and minor performance improvements for APRS-IS.
+- Corrected a bug in the DOS help where latitude and longitude were switched. My bad.
 
 ## Version 2.0
 <time datetime="2025-05-15">May 15, 2025</time>
