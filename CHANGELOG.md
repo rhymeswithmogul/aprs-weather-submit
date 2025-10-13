@@ -9,6 +9,7 @@
 - Fixed a bug where battery voltage would be reported without the decimal part.
 - Performance tweaks for systems without a floating-point unit or with a slow floating-point unit.
 - Code cleanup and minor performance improvements for APRS-IS.
+- Corrected a bug in the DOS help where latitude and longitude were switched. My bad.
 
 ## Version 2.0
 <time datetime="2025-05-15">May 15, 2025</time>
