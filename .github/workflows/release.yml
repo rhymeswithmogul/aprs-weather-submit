@@ -9,11 +9,70 @@ on:
     tags:
       - 'v*'
 jobs:
-  deb-bookworm:
+  debian-trixie:
     strategy:
       matrix:
         codename:
           - trixie
+        platform:
+          - amd64
+          - arm64
+          - arm/v7
+          - ppc64le
+          - 386
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Import PGP key
+      run: |
+        echo -n "${{ secrets.PGP_SIGNING_KEY_PRIVATE }}" | gpg --import
+        echo -n "${{ vars.PGP_SIGNING_KEY_PUBLIC }}" | gpg --import
+        echo "DE1A7DCE673576CD6F086957B8AB401015D97DA4:6:" | gpg --import-ownertrust
+        # We need to import it for root as well, because debsign won't run as a regular
+        # user.  That might be something I'm doing wrong.
+        echo -n "${{ secrets.PGP_SIGNING_KEY_PRIVATE }}" | sudo gpg --import
+        echo -n "${{ vars.PGP_SIGNING_KEY_PUBLIC }}" | sudo gpg --import
+        echo "DE1A7DCE673576CD6F086957B8AB401015D97DA4:6:" | sudo gpg --import-ownertrust
+
+    - uses: andy5995/gh-action-build-deb@v1
+      with:
+        args: |
+          --compression=xz
+        codename: ${{ matrix.codename }}
+        platform: ${{ matrix.platform }}
+
+    - name: rename the debs
+      run: |
+        sudo apt install -y rename
+        rename -nv 2.1 2.1-trixie *.deb
+
+    - name: debsign the debs
+      run: |
+        sudo apt install -y debsigs
+        find output -name '*.deb' -exec sudo debsigs --sign=origin --default-key=B8AB401015D97DA4 {} \;
+
+    - name: Create sha256sum
+      run: |
+        DEB_FILENAME=$(basename `find output/aprs-weather-submit_*deb`)
+        echo "DEB_FILENAME=$DEB_FILENAME" >> $GITHUB_ENV
+        cd output
+        sha256sum "$DEB_FILENAME" > "../$DEB_FILENAME.sha256sum"
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.DEB_FILENAME }}
+        path: |
+          output/*.deb
+          *deb.sha256sum
+        if-no-files-found: error
+
+  debian-bookworm:
+    strategy:
+      matrix:
+        codename:
           - bookworm
         platform:
           - amd64
@@ -43,6 +102,11 @@ jobs:
           --compression=xz
         codename: ${{ matrix.codename }}
         platform: ${{ matrix.platform }}
+
+    - name: rename the debs
+      run: |
+        sudo apt install -y rename
+        rename -nv 2.1 2.1-bookworm *.deb
 
     - name: debsign the debs
       run: |
