@@ -2,6 +2,7 @@
 
 ## Version 2.1
 <time datetime="2025-10-21">October 21, 2025</time>
+- GitHub Workflows now builds for Debian Trixie and the new `riscv64` architecture.
 - Noted that APRS weather reports containing weather data (except for wind speed and direction) cannot have custom icons.  This is a limitation of the APRS protocol itself.  [Thanks to SQ9RHX for being patient while I investigated.](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/30)
 - The temperature field is no longer mandatory, as many APRS viewing implementations have gotten more lenient.  Thus, an empty `t...` is no longer included when temperatures are not specified.  To undo this, compile the app with `-D_STRICT_APRS_COMPLIANCE`.
 - A security change in version 2.0 would not compile on DOS because `gmtime_r()` isn't part of the C99 standard.  Now, for DOS platforms, [we revert to using `gmtime()`](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/36).
@@ -10,7 +11,6 @@
 - Performance tweaks for systems without a floating-point unit or with a slow floating-point unit.
 - Code cleanup and minor performance improvements for APRS-IS.
 - Corrected a bug in the DOS help where latitude and longitude were switched. My bad.
-- GitHub Workflows now builds for Debian Trixie, too.
 - [Corrected a bug that stopped this from being built on ARM processors.](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/40)  Thanks yet again, DL9SEC!
 
 ## Version 2.0
