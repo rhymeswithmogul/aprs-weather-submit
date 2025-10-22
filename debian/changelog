@@ -25,4 +25,8 @@ aprs-weather-submit (2.1) UNRELEASED; urgency=medium
 
   * Code cleanup and minor performance improvements for APRS-IS.
 
- -- Colin Cogle <colin@colincogle.name>  Sun, 12 Oct 2025 19:09:00 -0400
+  * Fixes a bug introduced during development that prevented the build
+    process from completing on ARM and other platforms where `signed
+    char` is not the default.  Thanks again, DL9SEC. (Closes: #40)
+
+ -- Colin Cogle <colin@colincogle.name>  Tue, 21 Oct 2025 21:26:00 -0400

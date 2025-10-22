@@ -139,9 +139,9 @@ main (const int argc, const char** argv)
 	while ((c = (char) getopt_long(argc, (char* const*)argv, "CHvk:n:e:A:c:S:g:t:T:r:P:p:s:h:b:L:X:F:V:QM:i:Z:", long_options, &option_index)) != -1)
 #endif
 	{
-		char    temp_c = 0;   /* scratch space */
-		int32_t temp_i = 0;   /* scratch space */
-		double  temp_d = 0.0; /* scratch space */
+		signed char temp_c = 0;   /* scratch space */
+		int32_t     temp_i = 0;   /* scratch space */
+		double      temp_d = 0.0; /* scratch space */
 
 		switch (c)
 		{
