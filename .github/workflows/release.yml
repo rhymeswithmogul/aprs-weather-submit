@@ -47,7 +47,7 @@ jobs:
     - name: rename the debs
       run: |
         sudo apt install -y rename
-        rename -nv 2.1 2.1-trixie *.deb
+        rename -n -v 2.1 2.1-trixie *.deb
 
     - name: debsign the debs
       run: |
@@ -107,7 +107,7 @@ jobs:
     - name: rename the debs
       run: |
         sudo apt install -y rename
-        rename -nv 2.1 2.1-bookworm *.deb
+        rename -n -v 2.1 2.1-bookworm *.deb
 
     - name: debsign the debs
       run: |
