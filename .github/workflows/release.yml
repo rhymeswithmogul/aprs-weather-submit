@@ -19,6 +19,7 @@ jobs:
           - arm64
           - arm/v7
           - ppc64le
+          - riscv64
           - 386
 
     runs-on: ubuntu-latest
@@ -36,7 +37,7 @@ jobs:
         echo -n "${{ vars.PGP_SIGNING_KEY_PUBLIC }}" | sudo gpg --import
         echo "DE1A7DCE673576CD6F086957B8AB401015D97DA4:6:" | sudo gpg --import-ownertrust
 
-    - uses: andy5995/gh-action-build-deb@v1
+    - uses: andy5995/gh-action-build-deb@0ddedc1c7c3eea4ffdb1ca981ba061527f711b3d
       with:
         args: |
           --compression=xz
@@ -96,7 +97,7 @@ jobs:
         echo -n "${{ vars.PGP_SIGNING_KEY_PUBLIC }}" | sudo gpg --import
         echo "DE1A7DCE673576CD6F086957B8AB401015D97DA4:6:" | sudo gpg --import-ownertrust
 
-    - uses: andy5995/gh-action-build-deb@v1
+    - uses: andy5995/gh-action-build-deb@0ddedc1c7c3eea4ffdb1ca981ba061527f711b3d
       with:
         args: |
           --compression=xz
