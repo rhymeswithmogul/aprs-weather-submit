@@ -54,20 +54,12 @@ jobs:
         sudo apt install -y debsigs
         find output -name '*.deb' -exec sudo debsigs --sign=origin --default-key=B8AB401015D97DA4 {} \;
 
-    - name: Create sha256sum
-      run: |
-        DEB_FILENAME=$(basename `find output/aprs-weather-submit_*deb`)
-        echo "DEB_FILENAME=$DEB_FILENAME" >> $GITHUB_ENV
-        cd output
-        sha256sum "$DEB_FILENAME" > "../$DEB_FILENAME.sha256sum"
-
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.DEB_FILENAME }}
         path: |
           output/*.deb
-          *deb.sha256sum
         if-no-files-found: error
 
   debian-bookworm:
@@ -114,20 +106,12 @@ jobs:
         sudo apt install -y debsigs
         find output -name '*.deb' -exec sudo debsigs --sign=origin --default-key=B8AB401015D97DA4 {} \;
 
-    - name: Create sha256sum
-      run: |
-        DEB_FILENAME=$(basename `find output/aprs-weather-submit_*deb`)
-        echo "DEB_FILENAME=$DEB_FILENAME" >> $GITHUB_ENV
-        cd output
-        sha256sum "$DEB_FILENAME" > "../$DEB_FILENAME.sha256sum"
-
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.DEB_FILENAME }}
         path: |
           output/*.deb
-          *deb.sha256sum
         if-no-files-found: error
 
   ppa:
