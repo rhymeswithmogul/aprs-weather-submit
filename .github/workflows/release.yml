@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         codename:
+          - trixie
           - bookworm
         platform:
           - amd64

@@ -10,6 +10,7 @@
 - Performance tweaks for systems without a floating-point unit or with a slow floating-point unit.
 - Code cleanup and minor performance improvements for APRS-IS.
 - Corrected a bug in the DOS help where latitude and longitude were switched. My bad.
+- GitHub Workflows now builds for Debian Trixie, too.
 - [Corrected a bug that stopped this from being built on ARM processors.](https://github.com/rhymeswithmogul/aprs-weather-submit/issues/40)  Thanks yet again, DL9SEC!
 
 ## Version 2.0
