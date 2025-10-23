@@ -47,7 +47,7 @@ jobs:
     - name: rename the debs
       run: |
         sudo apt install -y rename
-        rename -v s/2\.1/2\.1-${{ matrix.codename }}/ *.deb
+        rename -v s/2\.1/2\.1-${{ matrix.codename }}/ aprs-weather-submit_2.1*.deb
 
     - name: debsign the debs
       run: |
@@ -99,7 +99,7 @@ jobs:
     - name: rename the debs
       run: |
         sudo apt install -y rename
-        rename -v s/2\.1/2\.1-${{ matrix.codename }}/ *.deb
+        rename -v s/2\.1/2\.1-${{ matrix.codename }}/ aprs-weather-submit_2.1*.deb
 
     - name: debsign the debs
       run: |
@@ -153,7 +153,10 @@ jobs:
           # Normally, we'd download something from Debian, but that doesn't exist.
           # Next time, I'll link to the GitHub tarballs instead.
           #wget https://launchpadlibrarian.net/793714836/aprs-weather-submit_2.0.orig.tar.xz
-          mv aprs-weather-submit_2.1.orig.tar.xz ..
+          wget https://github.com/rhymeswithmogul/aprs-weather-submit/archive/refs/tags/v2.1.tar.gz
+          gunzip v2.1.tar.gz
+          xz v2.1.tar
+          mv v2.1.tar.xz ../aprs-weather-submit_2.1.orig.tar.xz
           mv debian ..
           rm -rf .git .github .gitignore release-signing-key.asc gentoo/
           tar cfv ../aprs-weather-submit_2.1-1${distribution}1.orig.tar .
