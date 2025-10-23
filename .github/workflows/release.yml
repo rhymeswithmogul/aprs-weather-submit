@@ -10,6 +10,7 @@ on:
       - 'v*'
 jobs:
   debian-trixie:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         codename:
@@ -22,7 +23,6 @@ jobs:
           - riscv64
           - 386
 
-    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
 
@@ -63,6 +63,7 @@ jobs:
         if-no-files-found: error
 
   debian-bookworm:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         codename:
@@ -74,7 +75,6 @@ jobs:
           - ppc64le
           - 386
 
-    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
 
@@ -115,7 +115,7 @@ jobs:
         if-no-files-found: error
 
   ppa:
-    runs-on: ubuntu-latest-breakme
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         # Edit this list as time goes on, and remove anything
@@ -123,7 +123,6 @@ jobs:
         distribution:
           - questing
           - plucky
-          - oracular
           - noble
           - jammy
           - focal
