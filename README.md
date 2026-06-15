@@ -71,7 +71,14 @@ sudo make install
 ```
 
 ## MS-DOS and compatibles
-Yeah, why not?  Install OpenWatcom and run `MAKE.BAT`.
+In true ham fashion, few things are obsolete!  You can run this on 45-year-old hardware if you really want.  System requirements are:
+ * An Intel 8088 processor or compatible (or newer).
+ * 128 KB of memory.
+ * A DOS-compatible operating system.
+
+To build this from source on DOS, install OpenWatcom and run `MAKE.BAT`.
+
+![aprs-weather-submit running on PC-DOS 3.1](https://raw.githubusercontent.com/rhymeswithmogul/aprs-weather-submit/refs/heads/main/.github/dos.png "A virtual IBM PC with 128 KB of memory running in 86Box 6.0")
 
 ## Windows
 This app can be compiled using MinGW.  If other compilers work, please open an issue to let me know!
